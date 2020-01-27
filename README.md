@@ -1,2 +1,0 @@
-# crowdsourcing
-my graduation design
