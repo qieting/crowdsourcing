@@ -1,0 +1,29 @@
+{
+  "@@last_modified": "2020-02-01T13:50:51.447411",
+  "title": "Flutter 应用",
+  "@title": {
+    "description": "Title for the Demo application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "guanggao": "这是一个广告",
+  "@guanggao": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "password": "密码",
+  "@password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "remainingEmailsMessage": "{howMany,plural, =0{There are no emails left}=1{There is {howMany} email left}other{There are {howMany} emails left}}",
+  "@remainingEmailsMessage": {
+    "description": "How many emails remain after archiving.",
+    "type": "text",
+    "placeholders": {
+      "howMany": {
+        "example": 42
+      }
+    }
+  }
+}
