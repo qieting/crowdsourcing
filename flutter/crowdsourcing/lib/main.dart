@@ -21,7 +21,7 @@ void main() {
   //设置安卓状态栏为透明,但是我感觉并没有必要
   if (false && Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle =
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 }
@@ -38,35 +38,54 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            DemoLocalizationsDelegate()
-          ],
-          supportedLocales: [
-            const Locale('en', 'US'),
-            const Locale('zh', 'CN')
-          ],
-          //routes: Routers.getRouters(),
-          theme: ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or simply save your changes to "hot reload" in a Flutter IDE).
-            // Notice that the counter didn't reset back to zero; the application
-            // is not restarted.
-            primarySwatch: Colors.blue,
-          ),
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              DemoLocalizationsDelegate()
+            ],
+            localeResolutionCallback:(
+                Locale locale, Iterable < Locale > supportedLocales)
+            {
+            if (locale == null) {
+            debugPrint("*language locale is null!!!");
+            return supportedLocales.first;
+            }
 
-          //这个是对路径进行拦截，但是由于我们没设置router。因此是无效的
+            for (Locale supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode ||
+            supportedLocale.countryCode == locale.countryCode) {
+            debugPrint("*language ok $supportedLocale");
+            return supportedLocale;
+            }
+            }
 
-          onGenerateRoute: (RouteSettings settings) {
-            String routeName = settings.name;
-            print(routeName);
-            return MaterialPageRoute(settings: settings);
+            debugPrint("*language to fallback ${supportedLocales.first}");
+            return supportedLocales.first;
+            },
+            supportedLocales: [
+              const Locale('en', 'US'),
+              const Locale('zh', 'CN')
+            ],
+            //routes: Routers.getRouters(),
+            theme: ThemeData(
+              // This is the theme of your application.
+              //
+              // Try running your application with "flutter run". You'll see the
+              // application has a blue toolbar. Then, without quitting the app, try
+              // changing the primarySwatch below to Colors.green and then invoke
+              // "hot reload" (press "r" in the console where you ran "flutter run",
+              // or simply save your changes to "hot reload" in a Flutter IDE).
+              // Notice that the counter didn't reset back to zero; the application
+              // is not restarted.
+              primarySwatch: Colors.blue,
+            ),
+
+            //这个是对路径进行拦截，但是由于我们没设置router。因此是无效的
+
+            onGenerateRoute: (RouteSettings settings) {
+              String routeName = settings.name;
+              print(routeName);
+              return MaterialPageRoute(settings: settings);
 //          return MaterialPageRoute(builder: (context) {
 //            String routeName = settings.name;
 //            print(routeName);
@@ -75,10 +94,10 @@ class MyApp extends StatelessWidget {
 //            // 如果访问的路由页需要登录，但当前未登录，则直接返回登录页路由，
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
-          },
-          home: Routers.getPage(Routers.SPLASH)
+            },
+            home: Routers.getPage(Routers.SPLASH)
           //MyHomePage(title: 'Flutter Demo Home Page'),
-          ),
+        ),
       );
   }
 }

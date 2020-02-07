@@ -54,8 +54,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    //监听获取焦点，实现在切换焦点时label和border颜色同步
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     focusNode1.addListener(() {
       if (focusNode1.hasFocus) {
         setState(() {
@@ -68,6 +69,11 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //监听获取焦点，实现在切换焦点时label和border颜色同步
     focusNode2.addListener(() {
       if (focusNode2.hasFocus) {
         setState(() {
