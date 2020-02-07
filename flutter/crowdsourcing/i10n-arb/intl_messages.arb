@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-01T13:54:12.587188",
+  "@@last_modified": "2020-02-07T00:30:24.018605",
   "title": "Flutter APP",
   "@title": {
     "description": "Title for the Demo application",
@@ -13,6 +13,41 @@
   },
   "password": "password",
   "@password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "Login",
+  "@login": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPhoneNumberReg": "All input required are Numbers",
+  "@errorPhoneNumberReg": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPwdLenth": "Password number must be greater than 8",
+  "@errorPwdLenth": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPwdReg": "Passwords can only consist of Numbers and characters",
+  "@errorPwdReg": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phoneNumber": "phoneNumber",
+  "@phoneNumber": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phoneNumberEnter": "enter your phone Number",
+  "@phoneNumberEnter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordEnter": "enter your password",
+  "@passwordEnter": {
     "type": "text",
     "placeholders": {}
   },

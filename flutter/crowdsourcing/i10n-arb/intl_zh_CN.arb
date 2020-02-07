@@ -25,5 +25,40 @@
         "example": 42
       }
     }
+  },
+  "login": "登陆",
+  "@login": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPhoneNumberReg": "输入必须为数字",
+  "@errorPhoneNumberReg": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPwdLenth": "密码长度需大于等于8",
+  "@errorPwdLenth": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPwdReg": "密码只能包含字符和数字",
+  "@errorPwdReg": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phoneNumber": "账号",
+  "@phoneNumber": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phoneNumberEnter": "输入你的手机号",
+  "@phoneNumberEnter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordEnter": "输入你的密码",
+  "@passwordEnter": {
+    "type": "text",
+    "placeholders": {}
   }
 }

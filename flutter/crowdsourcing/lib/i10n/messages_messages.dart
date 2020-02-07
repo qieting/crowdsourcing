@@ -23,8 +23,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "errorPhoneNumberReg" : MessageLookupByLibrary.simpleMessage("All input required are Numbers"),
+    "errorPwdLenth" : MessageLookupByLibrary.simpleMessage("Password number must be greater than 8"),
+    "errorPwdReg" : MessageLookupByLibrary.simpleMessage("Passwords can only consist of Numbers and characters"),
     "guanggao" : MessageLookupByLibrary.simpleMessage("this is a guanggao"),
+    "login" : MessageLookupByLibrary.simpleMessage("Login"),
     "password" : MessageLookupByLibrary.simpleMessage("password"),
+    "passwordEnter" : MessageLookupByLibrary.simpleMessage("enter your password"),
+    "phoneNumber" : MessageLookupByLibrary.simpleMessage("phoneNumber"),
+    "phoneNumberEnter" : MessageLookupByLibrary.simpleMessage("enter your phone Number"),
     "remainingEmailsMessage" : m0,
     "title" : MessageLookupByLibrary.simpleMessage("Flutter APP")
   };

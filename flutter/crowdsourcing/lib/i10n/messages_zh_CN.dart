@@ -23,8 +23,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "errorPhoneNumberReg" : MessageLookupByLibrary.simpleMessage("输入必须为数字"),
+    "errorPwdLenth" : MessageLookupByLibrary.simpleMessage("密码长度需大于等于8"),
+    "errorPwdReg" : MessageLookupByLibrary.simpleMessage("密码只能包含字符和数字"),
     "guanggao" : MessageLookupByLibrary.simpleMessage("这是一个广告"),
+    "login" : MessageLookupByLibrary.simpleMessage("登陆"),
     "password" : MessageLookupByLibrary.simpleMessage("密码"),
+    "passwordEnter" : MessageLookupByLibrary.simpleMessage("输入你的密码"),
+    "phoneNumber" : MessageLookupByLibrary.simpleMessage("账号"),
+    "phoneNumberEnter" : MessageLookupByLibrary.simpleMessage("输入你的手机号"),
     "remainingEmailsMessage" : m0,
     "title" : MessageLookupByLibrary.simpleMessage("Flutter 应用")
   };
