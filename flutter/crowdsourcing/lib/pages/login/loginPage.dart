@@ -22,8 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   //因为检验时如果错误会导致一直显示报错，因此
   //设置变量保证，当输入的时候是正确的
   bool isinput = true;
-  Color userNameColor = Colors.blue;
-  Color pwdColor = Colors.blue;
+  Color userNameColor;
+  Color pwdColor;
 
   //是否隐藏密码
   bool obscureText = true;
@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!isinput) {
       if (value.trim().length < 8) {
         return DemoLocalizations.of(context).errorPwdLenth;
-      }else{
+      } else {
         RegExp pwd = new RegExp(r"(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$");
         if (pwd.hasMatch(value)) {
           return DemoLocalizations.of(context).errorPwdReg;
@@ -65,15 +65,10 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else {
         setState(() {
-          userNameColor = Colors.blue;
+          userNameColor = Theme.of(context).primaryColor;
         });
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //监听获取焦点，实现在切换焦点时label和border颜色同步
     focusNode2.addListener(() {
       if (focusNode2.hasFocus) {
         setState(() {
@@ -82,13 +77,20 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else {
         setState(() {
-          pwdColor = Colors.blue;
+          pwdColor = Theme.of(context).primaryColor;
         });
       }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    //监听获取焦点，实现在切换焦点时label和border颜色同步
+
+    userNameColor = userNameColor??Theme.of(context).primaryColor;
+    pwdColor =pwdColor?? Theme.of(context).primaryColor;
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor:  Theme.of(context).primaryColor,
       //不根据弹出输入框重绘，这样将输入框尽量往上放
       resizeToAvoidBottomPadding: false,
       body: Padding(
@@ -125,12 +127,12 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       i = ++i % 7;
                       userNameColor = Rainbows[6 - i];
-                      pwdColor = Colors.blue;
+                      pwdColor = Theme.of(context).primaryColor;
                     });
                     print("$i");
                   },
                   //正在编辑的字体的颜色
-                  style: TextStyle(),
+                  style: TextStyle(color:userNameColor),
                   decoration: InputDecoration(
                     //删除按钮，由于是一个组件，因此我们可以放很多东西
                     suffixIcon:
@@ -157,7 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     //失去焦点时颜色
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 2.0),
                       borderRadius: BorderRadius.circular(55),
                     ),
                     //当validator报错时上面两种显示都会失效，所以必须设置默认显示
@@ -184,6 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: obscureText,
                   maxLength: 16,
                   maxLengthEnforced: true,
+                  style: TextStyle(color:pwdColor),
                   //设置输入光标样式
                   cursorRadius: Radius.circular(8),
                   cursorWidth: 4,
@@ -193,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       i = ++i % 7;
                       pwdColor = Rainbows[6 - i];
-                      userNameColor = Colors.blue;
+                      userNameColor = Theme.of(context).primaryColor;
                     });
                     print("$i");
                   },
@@ -244,7 +248,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       //失去焦点时颜色
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 2.0),
                         borderRadius: BorderRadius.circular(55),
                       ),
                       //当validator报错时上面两种显示都会失效，所以必须设置默认显示
@@ -270,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: <Widget>[
                       Expanded(
                         child: RaisedButton(
-                          color: Colors.blue,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () {
                             isinput = false;
                             if ((globalKey.currentState as FormState)

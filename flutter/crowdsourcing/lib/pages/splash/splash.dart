@@ -1,6 +1,6 @@
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
-import 'package:crowdsourcing/models/UserModel.dart';
+import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:flutter/material.dart';

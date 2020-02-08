@@ -4,10 +4,10 @@ class User {
   String phone, qq, weixin;
   double money;
 
-  static final String PHONE = 'phone';
-  static final String QQ = 'qq';
-  static final String WEIXIN = 'weixin';
-  static final String MONEY = 'money';
+  static const String PHONE = 'phone';
+  static const String QQ = 'qq';
+  static const String WEIXIN = 'weixin';
+  static const String MONEY = 'money';
 
   static User fromJsonMap(Map<String, dynamic> map) {
     if (map == null || map[PHONE] == null) return null;

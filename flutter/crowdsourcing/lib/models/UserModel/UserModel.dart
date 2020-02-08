@@ -1,7 +1,7 @@
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'object/user.dart';
+import '../object/user.dart';
 
 class UserModel extends ChangeNotifier {
 
