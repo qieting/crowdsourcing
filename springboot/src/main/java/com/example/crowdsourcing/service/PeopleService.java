@@ -1,11 +1,9 @@
 package com.example.crowdsourcing.service;
 
-import com.example.crowdsourcing.dao.People;
-import org.springframework.stereotype.Service;
+import com.example.crowdsourcing.dao.bean.People;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.jws.Oneway;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +28,10 @@ public interface PeopleService {
 //		return peopleService;
 //	}
 
-	public Map<String,Object> login(String phone_number, String password) ;
-	public int register(String phone_number, String password) ;
+	public Map<String,Object> login(People people) ;
+	public People peopleMessage(int id);
+	public int getIdByToken(int TokenId);
+//	public int register(String phone_number, String password) ;
 	public void changePassword(String id, String password);
 	public List<People> allPeople(int page ,int limit);
 

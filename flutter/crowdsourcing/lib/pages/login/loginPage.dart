@@ -1,5 +1,7 @@
 import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -11,8 +13,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   //唯一性表示form
   GlobalKey globalKey = new GlobalKey();
-  TextEditingController _unameController = new TextEditingController();
-  TextEditingController _pwdController = new TextEditingController();
+  TextEditingController _unameController = new TextEditingController(
+    text: "18340019030"
+  );
+  TextEditingController _pwdController = new TextEditingController(
+    text: "heshuyu123"
+  );
   FocusNode focusNode1 = new FocusNode();
   FocusNode focusNode2 = new FocusNode();
 
@@ -33,8 +39,9 @@ class _LoginPageState extends State<LoginPage> {
     if (value.length < 11) {
       return DemoLocalizations.of(context).errorPhoneNumberLength;
     } else {
-      RegExp mobile = new RegExp(r"1[0-9]\d{9}$");
-      if (mobile.hasMatch(value)) {
+      RegExp mobile = new RegExp(r"1[0-9]{10}$");
+      //print(value+value.length.toString());
+      if (!mobile.hasMatch(value)) {
         return DemoLocalizations.of(context).errorPhoneNumberReg;
       }
     }
@@ -46,7 +53,8 @@ class _LoginPageState extends State<LoginPage> {
         return DemoLocalizations.of(context).errorPwdLenth;
       } else {
         RegExp pwd = new RegExp(r"(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$");
-        if (pwd.hasMatch(value)) {
+        //print(value+value.length.toString());
+        if (!pwd.hasMatch(value)) {
           return DemoLocalizations.of(context).errorPwdReg;
         }
       }
@@ -86,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //监听获取焦点，实现在切换焦点时label和border颜色同步
-
     userNameColor = userNameColor??Theme.of(context).primaryColor;
     pwdColor =pwdColor?? Theme.of(context).primaryColor;
     return Scaffold(
@@ -277,6 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: RaisedButton(
                           color: Theme.of(context).primaryColor,
                           onPressed: () {
+                            //print("点击了按钮");
                             isinput = false;
                             if ((globalKey.currentState as FormState)
                                 .validate()) {
@@ -284,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
                               isinput = true;
                               var username = _unameController.text;
                               var password = _pwdController.text;
-                              print("$username,$password");
+                              MyDio.Login(new Map<String, dynamic>.from({'number':username,'password':password}),context: context);
                             } else {
                               Future.delayed(Duration(seconds: 1), () {
                                 setState(() {
@@ -307,6 +315,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  
+
+
 }
 //
 //mixin LoginAction on State<LoginPage> {

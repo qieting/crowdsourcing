@@ -56,4 +56,14 @@ class Routers {
       return getPage(url, params: params);
     }));
   }
+
+
+  static pushAndRemove(BuildContext context ,String url , {Map params}){
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+          //这里根据是否有user进行不同的跳转
+           return getPage(url,params: params);
+        }), (route) => route == null);
+  }
+
 }

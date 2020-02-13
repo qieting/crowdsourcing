@@ -1,10 +1,11 @@
-package com.example.crowdsourcing.dao;
+package com.example.crowdsourcing.dao.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 public class People implements Serializable {
@@ -12,21 +13,27 @@ public class People implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+
+
     @Id
     @GeneratedValue
     private  int id;
 
-    @Column(name = "phone_number", unique = true)
-    private String phoneNumber;
+    @Column(name = "number", unique = true)
+    private String number;
 
     @Column(name = "pass_word")
     private String password;
 
-    @Column(name = "weixin")
+    @Column(name = "weixin", unique = true)
     private String weixin;
 
-    @Column(name = "qq")
+    @Column(name = "qq", unique = true)
     private String qq;
+
+    @Column(updatable = false)
+    private Date date  =new Date();
 
 
 
@@ -35,12 +42,17 @@ public class People implements Serializable {
     }
 
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    @Override
+    public String toString(){
+        return  id+","+number+","+password+','+weixin+","+qq;
+    };
+
+    public String getNumber() {
+        return number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setNumber(String phoneNumber) {
+        this.number = phoneNumber;
     }
 
     public String getPassword() {

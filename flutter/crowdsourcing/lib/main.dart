@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
+import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
+import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,13 +18,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   StorageManager.init().then((val) {
     print("storage初始化成功");
-
+    MyDio.init();
     runApp(MyApp());
   });
   //设置安卓状态栏为透明
   if (Platform.isAndroid) {
-    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent);
+    SystemUiOverlayStyle systemUiOverlayStyle =
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 }
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>(
@@ -40,16 +43,18 @@ class MyApp extends StatelessWidget {
           create: (context) => ViewThemeModel(),
         )
       ],
-
       child: Consumer<ViewThemeModel>(builder: (context, viewThemeMode, child) {
         //根据是否黑暗模式设置通知栏字体颜色（比如白天由于背景是白色，字体需要变为黑色）
         return AnnotatedRegion<SystemUiOverlayStyle>(
           //value: SystemUiOverlayStyle.dark,
-          value: !viewThemeMode.viewTheme.drakMode? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
+          value: !viewThemeMode.viewTheme.drakMode
+              ? SystemUiOverlayStyle.dark
+              : SystemUiOverlayStyle.light,
           child: MaterialApp(
+              //showPerformanceOverlay: true,
               debugShowCheckedModeBanner: false,
               theme: viewThemeMode.getTheme(),
-              darkTheme:  viewThemeMode.getTheme(platformDarkMode: true),
+              darkTheme: viewThemeMode.getTheme(platformDarkMode: true),
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
@@ -106,7 +111,7 @@ class MyApp extends StatelessWidget {
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
               },
-              home: Routers.getPage(Routers.SPLASH)
+              home:Routers.getPage(Routers.SPLASH)
               //MyHomePage(title: 'Flutter Demo Home Page'),
               ),
         );

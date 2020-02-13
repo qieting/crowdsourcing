@@ -1,14 +1,13 @@
 package com.example.crowdsourcing.controller;
 
 
-import com.example.crowdsourcing.dao.People;
-import com.example.crowdsourcing.dao.PeopleRepository;
+import com.example.crowdsourcing.dao.bean.LoginRecord;
+import com.example.crowdsourcing.dao.bean.People;
 import com.example.crowdsourcing.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,8 @@ import java.util.Map;
 public class MyController {
 
     @Autowired
-    PeopleService peopleService;
+    static  PeopleService peopleService;
+
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
@@ -25,16 +25,16 @@ public class MyController {
 
     @RequestMapping(value = "/peoples", method = RequestMethod.GET)
     @ResponseBody
-    public List<People> allPeople(@RequestParam(value = "page",defaultValue ="0" ) int page, @RequestParam(value = "limit",defaultValue = "10") int limit) {
+    public List<People> allPeople(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        return peopleService.allPeople(page,limit);
+        return peopleService.allPeople(page, limit);
     }
 
     // 返回-1代表账号不存在，返回-2代表密码错误，登陆成功则返回1
-    @RequestMapping(value = "/people", method = RequestMethod.GET)
-    public Map<String, Object> login(@RequestParam("number") String phone_number, @RequestParam(name = "password") String pass_word,
-                                     HttpSession session) {
-        return  peopleService.login(phone_number, pass_word);
+    @RequestMapping(value = "/people", method = RequestMethod.POST)
+    public Map<String, Object> login(@RequestBody People people) {
+        System.out.println(people);
+        return peopleService.login(people);
     }
 
 
@@ -46,17 +46,18 @@ public class MyController {
 
 
     // 返回0代表账号已经被注册，否则返回1
-    @RequestMapping(value = "/people", method = RequestMethod.POST)
-    public int register(@RequestParam("number") String phone_number, @RequestParam("password") String pass_word,
-                        HttpSession session) {
-
-        int id = peopleService.register(phone_number, pass_word);
-        if (id == 1) {
-            session.setAttribute("id", phone_number);
-
-        }
-        return id;
-    }
+//    @RequestMapping(value = "/people", method = RequestMethod.GET)
+//    public People register(@RequestParam("token_id") int tokenId ) {
+//        int id =peopleService.getIdByToken(tokenId);
+//        switch (id){
+//            case -1:
+//                break;
+//            case  -2:
+//                break;
+//                default:
+//                    break;
+//        }
+//    }
 
     // 返回0代表账号已经被注册，否则返回1
     @RequestMapping(value = "/changePassword")

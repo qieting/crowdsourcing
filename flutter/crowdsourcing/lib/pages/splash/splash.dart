@@ -2,7 +2,9 @@ import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/user.dart';
+import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
+import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -66,26 +68,46 @@ class SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserModel>(builder: (context, usermodel, child) {
-      Future.delayed(Duration(seconds: 2), () {
-        //该方法是跳转后不再返回
-        //如果单纯调用pop销毁该界面，那么在下一个界面返回就是黑屏
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-              //这里根据是否有user进行不同的跳转
-              if (usermodel.hasUser) {
-                return Routers.getPage(Routers.MYHOMEPAGE, params: {'title': 'hi'});
-              } else {
-                return Routers.getPage(Routers.LOGIN);
-              }
-            }), (route) => route == null);
-        //      Routers.pushAndRe(context, Routers.MYHOMEPAGE, params: {'title': 'hi'});
-        //      Navigator.pop(context);
-      });
-      return Scaffold(
+    MyToast.init(context);
+    Future.delayed(new Duration(milliseconds: 100),(){
+      if(MyDio.token==null){
+        Routers.pushAndRemove(context,Routers.LOGIN);
+      }else{
+        bool success = MyDio.getPeople(context);
+        if(success){
+          return Routers.pushAndRemove(context,Routers.MYHOMEPAGE, params: {'title': 'hi'});
+        }else{
+          return Routers.pushAndRemove(context,Routers.LOGIN);
+        }
+      }
+    });
+
+    //该方法是跳转后不再返回
+    //如果单纯调用pop销毁该界面，那么在下一个界面返回就是黑屏
+
+//        if (usermodel.hasUser) {
+//          return Routers.pushAndRemove(context,Routers.MYHOMEPAGE, params: {'title': 'hi'});
+//        } else {
+//          return Routers.pushAndRemove(context,Routers.LOGIN);
+//        }
+
+//    Navigator.of(context).pushAndRemoveUntil(
+//        MaterialPageRoute(builder: (context) {
+//      //这里根据是否有user进行不同的跳转
+//      if (usermodel.hasUser) {
+//        return Routers.getPage(Routers.MYHOMEPAGE, params: {'title': 'hi'});
+//      } else {
+//        return Routers.getPage(Routers.LOGIN);
+//      }
+//    }), (route) => route == null);
+    //      Routers.pushAndRe(context, Routers.MYHOMEPAGE, params: {'title': 'hi'});
+    //      Navigator.pop(context);
+
+    return Center(
+      child: Scaffold(
         body: Container(
             child: Center(child: Text(DemoLocalizations.of(context).guanggao))),
-      );
-    });
+      ),
+    );
   }
 }

@@ -1,5 +1,6 @@
 package com.example.crowdsourcing;
 
+import com.example.crowdsourcing.untils.MyToken;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CrowdsourcingApplication {
 
     public static void main(String[] args) {
+
+        MyToken.init();
         SpringApplication.run(CrowdsourcingApplication.class, args);
     }
 
