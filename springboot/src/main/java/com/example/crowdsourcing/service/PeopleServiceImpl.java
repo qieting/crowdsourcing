@@ -113,17 +113,17 @@ public class PeopleServiceImpl implements PeopleService {
         return  peopleRepository.findById(id);
     }
 
-    @Override
-    public int getIdByToken(int tokenId) {
-        LoginRecord loginRecord = loginRecordRepository.findById(tokenId);
-        if (loginRecord==null){
-            return -1;
-        }else if (loginRecord.getFinishTime()!=null){
-            return  -2;
-        }else{
-            return loginRecord.getPeopleId();
-        }
-    }
+//    @Override
+//    public int getIdByToken(int tokenId) {
+//        LoginRecord loginRecord = loginRecordRepository.findById(tokenId);
+//        if (loginRecord==null){
+//            return -1;
+//        }else if (loginRecord.getFinishTime()!=null){
+//            return  -2;
+//        }else{
+//            return loginRecord.getPeopleId();
+//        }
+//    }
 
 //    // 返回0代表账号已经被注册，否则返回id
 //    public int register(String phone_number, String password) {

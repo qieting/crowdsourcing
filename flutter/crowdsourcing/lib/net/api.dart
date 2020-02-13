@@ -81,7 +81,7 @@ class MyDio {
       }
       token = body['token'];
       dio.options.headers[Token] = token;
-      //StorageManager.localStorage.setItem(Token, token);
+      StorageManager.localStorage.setItem(Token, token);
       User user = User.fromJsonMap(body['message']);
       Provider.of<UserModel>(context,listen: false).saveUser(user);
       Routers.pushAndRemove(context, Routers.MYHOMEPAGE,params: {"title":"as"});

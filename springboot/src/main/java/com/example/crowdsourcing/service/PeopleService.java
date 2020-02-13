@@ -30,7 +30,7 @@ public interface PeopleService {
 
 	public Map<String,Object> login(People people) ;
 	public People peopleMessage(int id);
-	public int getIdByToken(int TokenId);
+//	public int getIdByToken(int TokenId);
 //	public int register(String phone_number, String password) ;
 	public void changePassword(String id, String password);
 	public List<People> allPeople(int page ,int limit);

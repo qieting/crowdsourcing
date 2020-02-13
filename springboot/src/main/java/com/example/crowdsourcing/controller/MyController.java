@@ -1,6 +1,7 @@
 package com.example.crowdsourcing.controller;
 
 
+import com.example.crowdsourcing.Myannotation.CurrentUserId;
 import com.example.crowdsourcing.dao.bean.LoginRecord;
 import com.example.crowdsourcing.dao.bean.People;
 import com.example.crowdsourcing.service.PeopleService;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class MyController {
 
     @Autowired
-    static  PeopleService peopleService;
+    PeopleService peopleService;
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -46,18 +47,11 @@ public class MyController {
 
 
     // 返回0代表账号已经被注册，否则返回1
-//    @RequestMapping(value = "/people", method = RequestMethod.GET)
-//    public People register(@RequestParam("token_id") int tokenId ) {
-//        int id =peopleService.getIdByToken(tokenId);
-//        switch (id){
-//            case -1:
-//                break;
-//            case  -2:
-//                break;
-//                default:
-//                    break;
-//        }
-//    }
+    @RequestMapping(value = "/people", method = RequestMethod.GET)
+    public People register(@CurrentUserId int id) {
+        //System.out.println(id);
+        return peopleService.peopleMessage(id);
+    }
 
     // 返回0代表账号已经被注册，否则返回1
     @RequestMapping(value = "/changePassword")
