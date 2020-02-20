@@ -1,4 +1,4 @@
-import 'package:crowdsourcing/i10n/messages_messages.dart';
+
 import 'package:crowdsourcing/widgets/MyToast/ListNotify.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,10 +32,10 @@ class MyToast {
       } else {
         if (!show) {
           show = true;
-          showToast();
+          _showToast();
         } else {
           entry.remove();
-          showToast();
+          _showToast();
         }
       }
     });
@@ -55,7 +55,7 @@ class MyToast {
 //    overlayState.insert(entry);
   }
 
-  static showToast() {
+  static _showToast() {
     if (overlayState == null) {
       throw new Exception("context没有正常初始化");
     }
@@ -66,8 +66,8 @@ class MyToast {
   static Widget _builderToast(context) {
     int i = list.length;
     return Positioned(
-      top: MediaQuery.of(context).size.height - 120 - i * 8,
-      bottom: 120.0 - i * 8,
+      top: MediaQuery.of(context).size.height - 150 - i * 11,
+      bottom: 150.0 - i * 11,
       left: 50,
       right: 50,
       child: Container(
@@ -82,7 +82,7 @@ class MyToast {
           context: context,
           child: ListView.builder(
               itemCount: i,
-              itemExtent: 16.0, //强制高度为50.0
+              itemExtent: 20.0, //强制高度为50.0
               itemBuilder: (BuildContext context, int index) {
                 return Center(
 
@@ -90,7 +90,7 @@ class MyToast {
                     list.get(index).content,
                     maxLines: 2,
                     style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 16,
                         decoration: TextDecoration.none,
                         color: Colors.grey[700],
                         backgroundColor: Colors.grey[300]),

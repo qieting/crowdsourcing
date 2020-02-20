@@ -1,15 +1,19 @@
 import 'dart:convert';
 
+import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
+import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
-import 'package:dio/native_imp.dart';
+import 'package:data_plugin/bmob/bmob.dart';
+import 'package:data_plugin/utils/dialog_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class MyDio {
@@ -43,8 +47,26 @@ class MyDio {
         Provider.of<UserModel>(context, listen: false).saveUser(user);
         return true;
       } else {
-        failStatus(response.statusCode);
+        MyToast.toast(failStatus(response.statusCode));
         return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+
+
+  }
+
+  static changeMessage(Map map,BuildContext context) async {
+    try {
+      Response response = await dio.put(MyUrl.people, data: map);
+      if (response.statusCode == 200) {
+        var body = json.decode(response.toString());
+        User user = User.fromJsonMap(body);
+        Provider.of<UserModel>(context, listen: false).saveUser(user);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
       }
     } catch (e) {
       print(e);
@@ -57,36 +79,47 @@ class MyDio {
         return true;
         break;
       case 401:
-        return "登陆状态无效，请登录";
+        return DemoLocalizations.demoLocalizations.status401;
         break;
       case 417:
-        return "检测到异地登陆,请重新登陆";
+        return  DemoLocalizations.demoLocalizations.status407;
       case 500:
-        return "服务器发射管异常错误";
+        return  DemoLocalizations.demoLocalizations.status500;
         break;
       default:
-        return "网络连接异常，错误码" + status.toString();
+        return  DemoLocalizations.demoLocalizations.statusOhters + status.toString();
         break;
     }
   }
 
   static Login(Map map,
-      {BuildContext context, Function success(), Function failed()}) async {
+      {BuildContext context, Function success(), failed}) async {
+    try{
+      FocusScope.of(context).unfocus();
     Response response = await dio.post(MyUrl.people, data: map);
     if (response.statusCode == 200) {
       var body = json.decode(response.toString());
       if (body['status'] < 0) {
-        MyToast.toast(body['message']);
+        Fluttertoast.showToast(msg:body['message']);
+        failed();
         return;
       }
       token = body['token'];
       dio.options.headers[Token] = token;
       StorageManager.localStorage.setItem(Token, token);
       User user = User.fromJsonMap(body['message']);
-      Provider.of<UserModel>(context,listen: false).saveUser(user);
-      Routers.pushAndRemove(context, Routers.MYHOMEPAGE,params: {"title":"as"});
+      Provider.of<UserModel>(context, listen: false).saveUser(user);
+      if (body['register'] != null) {
+        QQChannel.qqMessage();
+      }
+      Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
+          params: {"title": "as"});
     } else {
-      failStatus(response.statusCode);
+      failed();
+      showError(context, failStatus(response.statusCode));
+    }}catch (e){
+      failed();
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
 }

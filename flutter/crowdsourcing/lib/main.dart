@@ -5,6 +5,7 @@ import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
+import 'package:data_plugin/bmob/bmob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -51,6 +52,11 @@ class MyApp extends StatelessWidget {
               ? SystemUiOverlayStyle.dark
               : SystemUiOverlayStyle.light,
           child: MaterialApp(
+            builder: (context,child){
+              DemoLocalizations.init(context);
+              Bmob.init("a5b90ee9a94eed7e7a9f9b1b231de856", "85a013002f4a11c488891b995f4d9995");
+              return child;
+            },
               //showPerformanceOverlay: true,
               debugShowCheckedModeBanner: false,
               theme: viewThemeMode.getTheme(),
@@ -111,7 +117,7 @@ class MyApp extends StatelessWidget {
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
               },
-              home:Routers.getPage(Routers.SPLASH)
+              home:Routers.getPage(Routers.MYHOMEPAGE,params: {'title':"hi"})
               //MyHomePage(title: 'Flutter Demo Home Page'),
               ),
         );

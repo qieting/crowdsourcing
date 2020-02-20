@@ -43,7 +43,7 @@ public class PeopleServiceImpl implements PeopleService {
             if (people1 == null) {
 
                 peopleRepository.save(people);
-                people1 = peopleRepository.findByWeixin(people.getWeixin());
+                people1 = peopleRepository.findPeopleByQq(people.getQq());
                 req.put("register", true);
             }
             //手机号登陆，分为单纯手机号和账号密码两种
@@ -66,7 +66,7 @@ public class PeopleServiceImpl implements PeopleService {
             } else {
                 if (people1 == null) {
                     peopleRepository.save(people);
-                    people1 = peopleRepository.findByWeixin(people.getWeixin());
+                    people1 = peopleRepository.findByNumber(people.getNumber());
                     req.put("register", true);
                 } else {
                     //没有密码，则代表直接使用手机号登陆
@@ -112,6 +112,13 @@ public class PeopleServiceImpl implements PeopleService {
     public People peopleMessage(int id) {
         return  peopleRepository.findById(id);
     }
+
+
+
+
+
+
+
 
 //    @Override
 //    public int getIdByToken(int tokenId) {
@@ -168,6 +175,14 @@ public class PeopleServiceImpl implements PeopleService {
         return peopleRepository.findByIdBetween((page) * limit, (page + 1) * limit);
 
 
+    }
+
+    @Override
+    public People changeMessage(int id, People people) {
+        People people1 = peopleRepository.findById(id);
+        people1.change(people);
+        peopleRepository.save(people1);
+        return people1;
     }
 
 

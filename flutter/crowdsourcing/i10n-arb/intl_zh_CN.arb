@@ -60,5 +60,111 @@
   "@passwordEnter": {
     "type": "text",
     "placeholders": {}
+  },
+  "otherLoginWay": "其他方式",
+  "@otherLoginWay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "nowNull": "暂无",
+  "@nowNull": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginByMessage": "验证码登录",
+  "@loginByMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginByPassword": "密码登录",
+  "@loginByPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "waiting": "登陆中. . .",
+  "@waiting": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "messagText": "{howMany,plural, =0{获取验证码}other{{howMany}秒后获得}}",
+  "@messagText": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
+  },
+  "verificationCode": "验证码",
+  "@verificationCode": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "messageEnter": "请输入验证码",
+  "@messageEnter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPhoneNumberLength": "请输入您的手机号",
+  "@errorPhoneNumberLength": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "reminderMessage": "未注册的手机验证后自动注册",
+  "@reminderMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+
+
+  "messageErr": "验证码错误",
+  "@messageErr": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status401": "登陆状态无效，请登录",
+  "@status401": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status407": "检测到异地登陆,请重新登陆",
+  "@status407": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status500": "服务器发射管异常错误",
+  "@status500": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "statusOhters": "网络连接异常，错误码",
+  "@statusOhters": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "networkAnomaly": "网络异常",
+  "@networkAnomaly": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginCancel": "取消登录",
+  "@loginCancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "err": "异常",
+  "@err": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userInfoFailed": "获取用户信息失败",
+  "@userInfoFailed": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userInfoError": "获取用户信息异常",
+  "@userInfoError": {
+    "type": "text",
+    "placeholders": {}
   }
+
+
 }

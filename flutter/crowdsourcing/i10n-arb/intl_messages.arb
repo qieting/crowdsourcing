@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-07T00:30:24.018605",
+  "@@last_modified": "2020-02-20T18:45:41.687991",
   "title": "Flutter APP",
   "@title": {
     "description": "Title for the Demo application",
@@ -60,5 +60,107 @@
         "example": 42
       }
     }
+  },
+  "otherLoginWay": "other ways",
+  "@otherLoginWay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "nowNull": "not available",
+  "@nowNull": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginByMessage": "verification code login",
+  "@loginByMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginByPassword": "password to login",
+  "@loginByPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "waiting": "waiting . . .",
+  "@waiting": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "messagText": "{howMany,plural, =0{verification code}other{after {howMany} second}}",
+  "@messagText": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
+  },
+  "verificationCode": "Verification code",
+  "@verificationCode": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "messageEnter": "enter the verification code",
+  "@messageEnter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorPhoneNumberLength": "Please enter your 11-digit mobile phone account",
+  "@errorPhoneNumberLength": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "reminderMessage": "Unregistered phones are automatically registered after verification",
+  "@reminderMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "messageErr": "Verification code error",
+  "@messageErr": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status401": "Invalid login status",
+  "@status401": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status407": "Remote login detected, please login again",
+  "@status407": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "status500": "Server emitter tube exception error",
+  "@status500": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "statusOhters": "Network connection abnormal, error code",
+  "@statusOhters": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "networkAnomaly": "network anomaly",
+  "@networkAnomaly": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginCancel": "Cancel the login",
+  "@loginCancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "err": "erroe",
+  "@err": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userInfoFailed": "Failed to obtain personal information",
+  "@userInfoFailed": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "userInfoError": "obtain personal information error",
+  "@userInfoError": {
+    "type": "text",
+    "placeholders": {}
   }
 }

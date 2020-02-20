@@ -48,6 +48,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         //token为空则直接返回
         if (token == null) {
             response.setStatus(response.SC_UNAUTHORIZED);
+            System.out.println("异常无token访问");
             return false;
         } else {
             if (token.equals("heshuyu")) {

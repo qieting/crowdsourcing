@@ -34,6 +34,7 @@ public interface PeopleService {
 //	public int register(String phone_number, String password) ;
 	public void changePassword(String id, String password);
 	public List<People> allPeople(int page ,int limit);
+	public People changeMessage(int id,People people);
 
 
 

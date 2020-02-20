@@ -27,7 +27,8 @@ dependencies:
   json_annotation: ^2.0.0
   #国际化
   intl: ^0.16.0
-  dio: ^3.0.8
+  data_plugin: ^0.0.14
+  fluttertoast: ^3.1.3
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/start.png
+    - assets/images/qq_login_white_29X29.png
 
   fonts:
     - family: iconfont

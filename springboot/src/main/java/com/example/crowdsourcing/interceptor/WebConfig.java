@@ -36,7 +36,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         List<String> tokenExclude = new ArrayList<>();
         tokenExclude.add("/error");
-        tokenExclude.add("");
+        tokenExclude.add("/");
         registry.addInterceptor(new TokenInterceptor()).excludePathPatterns(tokenExclude);
 
 
