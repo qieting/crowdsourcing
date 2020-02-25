@@ -1,4 +1,6 @@
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
+import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
+import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,8 @@ class Routers {
   static const String SPLASH = "splash";
   static const String MYHOMEPAGE = "myhomepage";
   static const String LOGIN = "login";
+  static const String NEWORDERONNET ="net";
+  static const String NEWODERONOFFLINE = "offline";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -35,10 +39,16 @@ class Routers {
         return SplashPage();
         break;
       case MYHOMEPAGE:
-        return MyHomePage(title: params['title']);
+        return MyHomePage();
         break;
       case LOGIN:
         return LoginPage();
+        break;
+      case NEWODERONOFFLINE:
+        return NewOrderOnOffline();
+        break;
+      case NEWORDERONNET:
+        return NewOrderOnNet();
         break;
       default:
         break;

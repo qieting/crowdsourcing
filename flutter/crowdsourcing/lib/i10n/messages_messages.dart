@@ -19,9 +19,11 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'messages';
 
-  static m0(howMany) => "${Intl.plural(howMany, zero: 'verification code', other: 'after ${howMany} second')}";
+  static m0(howMany) => "${Intl.plural(howMany, zero: 'order', one: 'find', two: 'message', other: 'i')}";
 
-  static m1(howMany) => "${Intl.plural(howMany, zero: 'There are no emails left', one: 'There is ${howMany} email left', other: 'There are ${howMany} emails left')}";
+  static m1(howMany) => "${Intl.plural(howMany, zero: 'verification code', other: 'after ${howMany} second')}";
+
+  static m2(howMany) => "${Intl.plural(howMany, zero: 'There are no emails left', one: 'There is ${howMany} email left', other: 'There are ${howMany} emails left')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -35,7 +37,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginByMessage" : MessageLookupByLibrary.simpleMessage("verification code login"),
     "loginByPassword" : MessageLookupByLibrary.simpleMessage("password to login"),
     "loginCancel" : MessageLookupByLibrary.simpleMessage("Cancel the login"),
-    "messagText" : m0,
+    "mainTitle" : m0,
+    "messagText" : m1,
     "messageEnter" : MessageLookupByLibrary.simpleMessage("enter the verification code"),
     "messageErr" : MessageLookupByLibrary.simpleMessage("Verification code error"),
     "networkAnomaly" : MessageLookupByLibrary.simpleMessage("network anomaly"),
@@ -45,7 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordEnter" : MessageLookupByLibrary.simpleMessage("enter your password"),
     "phoneNumber" : MessageLookupByLibrary.simpleMessage("phoneNumber"),
     "phoneNumberEnter" : MessageLookupByLibrary.simpleMessage("enter your phone Number"),
-    "remainingEmailsMessage" : m1,
+    "remainingEmailsMessage" : m2,
     "reminderMessage" : MessageLookupByLibrary.simpleMessage("Unregistered phones are automatically registered after verification"),
     "status401" : MessageLookupByLibrary.simpleMessage("Invalid login status"),
     "status407" : MessageLookupByLibrary.simpleMessage("Remote login detected, please login again"),

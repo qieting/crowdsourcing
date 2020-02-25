@@ -19,9 +19,11 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
-  static m0(howMany) => "${Intl.plural(howMany, zero: '获取验证码', other: '${howMany}秒后获得')}";
+  static m0(howMany) => "${Intl.plural(howMany, zero: '接单', one: '发现', two: '消息', other: '我')}";
 
-  static m1(howMany) => "${Intl.plural(howMany, zero: 'There are no emails left', one: 'There is ${howMany} email left', other: 'There are ${howMany} emails left')}";
+  static m1(howMany) => "${Intl.plural(howMany, zero: '获取验证码', other: '${howMany}秒后获得')}";
+
+  static m2(howMany) => "${Intl.plural(howMany, zero: 'There are no emails left', one: 'There is ${howMany} email left', other: 'There are ${howMany} emails left')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -35,7 +37,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginByMessage" : MessageLookupByLibrary.simpleMessage("验证码登录"),
     "loginByPassword" : MessageLookupByLibrary.simpleMessage("密码登录"),
     "loginCancel" : MessageLookupByLibrary.simpleMessage("取消登录"),
-    "messagText" : m0,
+    "mainTitle" : m0,
+    "messagText" : m1,
     "messageEnter" : MessageLookupByLibrary.simpleMessage("请输入验证码"),
     "messageErr" : MessageLookupByLibrary.simpleMessage("验证码错误"),
     "networkAnomaly" : MessageLookupByLibrary.simpleMessage("网络异常"),
@@ -45,7 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordEnter" : MessageLookupByLibrary.simpleMessage("输入你的密码"),
     "phoneNumber" : MessageLookupByLibrary.simpleMessage("账号"),
     "phoneNumberEnter" : MessageLookupByLibrary.simpleMessage("输入你的手机号"),
-    "remainingEmailsMessage" : m1,
+    "remainingEmailsMessage" : m2,
     "reminderMessage" : MessageLookupByLibrary.simpleMessage("未注册的手机验证后自动注册"),
     "status401" : MessageLookupByLibrary.simpleMessage("登陆状态无效，请登录"),
     "status407" : MessageLookupByLibrary.simpleMessage("检测到异地登陆,请重新登陆"),

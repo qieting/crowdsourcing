@@ -192,7 +192,13 @@ class DemoLocalizations {
         name: 'userInfoError');
   }
 
-
+  mainTitle(int howMany) => Intl.plural(howMany,
+      zero: 'order',
+      one: "find",
+      two: 'message',
+      other: 'i',
+      name: "mainTitle",
+      args: [howMany]);
 
 
 

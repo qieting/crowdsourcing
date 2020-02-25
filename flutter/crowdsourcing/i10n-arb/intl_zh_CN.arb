@@ -164,6 +164,13 @@
   "@userInfoError": {
     "type": "text",
     "placeholders": {}
+  },
+  "mainTitle": "{howMany,plural, =0{接单}=1{发现}=2{消息}other{我}}",
+  "@mainTitle": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
   }
 
 

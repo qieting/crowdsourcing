@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-20T18:45:41.687991",
+  "@@last_modified": "2020-02-21T20:41:55.712570",
   "title": "Flutter APP",
   "@title": {
     "description": "Title for the Demo application",
@@ -162,5 +162,12 @@
   "@userInfoError": {
     "type": "text",
     "placeholders": {}
+  },
+  "mainTitle": "{howMany,plural, =0{order}=1{find}=2{message}other{i}}",
+  "@mainTitle": {
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
   }
 }

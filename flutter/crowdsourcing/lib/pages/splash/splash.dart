@@ -51,6 +51,7 @@ class SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     MyToast.init(context);
     Future.delayed(new Duration(milliseconds: 100),()async{
+      return Routers.pushAndRemove(context,Routers.MYHOMEPAGE, params: {'title': 'hi'});
       if(MyDio.token==null){
         Routers.pushAndRemove(context,Routers.LOGIN);
       }else{
