@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/MyImages.dart';
 import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
-import 'package:crowdsourcing/widgets/ChangeColorTextFiled/ChangeColorTextFiled.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool byPassword = false;
 
-
+  //记录当前输入框的颜色
+  int i = 0;
 
   //因为检验时如果错误会导致一直显示报错，因此
   //设置变量保证，当输入的时候是正确的
@@ -135,20 +137,32 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-//    focusNode1.addListener(() {
-//      if (focusNode1.hasFocus) {
-//        setState(() {
-//          i = ++i % 7;
-//          userNameColor = Rainbows[6 - i];
-//        });
-//      } else {
-//        setState(() {
-//          userNameColor = Theme.of(context).primaryColor;
-//        });
-//      }
-//    });
-//    focusNode2.addListener(() {
-//      if (focusNode2.hasFocus) {
+    focusNode1.addListener(() {
+      if (focusNode1.hasFocus) {
+        setState(() {
+          i = ++i % 7;
+          userNameColor = Rainbows[6 - i];
+        });
+      } else {
+        setState(() {
+          userNameColor = Theme.of(context).primaryColor;
+        });
+      }
+    });
+    focusNode2.addListener(() {
+      if (focusNode2.hasFocus) {
+        setState(() {
+          i = ++i % 7;
+          pwdColor = Rainbows[6 - i];
+        });
+      } else {
+        setState(() {
+          pwdColor = Theme.of(context).primaryColor;
+        });
+      }
+    });
+//    focusNode3.addListener(() {
+//      if (focusNode3.hasFocus) {
 //        setState(() {
 //          i = ++i % 7;
 //          pwdColor = Rainbows[6 - i];
@@ -192,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                   //主轴对齐方式
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ChangeColorTextFormField(
+                    TextFormField(
                       controller: _unameController,
                       keyboardType: TextInputType.number,
                       focusNode: focusNode1,
@@ -206,8 +220,14 @@ class _LoginPageState extends State<LoginPage> {
                       //设置输入光标样式
                       cursorRadius: Radius.circular(8),
                       cursorWidth: 4,
+                      cursorColor: Rainbows[i],
                       onChanged: (value) {
                         //监听输入变化，改变光标颜色
+                        setState(() {
+                          i = ++i % 7;
+                          userNameColor = Rainbows[6 - i];
+                          pwdColor = Theme.of(context).primaryColor;
+                        });
                         if (nextTime == -1 || nextTime == 0) {
                           if (value.length == 11 && value.startsWith("1")) {
                             nextTime = 0;
@@ -215,6 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                             nextTime = -1;
                           }
                         }
+                        print("$i");
                       },
                       //正在编辑的字体的颜色
                       style: TextStyle(color: userNameColor),
@@ -240,11 +261,11 @@ class _LoginPageState extends State<LoginPage> {
                         fillColor: Colors.grey[100],
                         filled: true,
                         //设置获取焦点时颜色
-//                        focusedBorder: OutlineInputBorder(
-//                          borderSide:
-//                              BorderSide(color: Rainbows[6 - i], width: 3),
-//                          borderRadius: BorderRadius.circular(55),
-//                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Rainbows[6 - i], width: 3),
+                          borderRadius: BorderRadius.circular(55),
+                        ),
                         //失去焦点时颜色
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -264,11 +285,11 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Theme.of(context).errorColor, width: 3)
                             //borderSide: BorderSide.none
                             ),
-//                        border: OutlineInputBorder(
-//                            borderRadius: BorderRadius.circular(55),
-//                            borderSide: BorderSide(color: Rainbows[i], width: 3)
-//                            //borderSide: BorderSide.none
-//                            ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(55),
+                            borderSide: BorderSide(color: Rainbows[i], width: 3)
+                            //borderSide: BorderSide.none
+                            ),
                         labelText: DemoLocalizations.of(context).phoneNumber,
                         hintText:
                             DemoLocalizations.of(context).phoneNumberEnter,
