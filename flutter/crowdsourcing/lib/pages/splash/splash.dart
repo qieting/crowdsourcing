@@ -9,57 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class SplashPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return SplashPageState();
-  }
-}
-
-class SplashPageState extends State<SplashPage> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    print("didChange");
-    super.didChangeDependencies();
-  }
-
-  @override
-  void deactivate() {
-    // TODO: implement deactivate
-    print("deactive");
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    print("dispose");
-    super.dispose();
-    
-  }
-
+class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MyToast.init(context);
-    Future.delayed(new Duration(milliseconds: 100),()async{
-      return Routers.pushAndRemove(context,Routers.MYHOMEPAGE, params: {'title': 'hi'});
-      if(MyDio.token==null){
-        Routers.pushAndRemove(context,Routers.LOGIN);
-      }else{
+    Future.delayed(new Duration(milliseconds: 100), () async {
+      if (MyDio.token == null) {
+        Routers.pushAndRemove(context, Routers.LOGIN);
+      } else {
         bool success = await MyDio.getPeople(context);
-        if(success){
-          return Routers.pushAndRemove(context,Routers.MYHOMEPAGE, params: {'title': 'hi'});
-        }else{
-          return Routers.pushAndRemove(context,Routers.LOGIN);
+        if (success) {
+          return Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
+              params: {'title': 'hi'});
+        } else {
+          return Routers.pushAndRemove(context, Routers.LOGIN);
         }
       }
     });
