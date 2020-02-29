@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+
 
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/BmobMessage.dart';
@@ -7,6 +7,7 @@ import 'package:crowdsourcing/common/MyImages.dart';
 import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/widgets/ChangeColorTextFiled/ChangeColorTextFiled.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,8 +24,6 @@ class _LoginPageState extends State<LoginPage> {
 
   bool byPassword = false;
 
-  //记录当前输入框的颜色
-  int i = 0;
 
   //因为检验时如果错误会导致一直显示报错，因此
   //设置变量保证，当输入的时候是正确的
@@ -43,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool logining = false;
 
-  Color userNameColor;
-  Color pwdColor;
+//  Color userNameColor;
+//  Color pwdColor;
 
   TextEditingController _unameController = new TextEditingController();
   TextEditingController _pwdController = new TextEditingController();
@@ -137,30 +136,30 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    focusNode1.addListener(() {
-      if (focusNode1.hasFocus) {
-        setState(() {
-          i = ++i % 7;
-          userNameColor = Rainbows[6 - i];
-        });
-      } else {
-        setState(() {
-          userNameColor = Theme.of(context).primaryColor;
-        });
-      }
-    });
-    focusNode2.addListener(() {
-      if (focusNode2.hasFocus) {
-        setState(() {
-          i = ++i % 7;
-          pwdColor = Rainbows[6 - i];
-        });
-      } else {
-        setState(() {
-          pwdColor = Theme.of(context).primaryColor;
-        });
-      }
-    });
+//    focusNode1.addListener(() {
+//      if (focusNode1.hasFocus) {
+//        setState(() {
+//          i = ++i % 7;
+//          userNameColor = Rainbows[6 - i];
+//        });
+//      } else {
+//        setState(() {
+//          userNameColor = Theme.of(context).primaryColor;
+//        });
+//      }
+//    });
+//    focusNode2.addListener(() {
+//      if (focusNode2.hasFocus) {
+//        setState(() {
+//          i = ++i % 7;
+//          pwdColor = Rainbows[6 - i];
+//        });
+//      } else {
+//        setState(() {
+//          pwdColor = Theme.of(context).primaryColor;
+//        });
+//      }
+//    });
 //    focusNode3.addListener(() {
 //      if (focusNode3.hasFocus) {
 //        setState(() {
@@ -183,8 +182,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //监听获取焦点，实现在切换焦点时label和border颜色同步
-    userNameColor = userNameColor ?? Theme.of(context).primaryColor;
-    pwdColor = pwdColor ?? Theme.of(context).primaryColor;
+//    userNameColor = userNameColor ?? Theme.of(context).primaryColor;
+//    pwdColor = pwdColor ?? Theme.of(context).primaryColor;
     return Scaffold(
       //backgroundColor:  Theme.of(context).primaryColor,
       //不根据弹出输入框重绘，这样将输入框尽量往上放
@@ -206,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                   //主轴对齐方式
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    TextFormField(
+                    ChangeColorTextFiled(
                       controller: _unameController,
                       keyboardType: TextInputType.number,
                       focusNode: focusNode1,
@@ -220,14 +219,9 @@ class _LoginPageState extends State<LoginPage> {
                       //设置输入光标样式
                       cursorRadius: Radius.circular(8),
                       cursorWidth: 4,
-                      cursorColor: Rainbows[i],
+
                       onChanged: (value) {
                         //监听输入变化，改变光标颜色
-                        setState(() {
-                          i = ++i % 7;
-                          userNameColor = Rainbows[6 - i];
-                          pwdColor = Theme.of(context).primaryColor;
-                        });
                         if (nextTime == -1 || nextTime == 0) {
                           if (value.length == 11 && value.startsWith("1")) {
                             nextTime = 0;
@@ -235,10 +229,9 @@ class _LoginPageState extends State<LoginPage> {
                             nextTime = -1;
                           }
                         }
-                        print("$i");
+
                       },
                       //正在编辑的字体的颜色
-                      style: TextStyle(color: userNameColor),
                       decoration: InputDecoration(
                         //删除按钮，由于是一个组件，因此我们可以放很多东西
                         suffixIcon: focusNode1.hasFocus &&
@@ -296,6 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle: TextStyle(color: userNameColor),
                         //开始图标
                         prefixIcon: Icon(
+
                           Icons.person,
                           color: userNameColor,
                         )
