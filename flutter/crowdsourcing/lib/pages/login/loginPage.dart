@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   //因为检验时如果错误会导致一直显示报错，因此
   //设置变量保证，当输入的时候是正确�
+  //设置变量保证，当输入的时候是正确�
   bool isinput = true;
 
   //是否隐藏密码
