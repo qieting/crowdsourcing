@@ -298,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
                         prefixIcon: Icon(
                           Icons.person,
                           color: userNameColor,
-                        ),
+                        )
                       ),
                     ),
                     !byPassword
