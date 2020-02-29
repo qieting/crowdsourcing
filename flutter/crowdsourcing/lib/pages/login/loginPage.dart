@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   bool byPassword = false;
 
   //记录当前输入框的颜色
-  int i = 0;
+  int i = 1;
 
   //因为检验时如果错误会导致一直显示报错，因此
   //设置变量保证，当输入的时候是正确的
