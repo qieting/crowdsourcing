@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+
 
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/BmobMessage.dart';
@@ -7,6 +7,7 @@ import 'package:crowdsourcing/common/MyImages.dart';
 import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/widgets/ChangeColorTextFiled/ChangeColorTextFiled.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,13 +28,13 @@ class _LoginPageState extends State<LoginPage> {
   int i = 1;
 
   //因为检验时如果错误会导致一直显示报错，因此
-  //设置变量保证，当输入的时候是正确的
+  //设置变量保证，当输入的时候是正确�
   bool isinput = true;
 
   //是否隐藏密码
   bool obscureText = true;
 
-  //用来记录短信验证码状态
+  //用来记录短信验证码状�
   int nextTime = -1;
 
   String messageText = DemoLocalizations.demoLocalizations.messagText(0);
@@ -43,6 +44,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool logining = false;
 
+//  Color userNameColor;
+//  Color pwdColor;
   Color userNameColor;
   Color pwdColor;
 
@@ -137,6 +140,30 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+//    focusNode1.addListener(() {
+//      if (focusNode1.hasFocus) {
+//        setState(() {
+//          i = ++i % 7;
+//          userNameColor = Rainbows[6 - i];
+//        });
+//      } else {
+//        setState(() {
+//          userNameColor = Theme.of(context).primaryColor;
+//        });
+//      }
+//    });
+//    focusNode2.addListener(() {
+//      if (focusNode2.hasFocus) {
+//        setState(() {
+//          i = ++i % 7;
+//          pwdColor = Rainbows[6 - i];
+//        });
+//      } else {
+//        setState(() {
+//          pwdColor = Theme.of(context).primaryColor;
+//        });
+//      }
+//    });
     focusNode1.addListener(() {
       if (focusNode1.hasFocus) {
         setState(() {
@@ -183,6 +210,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //监听获取焦点，实现在切换焦点时label和border颜色同步
+//    userNameColor = userNameColor ?? Theme.of(context).primaryColor;
+//    pwdColor = pwdColor ?? Theme.of(context).primaryColor;
     userNameColor = userNameColor ?? Theme.of(context).primaryColor;
     pwdColor = pwdColor ?? Theme.of(context).primaryColor;
     return Scaffold(
@@ -206,6 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                   //主轴对齐方式
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    ChangeColorTextFiled(
                     TextFormField(
                       controller: _unameController,
                       keyboardType: TextInputType.number,
@@ -215,14 +245,15 @@ class _LoginPageState extends State<LoginPage> {
                       maxLengthEnforced: true,
 //   感觉进去就弹出输入法体验很差，所以不自动获得焦点
 //                    autofocus: true,
-                      //对输入进行检验，不返回值代表没有问题
+                      //对输入进行检验，不返回值代表没有问�
                       validator: userNameValidator,
                       //设置输入光标样式
                       cursorRadius: Radius.circular(8),
                       cursorWidth: 4,
+
                       cursorColor: Rainbows[i],
                       onChanged: (value) {
-                        //监听输入变化，改变光标颜色
+                        //监听输入变化，改变光标颜�
                         setState(() {
                           i = ++i % 7;
                           userNameColor = Rainbows[6 - i];
@@ -235,12 +266,13 @@ class _LoginPageState extends State<LoginPage> {
                             nextTime = -1;
                           }
                         }
+
                         print("$i");
                       },
                       //正在编辑的字体的颜色
                       style: TextStyle(color: userNameColor),
                       decoration: InputDecoration(
-                        //删除按钮，由于是一个组件，因此我们可以放很多东西
+                        //删除按钮，由于是一个组件，因此我们可以放很多东�
                         suffixIcon: focusNode1.hasFocus &&
                                 _unameController.text.length > 0
                             ? IconButton(
@@ -249,7 +281,7 @@ class _LoginPageState extends State<LoginPage> {
                                   color: userNameColor,
                                 ),
                                 onPressed: () {
-//                                  //如果直接清空会报错，因为需要先失去焦点再清空数据
+//                                  //如果直接清空会报错，因为需要先失去焦点再清空数�
 //                                  //保证在组件build的第一帧时才去触发取消清空内容
 //                                  WidgetsBinding.instance.addPostFrameCallback(
 //                                      (_) => _unameController.clear());
@@ -260,13 +292,13 @@ class _LoginPageState extends State<LoginPage> {
                             : null,
                         fillColor: Colors.grey[100],
                         filled: true,
-                        //设置获取焦点时颜色
+                        //设置获取焦点时颜�
                         focusedBorder: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Rainbows[6 - i], width: 3),
                           borderRadius: BorderRadius.circular(55),
                         ),
-                        //失去焦点时颜色
+                        //失去焦点时颜�
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).primaryColor,
@@ -294,8 +326,9 @@ class _LoginPageState extends State<LoginPage> {
                         hintText:
                             DemoLocalizations.of(context).phoneNumberEnter,
                         labelStyle: TextStyle(color: userNameColor),
-                        //开始图标
+                        //开始图�
                         prefixIcon: Icon(
+
                           Icons.person,
                           color: userNameColor,
                         )
@@ -323,7 +356,7 @@ class _LoginPageState extends State<LoginPage> {
                                       cursorWidth: 4,
                                       cursorColor: Rainbows[i],
                                       onChanged: (value) {
-                                        //监听输入变化，改变光标颜色
+                                        //监听输入变化，改变光标颜�
                                         setState(() {
                                           i = ++i % 7;
                                           pwdColor = Rainbows[6 - i];
@@ -352,7 +385,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       color: pwdColor,
                                                     ),
                                                     onPressed: () {
-                                                      //如果直接清空会报错，因为需要先失去焦点再清空数据
+                                                      //如果直接清空会报错，因为需要先失去焦点再清空数�
                                                       //保证在组件build的第一帧时才去触发取消清空内容
 
                                                       _messageController
@@ -368,7 +401,7 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(55),
                                           ),
-                                          //失去焦点时颜色
+                                          //失去焦点时颜�
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Theme.of(context)
@@ -377,8 +410,8 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(55),
                                           ),
-                                          //当validator报错时上面两种显示都会失效，所以必须设置默认显示
-                                          //但是此时只有弧度生效，颜色和宽度并没有生效
+                                          //当validator报错时上面两种显示都会失效，所以必须设置默认显�
+                                          //但是此时只有弧度生效，颜色和宽度并没有生�
                                           focusedErrorBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(55),
@@ -458,7 +491,7 @@ class _LoginPageState extends State<LoginPage> {
                             cursorWidth: 4,
                             cursorColor: Rainbows[i],
                             onChanged: (value) {
-                              //监听输入变化，改变光标颜色
+                              //监听输入变化，改变光标颜�
                               setState(() {
                                 i = ++i % 7;
                                 pwdColor = Rainbows[6 - i];
@@ -482,7 +515,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: pwdColor,
                                               ),
                                               onPressed: () {
-                                                //如果直接清空会报错，因为需要先失去焦点再清空数据
+                                                //如果直接清空会报错，因为需要先失去焦点再清空数�
                                                 //保证在组件build的第一帧时才去触发取消清空内容
                                                 setState(() {
                                                   obscureText = !obscureText;
@@ -497,7 +530,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: pwdColor,
                                               ),
                                               onPressed: () {
-                                                //如果直接清空会报错，因为需要先失去焦点再清空数据
+                                                //如果直接清空会报错，因为需要先失去焦点再清空数�
                                                 //保证在组件build的第一帧时才去触发取消清空内容
 //                                                WidgetsBinding.instance
 //                                                    .addPostFrameCallback((_) =>
@@ -518,15 +551,15 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Rainbows[6 - i], width: 3),
                                   borderRadius: BorderRadius.circular(55),
                                 ),
-                                //失去焦点时颜色
+                                //失去焦点时颜�
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor,
                                       width: 2.0),
                                   borderRadius: BorderRadius.circular(55),
                                 ),
-                                //当validator报错时上面两种显示都会失效，所以必须设置默认显示
-                                //但是此时只有弧度生效，颜色和宽度并没有生效
+                                //当validator报错时上面两种显示都会失效，所以必须设置默认显�
+                                //但是此时只有弧度生效，颜色和宽度并没有生�
                                 focusedErrorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(55),
                                     borderSide: BorderSide(
@@ -564,7 +597,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: logining
                                   ? null
                                   : () {
-                                      //print("点击了按钮");
+                                      //print("点击了按�);
                                       isinput = false;
                                       if ((globalKey.currentState as FormState)
                                           .validate()) {
@@ -628,7 +661,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                             DemoLocalizations.of(context).loginWay(byPassword)),
                         //透明
-                        //按钮背景色
+                        //按钮背景�
                         color: Colors.transparent,
                         //点击时背景色
                         highlightColor: Colors.transparent,
