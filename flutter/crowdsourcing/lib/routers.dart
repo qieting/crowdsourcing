@@ -4,6 +4,7 @@ import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOff
 import 'package:crowdsourcing/pages/login/loginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'pages/NewOrderPage/NewOrderOnOffline/OnOffineAddpage.dart';
 import 'pages/splash/splash.dart';
 
 class Routers {
@@ -12,6 +13,7 @@ class Routers {
   static const String LOGIN = "login";
   static const String NEWORDERONNET ="net";
   static const String NEWODERONOFFLINE = "offline";
+  static const String OnOfficeAdd = "onAddOfficeAddpage";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -50,6 +52,8 @@ class Routers {
       case NEWORDERONNET:
         return NewOrderOnNet();
         break;
+      case OnOfficeAdd:
+        return OnOfficeAddpage();
       default:
         break;
     }

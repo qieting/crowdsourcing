@@ -98,7 +98,7 @@ class MyHomePageState extends State<MyHomePage>
         //
         floatingActionButton: FloatingActionButton(
             //悬浮按钮
-            mini: true,
+            //mini: true,
             //materialTapTargetSize:MaterialTapTargetSize.shrinkWrap
             //tooltip: "ads",
             child: ChooseOrder(choose),

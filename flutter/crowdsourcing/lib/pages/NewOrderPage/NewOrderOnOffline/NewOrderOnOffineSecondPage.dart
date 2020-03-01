@@ -1,3 +1,4 @@
+import 'package:crowdsourcing/routers.dart';
 import 'package:flutter/material.dart';
 
 class NewOrderOnDoofliceSecondPage extends StatelessWidget {
@@ -15,7 +16,9 @@ class NewOrderOnDoofliceSecondPage extends StatelessWidget {
         children: <Widget>[
           FlatButton.icon(
               shape: OutlineInputBorder(borderSide: BorderSide.none),
-              onPressed: () {},
+              onPressed: () {
+                Routers.push(context, Routers.OnOfficeAdd);
+              },
               icon: Icon(Icons.add),
               label: Text("增加代拿代买地")),
           ListView.builder(

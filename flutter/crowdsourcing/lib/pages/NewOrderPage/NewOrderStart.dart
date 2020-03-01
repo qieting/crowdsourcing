@@ -172,11 +172,15 @@ class NewOrderStart extends StatelessWidget {
         ),
         Container(
           color: Colors.grey[100],
-          padding: const EdgeInsets.only(left: 15, right: 15),
+          padding: const EdgeInsets.only(left: 15, right: 15,bottom: 40),
           child: Row(
             children: <Widget>[
               Expanded(
                 child: RaisedButton(
+                  shape:OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    borderSide: BorderSide.none
+                  ),
                   color: Theme.of(context).primaryColor,
                   child: Text(
                     "下一步",

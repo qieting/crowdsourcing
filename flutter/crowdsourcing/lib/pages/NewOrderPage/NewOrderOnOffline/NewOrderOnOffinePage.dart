@@ -25,7 +25,7 @@ class NewOrderOnOfflineState extends State<NewOrderOnOffline> {
 
 
   jumpToPage( double nextPage){
-    _pageController.nextPage(duration: Duration(milliseconds: 200), curve: Interval(0,1));
+    _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Interval(0,1,curve: Curves.easeOut));
   }
 
 

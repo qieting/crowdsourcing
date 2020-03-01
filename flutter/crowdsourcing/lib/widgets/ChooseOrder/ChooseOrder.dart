@@ -91,7 +91,7 @@ class ChooseOrderWidget extends AnimatedWidget {
             turns: animations[0],
             child: Icon(
               Icons.add,
-              size: 30,
+              size: 40,
             )),
       ],
     );
