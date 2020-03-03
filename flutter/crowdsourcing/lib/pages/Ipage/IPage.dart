@@ -11,7 +11,6 @@ class IPage extends StatefulWidget{
     // TODO: implement createState
     return IState();
   }
-
 }
 
 class IState extends State<IPage>{
@@ -23,7 +22,7 @@ class IState extends State<IPage>{
     return Column(
 
       children: <Widget>[
-        Text(DemoLocalizations.of(context).mainTitle(4)+"dasdihqsahduiashgfasjbfhjsabfhjasfbhasbfas"),
+
       ],
     );  }
 

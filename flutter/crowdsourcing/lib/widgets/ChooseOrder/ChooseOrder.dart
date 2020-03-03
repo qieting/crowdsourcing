@@ -25,7 +25,7 @@ class _ChooseOrderState extends State<ChooseOrder>
     // TODO: implement initState
     super.initState();
     controller = new AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
+        duration: const Duration(milliseconds: 60), vsync: this);
     turnAnimation = new Tween(begin: 0.0, end: 0.125)
         .animate(CurvedAnimation(parent: controller, curve: Curves.easeOut));
     sizeAnimation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
@@ -91,7 +91,7 @@ class ChooseOrderWidget extends AnimatedWidget {
             turns: animations[0],
             child: Icon(
               Icons.add,
-              size: 40,
+              size: 35,
             )),
       ],
     );

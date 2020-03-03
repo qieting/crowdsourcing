@@ -1,6 +1,8 @@
 class User {
   String phone, qq, weixin, head, nick, gender;
   double money;
+  List locations;
+  int id;
 
   static const String PHONE = 'number';
   static const String QQ = 'qq';
@@ -9,6 +11,8 @@ class User {
   static const String HEAD = "head";
   static const String NICK = "nick";
   static const String GENDER = "gender";
+  static const String Id = 'id';
+
 
   static User fromJsonMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -20,6 +24,8 @@ class User {
     user.nick = map[NICK];
     user.head = map[HEAD];
     user.gender = map[GENDER];
+    user.id= map[Id];
+    user.nick = map[NICK]??"id"+user.id.toString();
     return user;
   }
 
@@ -30,6 +36,7 @@ class User {
         MONEY: money,
         HEAD: head,
         NICK: nick,
-        GENDER: gender
+        GENDER: gender,
+    Id:id
       };
 }

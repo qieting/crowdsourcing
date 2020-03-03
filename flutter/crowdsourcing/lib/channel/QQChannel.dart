@@ -73,7 +73,7 @@ class QQChannel {
               case QQLoginSuccess:
                 Map<String, dynamic> _qquser = json.decode(message);
                 _qquser["nick"] = _qquser["nickname"];
-                _qquser["head"] = _qquser["figureurl_1"];
+                _qquser["head"] = _qquser["figureurl_2"];
                 print(_qquser);
                 MyDio.changeMessage(_qquser, context);
                 break;

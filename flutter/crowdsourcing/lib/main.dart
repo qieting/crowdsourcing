@@ -13,6 +13,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'i10n/localization_intl.dart';
 import 'package:provider/provider.dart';
 
+import 'models/UserModel/LocationModel.dart';
+
 void main() {
   //storageMannager需要在app内部初始化
   //但是增加下面这句话就可以先初始化这个
@@ -42,7 +44,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ViewThemeModel>(
           create: (context) => ViewThemeModel(),
-        )
+        ),
+        ChangeNotifierProvider<LocationModel>(
+          create: (context) => LocationModel(),
+        ),
       ],
       child: Consumer<ViewThemeModel>(builder: (context, viewThemeMode, child) {
         //根据是否黑暗模式设置通知栏字体颜色（比如白天由于背景是白色，字体需要变为黑色）
@@ -117,7 +122,7 @@ class MyApp extends StatelessWidget {
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
               },
-              home:Routers.getPage(Routers.OnOfficeAdd)
+              home:Routers.getPage(Routers.SPLASH)
               //MyHomePage(title: 'Flutter Demo Home Page'),
               ),
         );
