@@ -41,6 +41,11 @@ class LocationModel extends ChangeNotifier {
     notifyListeners();
     saveLocations();
   }
+  addLocations(List<Location>  locations){
+    _locations.addAll(locations);
+    notifyListeners();
+    saveLocations();
+  }
 
   changeLocation(int i ,Location location){
     _locations[i]=location;

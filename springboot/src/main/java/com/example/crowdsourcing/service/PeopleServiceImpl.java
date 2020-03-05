@@ -1,7 +1,9 @@
 package com.example.crowdsourcing.service;
 
 
+import com.example.crowdsourcing.dao.LocationRepository;
 import com.example.crowdsourcing.dao.LoginRecordRepository;
+import com.example.crowdsourcing.dao.bean.Location;
 import com.example.crowdsourcing.dao.bean.LoginRecord;
 import com.example.crowdsourcing.dao.bean.People;
 import com.example.crowdsourcing.dao.PeopleRepository;
@@ -19,7 +21,8 @@ public class PeopleServiceImpl implements PeopleService {
     private PeopleRepository peopleRepository;
     @Autowired
     private LoginRecordRepository loginRecordRepository;
-
+    @Autowired
+    private LocationRepository locationRepository;
 
     // status为-1代表账号不存在，返回-2代表密码错误，登陆成功则返回1
     public Map<String, Object> login(People people) {
@@ -87,7 +90,7 @@ public class PeopleServiceImpl implements PeopleService {
         req.put("message", people1);
 
         LoginRecord last = loginRecordRepository.findByPeopleIdAndFinishTimeNull(people1.getId());
-        if(last!=null){
+        if (last != null) {
             last.setFinishTime(new Date());
             loginRecordRepository.save(last);
         }
@@ -103,21 +106,20 @@ public class PeopleServiceImpl implements PeopleService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        req.put("location",locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
         return req;
 
     }
 
     @Override
-    public People peopleMessage(int id) {
-        return  peopleRepository.findById(id);
+    public Map<String ,Object> peopleMessage(int id) {
+
+        Map <String ,Object> map = new HashMap<>();
+        map.put("message",peopleRepository.findById(id));
+        map.put("locations",locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(id));
+
+        return map;
     }
-
-
-
-
-
-
 
 
 //    @Override
@@ -183,6 +185,41 @@ public class PeopleServiceImpl implements PeopleService {
         people1.change(people);
         peopleRepository.save(people1);
         return people1;
+    }
+
+    @Override
+    public List<Location> getLocations(int peopleid) {
+        return locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(peopleid);
+    }
+
+    @Override
+    public void addLocation(int peopleid, Location location) {
+        location.setPeopleId(peopleid);
+        locationRepository.save(location);
+    }
+
+    @Override
+    public void deleteLocation(int peopleid, int id) {
+        Location location = locationRepository.findById(id).get();
+        if (location != null){
+            location.setDelete(true);
+            locationRepository.save(location);
+        }
+    }
+
+    @Override
+    public void changeLocationMain(int peopleid, int id) {
+        Location location = locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
+        if (location != null){
+            location.setMain(false);
+           locationRepository.save(location);}
+        location =locationRepository.findById(id).get();
+        if(location!=null){
+            location.setMain(true);
+            locationRepository.save(location);
+        }
+
+
     }
 
 

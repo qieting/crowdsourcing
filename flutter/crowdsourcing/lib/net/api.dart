@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
+import 'package:crowdsourcing/models/object/Location.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/routers.dart';
@@ -43,8 +45,10 @@ class MyDio {
       Response response = await dio.get(MyUrl.people);
       if (response.statusCode == 200) {
         var body = json.decode(response.toString());
-        User user = User.fromJsonMap(body);
+        User user = User.fromJsonMap(body['message']);
         Provider.of<UserModel>(context, listen: false).saveUser(user);
+        List<Location> list   =json.decode(body['location']);
+        Provider.of<LocationModel>(context, listen: false).addLocations(list);
         return true;
       } else {
         MyToast.toast(failStatus(response.statusCode));
@@ -109,6 +113,8 @@ class MyDio {
       StorageManager.localStorage.setItem(Token, token);
       User user = User.fromJsonMap(body['message']);
       Provider.of<UserModel>(context, listen: false).saveUser(user);
+      List<Location> list   =json.decode(body['location']);
+      Provider.of<LocationModel>(context, listen: false).addLocations(list);
       if (body['register'] != null) {
         QQChannel.qqMessage();
       }

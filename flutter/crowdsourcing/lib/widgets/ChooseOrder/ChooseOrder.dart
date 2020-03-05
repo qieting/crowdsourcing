@@ -84,16 +84,11 @@ class ChooseOrderWidget extends AnimatedWidget {
   }) : super(listenable: controller);
 
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        RotationTransition(
-            turns: animations[0],
-            child: Icon(
-              Icons.add,
-              size: 35,
-            )),
-      ],
-    );
+    return RotationTransition(
+        turns: animations[0],
+        child: Icon(
+          Icons.add,
+          size: 35,
+        ));
   }
 }

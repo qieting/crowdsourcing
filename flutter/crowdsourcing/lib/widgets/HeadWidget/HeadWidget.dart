@@ -8,8 +8,8 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 95,
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-      padding: const EdgeInsets.only(left: 40, top: 5, bottom: 5, right: 10),
+      decoration: BoxDecoration(color: Theme.of(context).appBarTheme.color),
+      padding: const EdgeInsets.only(left: 40, top: 5, bottom: 5, right: 0),
       child: Consumer<UserModel>(builder: (context, userModel, child) {
         return Row(
           children: <Widget>[

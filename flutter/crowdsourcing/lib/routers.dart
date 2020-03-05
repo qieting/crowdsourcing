@@ -1,3 +1,5 @@
+import 'package:crowdsourcing/pages/AddLocationPage.dart';
+import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
@@ -11,9 +13,11 @@ class Routers {
   static const String SPLASH = "splash";
   static const String MYHOMEPAGE = "myhomepage";
   static const String LOGIN = "login";
-  static const String NEWORDERONNET ="net";
+  static const String NEWORDERONNET = "net";
   static const String NEWODERONOFFLINE = "offline";
   static const String OnOfficeAdd = "onAddOfficeAddpage";
+  static const String LOCATIONPAGE = "LocationPage";
+  static const String ADDLOcationPage = "AddLocationPage";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -54,6 +58,11 @@ class Routers {
         break;
       case OnOfficeAdd:
         return OnOfficeAddpage();
+        break;
+      case LOCATIONPAGE:
+        return LocationPage();
+      case ADDLOcationPage:
+        return AddLocationPage();
       default:
         break;
     }
@@ -71,13 +80,11 @@ class Routers {
     }));
   }
 
-
-  static pushAndRemove(BuildContext context ,String url , {Map params}){
+  static pushAndRemove(BuildContext context, String url, {Map params}) {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) {
-          //这里根据是否有user进行不同的跳转
-           return getPage(url,params: params);
-        }), (route) => route == null);
+      //这里根据是否有user进行不同的跳转
+      return getPage(url, params: params);
+    }), (route) => route == null);
   }
-
 }

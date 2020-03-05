@@ -108,7 +108,7 @@ class DemoLocalizations {
   }
 
   loginWay(bool password) {
-    if (true) {
+    if (password) {
       return loginByMessage;
     } else {
       return loginByPassword;

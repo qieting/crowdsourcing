@@ -1,5 +1,6 @@
 package com.example.crowdsourcing.service;
 
+import com.example.crowdsourcing.dao.bean.Location;
 import com.example.crowdsourcing.dao.bean.People;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,12 +30,17 @@ public interface PeopleService {
 //	}
 
 	public Map<String,Object> login(People people) ;
-	public People peopleMessage(int id);
+	public  Map<String ,Object> peopleMessage(int id);
 //	public int getIdByToken(int TokenId);
 //	public int register(String phone_number, String password) ;
 	public void changePassword(String id, String password);
 	public List<People> allPeople(int page ,int limit);
 	public People changeMessage(int id,People people);
+
+	public List<Location> getLocations(int peopleid);
+	public void  addLocation(int peopleid, Location location);
+	public void deleteLocation(int peopleid,int id);
+	public void changeLocationMain(int peopleid,int id);
 
 
 
