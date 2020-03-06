@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
               },
-              home:Routers.getPage(Routers.LOCATIONPAGE)
+              home:Routers.getPage(Routers.ADDLOcationPage)
               //MyHomePage(title: 'Flutter Demo Home Page'),
               ),
         );

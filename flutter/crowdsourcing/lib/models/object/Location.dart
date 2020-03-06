@@ -48,4 +48,11 @@ class Location {
         Street: street,
         IsMain: isMain
       };
+
+  @override
+  toString() {
+    return this.province == null
+        ? "暂无地址设置"
+        : this.province + this.city??"" + this.plot??"" + this.street??"";
+  }
 }

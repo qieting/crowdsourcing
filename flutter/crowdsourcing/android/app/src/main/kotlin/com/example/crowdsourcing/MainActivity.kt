@@ -1,21 +1,23 @@
 package com.example.crowdsourcing
 
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
+//import io.flutter.plugins.GeneratedPluginRegistrant
+
 import android.content.Intent
 import android.util.Log
-import androidx.annotation.NonNull
+import com.baidu.location.BDAbstractLocationListener
+import com.baidu.location.BDLocation
+import com.baidu.location.LocationClient
+import com.baidu.location.LocationClientOption
 import com.example.crowdsourcing.Utils.Common
-import com.tencent.tauth.Tencent
-import io.flutter.plugin.common.MethodChannel
-//import io.flutter.plugins.GeneratedPluginRegistrant
-import com.tencent.tauth.IUiListener
-import com.tencent.tauth.UiError
-import kotlin.collections.HashMap
-
-import com.tencent.connect.common.Constants
-import org.json.JSONObject
 import com.tencent.connect.UserInfo
+import com.tencent.connect.common.Constants
+import com.tencent.tauth.IUiListener
+import com.tencent.tauth.Tencent
+import com.tencent.tauth.UiError
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+import org.json.JSONObject
 
 
 class MainActivity : FlutterActivity() {
@@ -23,9 +25,11 @@ class MainActivity : FlutterActivity() {
     private val Tag: String = "MainActivity";
     //   private val CHANNEL = "samples.flutter.io/battery"
     private val TencentChannel = "samples.flutter.io/QQ"
+    private val BAIDUChannel = "samples.flutter.io/Baidu"
     var _QQinstalled = "QQinstalled"
     var _QQLogin = "loginByQQ"
     var _QQMessage = "QQMessage";
+    var _Locacation ="Location"
     private val LoginStstus = "ret"
     private val ARGUMENT_KEY_RESULT_MSG = "msg"
     lateinit var mInfo: UserInfo;
@@ -37,6 +41,9 @@ class MainActivity : FlutterActivity() {
 
     lateinit var tencent: Tencent;
     lateinit var channel: MethodChannel;
+    lateinit var BaiduChannel: MethodChannel;
+    lateinit var mLocationClient : LocationClient;
+    lateinit var  myListener :MyLocationListener;
 
 
     //这是QQ登录返回的监听器,分为erroe，cancel，complete
@@ -70,7 +77,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         //GeneratedPluginRegistrant.registerWith(FlutterEngine(this));
-        tencent = Tencent.createInstance("1110242316", this);
+
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TencentChannel)
         channel.setMethodCallHandler { call, result ->
             if (call.method.equals(_QQLogin)) {
@@ -79,6 +86,7 @@ class MainActivity : FlutterActivity() {
                 result.success(null)
             } else if (call.method.equals(_QQinstalled)) {
                 //是否安装QQ，因为QQ登录的使用需要已经安装QQ
+                tencent = Tencent.createInstance("1110242316", this);
                 var qqIntalled = Common.isAppInstalled(context, "com.tencent.mobileqq");
                 if (qqIntalled) {
                     result.success(qqIntalled);
@@ -99,12 +107,42 @@ class MainActivity : FlutterActivity() {
                 //获取个人信息，当第一次QQ登陆后会调用，仅调用一次
                 getUserInfo();
                 result.success(null);
-            } else {
+            } else{
                 result.notImplemented()
             }
         }
+        BaiduChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BAIDUChannel)
+        BaiduChannel.setMethodCallHandler { call, result ->
+            if (call.method.equals(_Locacation)){
+                mLocationClient = LocationClient(getApplicationContext());
+                myListener = MyLocationListener();
+                //声明LocationClient类
+                mLocationClient.registerLocationListener(myListener);
+                var option  = LocationClientOption();
 
+                option.setIsNeedLocationDescribe(true);
+//可选，是否需要位置描述信息，默认为不需要，即参数为false
+//如果开发者需要获得当前点的位置信息，此处必须为true
+
+                option.openGps=true;
+
+                mLocationClient.setLocOption(option);
+                mLocationClient.start();
+//mLocationClient为第二步初始化过的LocationClient对象
+//需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+//更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
+
+
+
+                result.success(null);
+            }else{
+                result.notImplemented()
+            }
+        }
     }
+
+
+
 
 
     //此处data可能为空（比如扣扣登陆取消
@@ -167,6 +205,17 @@ class MainActivity : FlutterActivity() {
             }
 
         })
+    }
+
+    inner class MyLocationListener : BDAbstractLocationListener() {
+        override fun onReceiveLocation(location: BDLocation) { //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+//以下只列举部分获取位置描述信息相关的结果
+//更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+            val map = HashMap<String, Any>()
+            map.put(_Locacation, location.locationDescribe);
+            BaiduChannel.invokeMethod(_Locacation, map)
+            //获取位置描述信息
+        }
     }
 
 }
