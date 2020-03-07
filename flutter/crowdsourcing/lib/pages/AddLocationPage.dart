@@ -8,6 +8,10 @@ import '../routers.dart';
 class AddLocationPage extends StatefulWidget {
   @override
   _AddLocationPageState createState() => _AddLocationPageState();
+
+
+
+
 }
 
 class _AddLocationPageState extends State<AddLocationPage> {
@@ -16,6 +20,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
       othersController = new TextEditingController();
   bool main = false;
   Location _location  =new Location();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +78,12 @@ class _AddLocationPageState extends State<AddLocationPage> {
                       FlatButton(
                         child: Text("使用当前位置"),
                         onPressed: () {
-                          BaiduChannel.getLocation(context);
+                          BaiduChannel.getLocation(context,(location){
+                            _location=location;
+                            setState(() {
+
+                            });
+                          });
                         },
                       )
                     ],
@@ -81,6 +92,23 @@ class _AddLocationPageState extends State<AddLocationPage> {
               Container(
                   margin: const EdgeInsets.only(left: 15, right: 5),
                   child: Text(_location.toString())),
+              Divider(),
+              Container(
+                margin: const EdgeInsets.only(left: 15, right: 5),
+                child: TextField(
+                  controller: othersController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                      isDense: true,
+
+                      contentPadding: const EdgeInsets.only(top: 10),
+                      hintText: "详细地址：如街道、门牌号、单元室等",
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      //disabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none),
+                ),
+              ),
               Divider(),
               Container(
                 margin: const EdgeInsets.only(left: 15, right: 5),

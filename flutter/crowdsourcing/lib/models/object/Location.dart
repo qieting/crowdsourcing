@@ -1,5 +1,5 @@
 class Location {
-  String name, phone, province, city, plot, street, others;
+  String name, phone, province, city, plot, street, others,town;
   int id;
   bool isMain;
   static const String Id = "id";
@@ -8,6 +8,7 @@ class Location {
   static const String Province = 'province';
   static const String City = 'city';
   static const String Plot = "plot";
+  static const String Town = 'town';
   static const String Street = "street";
   static const String IsMain = "main";
   static const String Others = "others";
@@ -19,6 +20,7 @@ class Location {
       this.province,
       this.city,
       this.plot,
+        this.town,
       this.street,
       this.others,
       this.isMain});
@@ -27,6 +29,7 @@ class Location {
     if (map == null) return null;
     return Location(
         id: map[Id],
+        town: map[Town],
         name: map[Name],
         phone: map[Phone],
         province: map[Province],
@@ -44,6 +47,7 @@ class Location {
         Name: name,
         City: city,
         Plot: plot,
+        Town:town,
         Others: others,
         Street: street,
         IsMain: isMain
@@ -53,6 +57,6 @@ class Location {
   toString() {
     return this.province == null
         ? "暂无地址设置"
-        : this.province + this.city??"" + this.plot??"" + this.street??"";
+        : this.province + (this.city??"") + (this.plot??"") + (this.town??"");
   }
 }

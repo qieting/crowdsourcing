@@ -3,6 +3,7 @@ package com.example.crowdsourcing
 //import io.flutter.plugins.GeneratedPluginRegistrant
 
 import android.content.Intent
+import android.location.Location
 import android.util.Log
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
@@ -42,7 +43,7 @@ class MainActivity : FlutterActivity() {
     lateinit var tencent: Tencent;
     lateinit var channel: MethodChannel;
     lateinit var BaiduChannel: MethodChannel;
-    lateinit var mLocationClient : LocationClient;
+    var mLocationClient : LocationClient? = null;
     lateinit var  myListener :MyLocationListener;
 
 
@@ -114,20 +115,27 @@ class MainActivity : FlutterActivity() {
         BaiduChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BAIDUChannel)
         BaiduChannel.setMethodCallHandler { call, result ->
             if (call.method.equals(_Locacation)){
-                mLocationClient = LocationClient(getApplicationContext());
-                myListener = MyLocationListener();
-                //声明LocationClient类
-                mLocationClient.registerLocationListener(myListener);
-                var option  = LocationClientOption();
+                if(mLocationClient==null) {
+                    mLocationClient = LocationClient(getApplicationContext());
+                    myListener = MyLocationListener();
+                    //声明LocationClient类
+                    mLocationClient!!.registerLocationListener(myListener);
+                    var option = LocationClientOption();
 
-                option.setIsNeedLocationDescribe(true);
+                    option.setIsNeedLocationDescribe(true);
 //可选，是否需要位置描述信息，默认为不需要，即参数为false
 //如果开发者需要获得当前点的位置信息，此处必须为true
 
-                option.openGps=true;
+                    option.setIsNeedAddress(true);
+//可选，是否需要地址信息，默认为不需要，即参数为false
+//如果开发者需要获得当前点的地址信息，此处必须为true
+                    option.openGps = true;
+                    option.addrType = "all"
 
-                mLocationClient.setLocOption(option);
-                mLocationClient.start();
+                    mLocationClient!!.setLocOption(option);
+                }
+                if(!mLocationClient!!.isStarted)
+                mLocationClient!!.start();
 //mLocationClient为第二步初始化过的LocationClient对象
 //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
 //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
@@ -211,8 +219,16 @@ class MainActivity : FlutterActivity() {
         override fun onReceiveLocation(location: BDLocation) { //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
 //以下只列举部分获取位置描述信息相关的结果
 //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+            mLocationClient!!.stop();
             val map = HashMap<String, Any>()
-            map.put(_Locacation, location.locationDescribe);
+            var location0 =  Location();
+            location0.province = location.province
+            location0.city = location.city
+            location0.plot = location.district
+            location0.town = location.town
+            location0.street = location.street
+            location0.others =location.street+location.streetNumber+","+location.locationDescribe
+            map.put(_Locacation, location0.toString());
             BaiduChannel.invokeMethod(_Locacation, map)
             //获取位置描述信息
         }
