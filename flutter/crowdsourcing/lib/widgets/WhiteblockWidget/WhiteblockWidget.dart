@@ -24,26 +24,29 @@ class WhiteblockWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 15, right: 0),
       margin: margin,
       decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor!=Colors.grey[100]
+          color: Theme.of(context).scaffoldBackgroundColor != Colors.grey[100]
               ? null
               : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(10))),
-      child: Row(
-        children: <Widget>[
-          icon,
-          SizedBox(
-            width: 10,
-          ),
-          Text(title),
-          Expanded(
-            flex: 1,
-            child: SizedBox(),
-          ),
-          GestureDetector(
-            child: Icon(Icons.keyboard_arrow_right,),
-            onTap: onClick,
-          )
-        ],
+      child: GestureDetector(
+        onTap: onClick,
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          children: <Widget>[
+            icon,
+            SizedBox(
+              width: 10,
+            ),
+            Text(title),
+            Expanded(
+              flex: 1,
+              child: SizedBox(),
+            ),
+            Icon(
+              Icons.keyboard_arrow_right,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -14,6 +14,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     MyToast.init(context);
     Future.delayed(new Duration(milliseconds: 100), () async {
+      //Routers.pushAndRemove(context, Routers.ADDLOcationPage);
       if (MyDio.token == null) {
         Routers.pushAndRemove(context, Routers.LOGIN);
       } else {

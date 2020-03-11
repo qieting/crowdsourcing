@@ -1,4 +1,5 @@
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/WhiteblockWidget/WhiteblockWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,9 @@ class IState extends State<IPage> {
             Icons.location_city,
             color: Theme.of(context).accentColor.withAlpha(180),
           ),
-          onClick: () {},
+          onClick: () {
+            Routers.push(context, Routers.LOCATIONPAGE);
+          },
         )
       ],
     );

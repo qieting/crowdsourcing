@@ -27,10 +27,38 @@ class LocationPage extends StatelessWidget {
             return ListView.builder(
                 itemCount: locations.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                      child: Text(
-                    locations[index].toString(),
-                  ));
+                  return Card(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, top: 5, bottom: 5),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(locations[index].name),
+                              Text(
+                                locations[index].phone,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 15,),
+                          Text(locations[index].toString()),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("设为默认地址"),
+                              Switch(
+                                value: locations[index].isMain,
+                                onChanged: (value) {},
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 });
           }),
         ));

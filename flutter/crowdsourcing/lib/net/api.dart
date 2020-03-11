@@ -47,7 +47,16 @@ class MyDio {
         var body = json.decode(response.toString());
         User user = User.fromJsonMap(body['message']);
         Provider.of<UserModel>(context, listen: false).saveUser(user);
-        List<Location> list   =json.decode(body['location']);
+
+        List<Location> list = [];
+
+        if (body['locations'] != null) {
+
+          for (var location in body['locations']) {
+            list.add(Location.fromJsonMap(location));
+          }
+        }
+
         Provider.of<LocationModel>(context, listen: false).addLocations(list);
         return true;
       } else {
@@ -58,11 +67,9 @@ class MyDio {
       print(e);
       return false;
     }
-
-
   }
 
-  static changeMessage(Map map,BuildContext context) async {
+  static changeMessage(Map map, BuildContext context) async {
     try {
       Response response = await dio.put(MyUrl.people, data: map);
       if (response.statusCode == 200) {
@@ -86,45 +93,66 @@ class MyDio {
         return DemoLocalizations.demoLocalizations.status401;
         break;
       case 417:
-        return  DemoLocalizations.demoLocalizations.status407;
+        return DemoLocalizations.demoLocalizations.status407;
       case 500:
-        return  DemoLocalizations.demoLocalizations.status500;
+        return DemoLocalizations.demoLocalizations.status500;
         break;
       default:
-        return  DemoLocalizations.demoLocalizations.statusOhters + status.toString();
+        return DemoLocalizations.demoLocalizations.statusOhters +
+            status.toString();
         break;
     }
   }
 
   static Login(Map map,
       {BuildContext context, Function success(), failed}) async {
-    try{
+    try {
       FocusScope.of(context).unfocus();
-    Response response = await dio.post(MyUrl.people, data: map);
-    if (response.statusCode == 200) {
-      var body = json.decode(response.toString());
-      if (body['status'] < 0) {
-        Fluttertoast.showToast(msg:body['message']);
+      Response response = await dio.post(MyUrl.people, data: map);
+      if (response.statusCode == 200) {
+        var body = json.decode(response.toString());
+        if (body['status'] < 0) {
+          Fluttertoast.showToast(msg: body['message']);
+          failed();
+          return;
+        }
+        token = body['token'];
+        dio.options.headers[Token] = token;
+        StorageManager.localStorage.setItem(Token, token);
+        User user = User.fromJsonMap(body['message']);
+        Provider.of<UserModel>(context, listen: false).saveUser(user);
+        List<Location> list = json.decode(body['location']);
+        Provider.of<LocationModel>(context, listen: false).addLocations(list);
+        if (body['register'] != null) {
+          QQChannel.qqMessage();
+        }
+        Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
+            params: {"title": "as"});
+      } else {
         failed();
-        return;
+        showError(context, failStatus(response.statusCode));
       }
-      token = body['token'];
-      dio.options.headers[Token] = token;
-      StorageManager.localStorage.setItem(Token, token);
-      User user = User.fromJsonMap(body['message']);
-      Provider.of<UserModel>(context, listen: false).saveUser(user);
-      List<Location> list   =json.decode(body['location']);
-      Provider.of<LocationModel>(context, listen: false).addLocations(list);
-      if (body['register'] != null) {
-        QQChannel.qqMessage();
+    } catch (e) {
+      if (failed != null) failed();
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static addLocation(Location location,
+      {BuildContext context, Function success()}) async {
+    try {
+      FocusScope.of(context).unfocus();
+      Response response =
+          await dio.post(MyUrl.location, data: location.toJson());
+      if (response.statusCode == 200) {
+        Provider.of<LocationModel>(context, listen: false)
+            .addLocation(location);
+        MyToast.toast("增加位置信息成功");
+      } else {
+        showError(context, failStatus(response.statusCode));
       }
-      Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
-          params: {"title": "as"});
-    } else {
-      failed();
-      showError(context, failStatus(response.statusCode));
-    }}catch (e){
-      failed();
+    } catch (e) {
+      e.toString();
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }

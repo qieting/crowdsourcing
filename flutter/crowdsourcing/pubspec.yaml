@@ -44,6 +44,7 @@ dev_dependencies:
   provider: ^4.0.2 #数据管理层
   # 本地json对象存储
   localstorage: ^3.0.0
+  permission_handler: '^4.4.0'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -58,6 +59,8 @@ flutter:
   assets:
     - assets/images/start.png
     - assets/images/qq_login_white_29X29.png
+    - assets/locations.json
+
 
   fonts:
     - family: iconfont

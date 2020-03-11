@@ -57,6 +57,6 @@ class Location {
   toString() {
     return this.province == null
         ? "暂无地址设置"
-        : this.province + (this.city??"") + (this.plot??"") + (this.town??"");
+        : this.province + (this.city??"") + (this.plot??"") + (this.town??"")+this.others??"";
   }
 }

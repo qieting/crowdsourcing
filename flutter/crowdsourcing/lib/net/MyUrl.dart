@@ -4,4 +4,7 @@ class MyUrl {
 
   //登陆注册等
   static const String people = "people";
+
+  //位置等
+  static const String location = "location";
 }
