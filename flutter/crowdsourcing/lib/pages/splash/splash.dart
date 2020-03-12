@@ -12,9 +12,12 @@ import 'package:provider/provider.dart';
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //在此处注册MyToast，因为MyToast的原理是在MaterialApp内有一个overlay浮层，
+    //在main.drat里面的MaterialApp的builder的context是其父组件的context，不可以，然后我们又不想
+    //在MaterialApp的builder里使用Builder，因此就在这里初始化
     MyToast.init(context);
-    Future.delayed(new Duration(milliseconds: 100), () async {
-      //Routers.pushAndRemove(context, Routers.ADDLOcationPage);
+    Future.delayed(new Duration(milliseconds: 0), () async {
+      //Routers.pushAndRemove(context, Routers.LOCATIONPAGE);
       if (MyDio.token == null) {
         Routers.pushAndRemove(context, Routers.LOGIN);
       } else {

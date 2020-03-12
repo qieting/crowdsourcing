@@ -20,10 +20,10 @@ class LocationPage extends StatelessWidget {
                 })
           ],
         ),
-        body: Container(
-          child:
-              Consumer<LocationModel>(builder: (context, locationModel, child) {
-            List<Location> locations = locationModel.locations ?? [];
+        body: Container(child:
+            Consumer<LocationModel>(builder: (context, locationModel, child) {
+          List<Location> locations = locationModel.locations ?? [];
+          return StatefulBuilder(builder: (context, _setState) {
             return ListView.builder(
                 itemCount: locations.length,
                 itemBuilder: (context, index) {
@@ -40,9 +40,18 @@ class LocationPage extends StatelessWidget {
                               Text(
                                 locations[index].phone,
                               ),
+                              GestureDetector(
+                                child: Icon(Icons.delete_outline),
+                                onTap: () {
+                                  locationModel.deleteLocation(locations[index].id);
+                                  _setState((){});
+                                },
+                              )
                             ],
                           ),
-                          SizedBox(height: 15,),
+                          SizedBox(
+                            height: 15,
+                          ),
                           Text(locations[index].toString()),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,8 +60,14 @@ class LocationPage extends StatelessWidget {
                               Text("设为默认地址"),
                               Switch(
                                 value: locations[index].isMain,
-                                onChanged: (value) {},
-                              ),
+                                onChanged: (value) {
+//                                      locations[index].isMain =
+//                                          !locations[index].isMain;
+                                  locationModel
+                                      .changeMainLocation(locations[index]);
+                                  _setState(() {});
+                                },
+                              )
                             ],
                           ),
                         ],
@@ -60,7 +75,7 @@ class LocationPage extends StatelessWidget {
                     ),
                   );
                 });
-          }),
-        ));
+          });
+        })));
   }
 }

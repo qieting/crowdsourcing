@@ -208,17 +208,17 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public void changeLocationMain(int peopleid, int id) {
-        Location location = locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
-        if (location != null){
-            location.setMain(false);
-           locationRepository.save(location);}
-        location =locationRepository.findById(id).get();
-        if(location!=null){
-            location.setMain(true);
-            locationRepository.save(location);
-        }
+    public void changeLocation(int peopleid, Location location) {
 
+        location.setPeopleId(peopleid);
+        if(location.isMain()){
+           Location llll =  locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
+           if(llll!=null){
+               llll.setMain(false);
+               locationRepository.save(llll);
+           }
+        }
+        locationRepository.save(location);
 
     }
 

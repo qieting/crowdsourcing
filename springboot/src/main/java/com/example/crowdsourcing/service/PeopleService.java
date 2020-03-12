@@ -40,7 +40,7 @@ public interface PeopleService {
 	public List<Location> getLocations(int peopleid);
 	public void  addLocation(int peopleid, Location location);
 	public void deleteLocation(int peopleid,int id);
-	public void changeLocationMain(int peopleid,int id);
+	public void changeLocation(int peopleid,Location location);
 
 
 

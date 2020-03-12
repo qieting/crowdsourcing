@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
@@ -20,9 +21,11 @@ void main() {
   //但是增加下面这句话就可以先初始化这个
   WidgetsFlutterBinding.ensureInitialized();
   StorageManager.init().then((val) {
+    //storagemanager初始化大约需要1.2秒
     print("storage初始化成功");
-    MyDio.init();
+
     runApp(MyApp());
+    MyDio.init();
   });
   //设置安卓状态栏为透明
   if (Platform.isAndroid) {
@@ -36,8 +39,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
+      //此处的provider并不会立刻生成，而是会在第一次使用的地方初始化
       providers: [
         ChangeNotifierProvider<UserModel>(
           create: (context) => UserModel(),
@@ -57,11 +60,15 @@ class MyApp extends StatelessWidget {
               ? SystemUiOverlayStyle.dark
               : SystemUiOverlayStyle.light,
           child: MaterialApp(
-            builder: (context,child){
-              DemoLocalizations.init(context);
-              Bmob.init("a5b90ee9a94eed7e7a9f9b1b231de856", "85a013002f4a11c488891b995f4d9995");
-              return child;
-            },
+
+              builder: (context, child) {
+                //初始化语言包
+                DemoLocalizations.init(context);
+                //初始化Bmobsdk
+                Bmob.init("a5b90ee9a94eed7e7a9f9b1b231de856",
+                    "85a013002f4a11c488891b995f4d9995");
+                return child;
+              },
               //showPerformanceOverlay: true,
               debugShowCheckedModeBanner: false,
               theme: viewThemeMode.getTheme(),
@@ -73,11 +80,11 @@ class MyApp extends StatelessWidget {
               ],
               localeResolutionCallback:
                   (Locale locale, Iterable<Locale> supportedLocales) {
+                //当没有支持语言时，返回英语。
                 if (locale == null) {
                   debugPrint("*language locale is null!!!");
                   return supportedLocales.first;
                 }
-
                 for (Locale supportedLocale in supportedLocales) {
                   if (supportedLocale.languageCode == locale.languageCode ||
                       supportedLocale.countryCode == locale.countryCode) {
@@ -85,10 +92,10 @@ class MyApp extends StatelessWidget {
                     return supportedLocale;
                   }
                 }
-
                 debugPrint("*language to fallback ${supportedLocales.first}");
                 return supportedLocales.first;
               },
+              //支持的语言
               supportedLocales: [
                 const Locale('en', 'US'),
                 const Locale('zh', 'CN')
@@ -108,7 +115,6 @@ class MyApp extends StatelessWidget {
 //              ),
 
               //这个是对路径进行拦截，但是由于我们没设置router。因此是无效的
-
               onGenerateRoute: (RouteSettings settings) {
                 String routeName = settings.name;
                 print(routeName);
@@ -122,7 +128,7 @@ class MyApp extends StatelessWidget {
 //            // 引导用户登录；其它情况则正常打开路由。
 //          });
               },
-              home:Routers.getPage(Routers.SPLASH)
+              home: Routers.getPage(Routers.SPLASH)
               //MyHomePage(title: 'Flutter Demo Home Page'),
               ),
         );

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/MyImages.dart';
 import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -235,7 +235,6 @@ class _LoginPageState extends State<LoginPage> {
                   //主轴对齐方式
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     TextFormField(
                       controller: _unameController,
                       keyboardType: TextInputType.number,
@@ -272,67 +271,66 @@ class _LoginPageState extends State<LoginPage> {
                       //正在编辑的字体的颜色
                       style: TextStyle(color: userNameColor),
                       decoration: InputDecoration(
-                        //删除按钮，由于是一个组件，因此我们可以放很多东
-                        suffixIcon: focusNode1.hasFocus &&
-                                _unameController.text.length > 0
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: userNameColor,
-                                ),
-                                onPressed: () {
+                          //删除按钮，由于是一个组件，因此我们可以放很多东
+                          suffixIcon: focusNode1.hasFocus &&
+                                  _unameController.text.length > 0
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: userNameColor,
+                                  ),
+                                  onPressed: () {
 //                                  //如果直接清空会报错，因为需要先失去焦点再清空数
 //                                  //保证在组件build的第一帧时才去触发取消清空内容
 //                                  WidgetsBinding.instance.addPostFrameCallback(
 //                                      (_) => _unameController.clear());
-                                  _unameController.clear();
-                                  setState(() {});
-                                },
-                              )
-                            : null,
-                        fillColor: Colors.grey[100],
-                        filled: true,
-                        //设置获取焦点时颜
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Rainbows[6 - i], width: 3),
-                          borderRadius: BorderRadius.circular(55),
-                        ),
-                        //失去焦点时颜
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 2.0),
-                          borderRadius: BorderRadius.circular(55),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
+                                    _unameController.clear();
+                                    setState(() {});
+                                  },
+                                )
+                              : null,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          //设置获取焦点时颜
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Rainbows[6 - i], width: 3),
                             borderRadius: BorderRadius.circular(55),
+                          ),
+                          //失去焦点时颜
+                          enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Theme.of(context).errorColor, width: 3)
-                            //borderSide: BorderSide.none
-                            ),
-                        errorBorder: OutlineInputBorder(
+                                color: Theme.of(context).primaryColor,
+                                width: 2.0),
                             borderRadius: BorderRadius.circular(55),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).errorColor, width: 3)
-                            //borderSide: BorderSide.none
-                            ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(55),
-                            borderSide: BorderSide(color: Rainbows[i], width: 3)
-                            //borderSide: BorderSide.none
-                            ),
-                        labelText: DemoLocalizations.of(context).phoneNumber,
-                        hintText:
-                            DemoLocalizations.of(context).phoneNumberEnter,
-                        labelStyle: TextStyle(color: userNameColor),
-                        //开始图
-                        prefixIcon: Icon(
-
-                          Icons.person,
-                          color: userNameColor,
-                        )
-                      ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(55),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).errorColor, width: 3)
+                              //borderSide: BorderSide.none
+                              ),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(55),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).errorColor, width: 3)
+                              //borderSide: BorderSide.none
+                              ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(55),
+                              borderSide:
+                                  BorderSide(color: Rainbows[i], width: 3)
+                              //borderSide: BorderSide.none
+                              ),
+                          labelText: DemoLocalizations.of(context).phoneNumber,
+                          hintText:
+                              DemoLocalizations.of(context).phoneNumberEnter,
+                          labelStyle: TextStyle(color: userNameColor),
+                          //开始图
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: userNameColor,
+                          )),
                     ),
                     !byPassword
                         ? Column(

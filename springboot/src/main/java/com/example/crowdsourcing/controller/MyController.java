@@ -73,17 +73,18 @@ public class MyController {
     @RequestMapping(value = "/location", method = RequestMethod.GET)
     public List<Location> getLocations(@CurrentUserId int id) {
 
-        return  peopleService.getLocations(id);
+        return peopleService.getLocations(id);
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.PUT)
-    public void ChangeLocationsMain(@CurrentUserId int id, int locationId) {
-        peopleService.changeLocationMain(id, locationId);
+    public void ChangeLocationsMain(@CurrentUserId int id, @RequestBody Location location) {
+        peopleService.changeLocation(id, location);
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.DELETE)
-    public void deleteLocation(@CurrentUserId int id, int locationId) {
-        peopleService.deleteLocation(id, locationId);
+    public void deleteLocation(@CurrentUserId int id,@RequestBody Location location) {
+
+       peopleService.deleteLocation(id,location.getId());
     }
 
 

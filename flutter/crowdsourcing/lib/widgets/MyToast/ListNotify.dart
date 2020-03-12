@@ -1,23 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
+//自定义的可被监听的list
 class ListNotify<T> extends ChangeNotifier {
   var _list = new List<T>();
 
   int get length => _list.length;
 
-  add(T t , {int second :0 ,int millisecond =0})  {
+  add(T t) {
     _list.add(t);
-//    Future.delayed(new Duration(seconds: second, milliseconds:  millisecond),(){
-//      remove(t);
-//      print("减少");
-//    });
     notifyListeners();
-
   }
-
-
-
-
 
   removeAt(int i) {
     _list.removeAt(i);
@@ -30,4 +22,6 @@ class ListNotify<T> extends ChangeNotifier {
   }
 
   T get(int i) => _list[i];
+
+  T operator [](i) => get(i);
 }

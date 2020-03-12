@@ -7,27 +7,26 @@ import 'ThemeHelper.dart';
 
 class ViewThemeModel extends ChangeNotifier {
   static const String ViewThemeS = 'ViewTheme';
-  ViewTheme _ViewTheme;
+  ViewTheme _viewTheme;
 
-  ViewTheme get viewTheme => _ViewTheme;
+  ViewTheme get viewTheme => _viewTheme;
 
   bool get hasViewTheme => ViewTheme != null;
 
   ViewThemeModel() {
     var s = StorageManager.localStorage.getItem(ViewThemeS);
-    _ViewTheme = s == null ? ViewTheme() : ViewTheme.fromJsonMap(s);
-    print(_ViewTheme.toJson());
+    _viewTheme = s == null ? ViewTheme() : ViewTheme.fromJsonMap(s);
   }
 
-  saveViewTheme(ViewTheme ViewTheme) {
-    _ViewTheme = ViewTheme;
+  saveViewTheme(ViewTheme viewTheme) {
+    _viewTheme = viewTheme;
     notifyListeners();
-    StorageManager.localStorage.setItem(ViewThemeS, ViewTheme);
+    StorageManager.localStorage.setItem(ViewThemeS, viewTheme);
   }
 
   /// 清除持久化的用户数据
   clearViewTheme() {
-    _ViewTheme = null;
+    _viewTheme = null;
     notifyListeners();
     StorageManager.localStorage.deleteItem(ViewThemeS);
   }
@@ -35,11 +34,11 @@ class ViewThemeModel extends ChangeNotifier {
   //根据存储的对象生成对应的themedata，分为是否是黑暗模式
   ThemeData getTheme({platformDarkMode: false}) {
     //是否是黑夜模式取决于用户设置和系统设置
-    var isDark = platformDarkMode || _ViewTheme.drakMode;
+    var isDark = platformDarkMode || _viewTheme.drakMode;
     //应用程序的整体主题亮度，利用这个判断文字的颜色
     Brightness brightness = isDark ? Brightness.dark : Brightness.light;
     //根据下标获取相应的主题颜色
-    var themeColor = Colors.primaries[_ViewTheme.themeColorIndex];
+    var themeColor = Colors.primaries[_viewTheme.themeColorIndex];
 
     //前景色（覆盖边缘效果）
     var accentColor = isDark ? themeColor[700] : themeColor[400];
@@ -59,7 +58,7 @@ class ViewThemeModel extends ChangeNotifier {
         //主题颜色，这是一个颜色的相应的不同深度，比如primary通常为深度为500
         primarySwatch: themeColor,
         accentColor: accentColor,
-        fontFamily: ViewTheme.FontValueList[_ViewTheme.fontindex]);
+        fontFamily: ViewTheme.FontValueList[_viewTheme.fontindex]);
 
     //copywith  创建此文本主题的副本，但将给定字段替换为新值。
     themeData = themeData.copyWith(

@@ -1,4 +1,3 @@
-
 import 'package:crowdsourcing/widgets/MyToast/ListNotify.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +14,8 @@ class MyToast {
   //这个overlay是在matericalAPP内加的一层，类似于stack
   static OverlayState overlayState;
   static var list = new ListNotify();
+
+  //在覆层上的插入物
   static OverlayEntry entry;
   static bool show = false;
 
@@ -24,7 +25,6 @@ class MyToast {
     //所以我们不能使用matericalAPP的context，如果我们选择某一个界面的context，又有可能会被销毁
     //而我们直接选择获取到相应的overlay，这个是唯一且不会被销毁的
     overlayState = Overlay.of(context);
-
     list.addListener(() {
       if (list.length == 0) {
         entry.remove();
@@ -42,17 +42,14 @@ class MyToast {
   }
 
   static toast(String content,
-      {BuildContext context,
-      int millisecond = 2000,
-      ToastPostion position = ToastPostion.bottom}) {
+      {int millisecond = 2000, ToastPostion position = ToastPostion.bottom}) {
     var t = ToastSave(content, position);
-    list.add(t, millisecond: millisecond);
+    list.add(t);
+    //定时删除
     Future.delayed(new Duration(milliseconds: millisecond), () {
       list.remove(t);
       print("变化" + list.length.toString());
     });
-//    OverlayEntry entry = new OverlayEntry(builder: _builderToast);
-//    overlayState.insert(entry);
   }
 
   static _showToast() {
@@ -66,34 +63,33 @@ class MyToast {
   static Widget _builderToast(context) {
     int i = list.length;
     return Positioned(
-      top: MediaQuery.of(context).size.height - 150 - i * 11,
-      bottom: 150.0 - i * 11,
-      left: 50,
-      right: 50,
+      top: MediaQuery.of(context).size.height - 150 - i * 15,
+      bottom: 150.0 - i * 15,
+      left: 25,
+      right: 25,
       child: Container(
+        decoration: BoxDecoration(
+          color:  Colors.grey[100]
+        ),
         padding: EdgeInsets.all(0),
         margin: EdgeInsets.all(0),
         alignment: Alignment.center,
-        // height: i*16.0,
-//        width: MediaQuery.of(context).size.width/4,
- //       decoration: BoxDecoration(color: Colors.grey[200]),
         child: MediaQuery.removePadding(
           removeTop: true,
           context: context,
           child: ListView.builder(
-              itemCount: i,
-              itemExtent: 20.0, //强制高度为50.0
+              itemCount: list.length,
+              itemExtent: 30.0, //强制高度为50.0
               itemBuilder: (BuildContext context, int index) {
                 return Center(
-
                   child: Text(
                     list.get(index).content,
-                    maxLines: 2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 16,
                         decoration: TextDecoration.none,
-                        color: Colors.grey[700],
-                        backgroundColor: Colors.grey[300]),
+                        color: Colors.grey[700],),
                   ),
                 );
               }),

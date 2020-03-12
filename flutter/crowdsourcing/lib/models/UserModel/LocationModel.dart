@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/net/api.dart';
 import 'package:flutter/cupertino.dart';
 
 class LocationModel extends ChangeNotifier {
@@ -57,7 +58,7 @@ class LocationModel extends ChangeNotifier {
     saveLocations();
   }
 
-  getMainLocation() {
+  Location getMainLocation() {
     for (Location location in _locations) {
       if (location.isMain) {
         return location;
@@ -66,13 +67,32 @@ class LocationModel extends ChangeNotifier {
     return isEmpty ? null : _locations[0];
   }
 
-  changeMainLocation(int i) {
+  changeMainLocation(Location l) {
     for (Location location in _locations) {
       if (location.isMain) {
         location.isMain = false;
+        if (location.id == l.id) {
+          MyDio.changeLocation(l);
+          saveLocations();
+          return;
+        }
+        break;
       }
     }
-    _locations[i].isMain = true;
+    l.isMain = true;
+    MyDio.changeLocation(l);
+    saveLocations();
+  }
+
+  deleteLocation(int id) {
+    for (Location location in _locations) {
+      if (location.id == id) {
+        _locations.remove(location);
+        break;
+      }
+    }
+    MyDio.deleteLocation(id);
+
     saveLocations();
   }
 }
