@@ -40,6 +40,14 @@ class LocationModel extends ChangeNotifier {
   }
 
   addLocation(Location location) {
+    if(location.isMain){
+      for (Location location in _locations) {
+        if (location.isMain) {
+          location.isMain= false;
+          break;
+        }
+      }
+    }
     _locations.add(location);
     notifyListeners();
     saveLocations();

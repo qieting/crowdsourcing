@@ -1,5 +1,5 @@
 class Location {
-  String name, phone, province, city, plot, street, others,town;
+  String name, phone, province, city, plot, street, others, town;
   int id;
   bool isMain;
   static const String Id = "id";
@@ -20,7 +20,7 @@ class Location {
       this.province,
       this.city,
       this.plot,
-        this.town,
+      this.town,
       this.street,
       this.others,
       this.isMain});
@@ -47,16 +47,35 @@ class Location {
         Name: name,
         City: city,
         Plot: plot,
-        Town:town,
+        Town: town,
         Others: others,
         Street: street,
         IsMain: isMain
       };
 
   @override
-  toString() {
+  locationToString({containOthers: true}) {
     return this.province == null
         ? "暂无地址设置"
-        : this.province + (this.city??"") + (this.plot??"") + (this.town??"")+this.others??"";
+        : this.province +
+            (this.city ?? "") +
+            (this.plot ?? "") +
+            (this.town ?? "") +
+            (containOthers ? (this.others ?? "") : "");
+  }
+
+  String toString() {
+    return this.province == null
+        ? "暂无地址设置"
+        : (this.name ?? "") +
+                "  " +
+                (this.phone ?? "") +
+                "  " +
+                this.province +
+                (this.city ?? "") +
+                (this.plot ?? "") +
+                (this.town ?? "") +
+                this.others ??
+            "";
   }
 }

@@ -65,6 +65,7 @@ class MyDio {
       }
     } catch (e) {
       print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
       return false;
     }
   }

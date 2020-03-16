@@ -60,7 +60,9 @@ class Routers {
         return OnOfficeAddpage();
         break;
       case LOCATIONPAGE:
-        return LocationPage();
+        return LocationPage(
+          choose: params==null?null:params["location"],
+        );
       case ADDLOcationPage:
         return AddLocationPage();
       default:
@@ -74,8 +76,9 @@ class Routers {
 //    }));
 //  }
 
-  Routers.push(BuildContext context, String url, {Map params}) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+  static Future<Map> push(BuildContext context, String url,
+      {Map params}) async {
+    return await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return getPage(url, params: params);
     }));
   }

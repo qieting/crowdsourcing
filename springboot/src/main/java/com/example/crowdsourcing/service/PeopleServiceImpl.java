@@ -195,6 +195,13 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public void addLocation(int peopleid, Location location) {
         location.setPeopleId(peopleid);
+        if(location.isMain()){
+            Location llll =  locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
+            if(llll!=null){
+                llll.setMain(false);
+                locationRepository.save(llll);
+            }
+        }
         locationRepository.save(location);
     }
 

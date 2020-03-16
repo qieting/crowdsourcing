@@ -144,36 +144,32 @@ class _AddLocationPageState extends State<AddLocationPage> {
             FlatButton(
                 child: Text("保存", style: TextStyle(color: Colors.white)),
                 onPressed: () async {
-                  String name =nameController.text;
-                  if(name.length==0){
+                  String name = nameController.text;
+                  if (name.length == 0) {
                     MyToast.toast("姓名不能为空");
                     return;
                   }
                   String number = phoneController.text;
-                  if(number.length==0){
+                  if (number.length == 0) {
                     MyToast.toast("联系方式不能为空");
                     return;
                   }
                   String others = othersController.text;
-                  if(others.length==0){
+                  if (others.length == 0) {
                     MyToast.toast("详细联系方式不能为空");
                     return;
                   }
-                  if(_location.plot==null){
+                  if (_location.plot == null) {
                     MyToast.toast("城市等信息不能为空");
                     return;
                   }
 
-                  _location.others= others;
+                  _location.others = others;
                   _location.phone = number;
-                  _location.name=name;
-                  _location.isMain=main;
-                  await MyDio.addLocation(_location,context: context);
+                  _location.name = name;
+                  _location.isMain = main;
+                  await MyDio.addLocation(_location, context: context);
                   Navigator.of(context).pop();
-
-
-
-
                 })
           ],
         ),
@@ -217,7 +213,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                       FlatButton(
                         child: Text(_location.province == null
                             ? "手动设置地址"
-                            : _location.toString()),
+                            : _location.locationToString(containOthers: false)),
                         onPressed: () {
                           ChooseLocation();
                         },
@@ -228,7 +224,6 @@ class _AddLocationPageState extends State<AddLocationPage> {
                               onPressed: () {
                                 BaiduChannel.getLocation(context,
                                     (Location location) {
-
                                   if (othersController.text != null) {
                                     othersController.text = location.others;
                                   }
