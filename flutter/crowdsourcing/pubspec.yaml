@@ -60,6 +60,7 @@ flutter:
     - assets/images/start.png
     - assets/images/qq_login_white_29X29.png
     - assets/locations.json
+    - assets/images/deafaultHead.png
 
 
   fonts:

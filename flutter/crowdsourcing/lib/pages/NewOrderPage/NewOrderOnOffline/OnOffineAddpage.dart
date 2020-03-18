@@ -1,3 +1,6 @@
+import 'package:crowdsourcing/channel/BaiduChannel.dart';
+import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/TextFiledHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,7 @@ class OnOfficeAddpage extends StatefulWidget {
 class _OnOffineAddpageState extends State<OnOfficeAddpage> {
   TextEditingController price = new TextEditingController();
   bool jiujin = true;
+  Location location = new Location();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,9 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                           textAlign: TextAlign.end,
                           maxLines: 3,
                           style: TextStyle(fontSize: 15),
-                          inputFormatters: [LengthLimitingTextInputFormatter(40)],
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(40)
+                          ],
                           decoration: InputDecoration(
                             //decoration设置后让textfiled有了默认最小尺寸，因此我们设置
                             //isdence让该限制取消
@@ -131,7 +137,6 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                   child: Row(
                     children: <Widget>[
                       Text("购买地址"),
-
                       Expanded(
                           child: Row(
                         children: <Widget>[
@@ -152,7 +157,8 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                           Flexible(
                             child: RadioListTile(
                               value: "指定地址",
-                              title: Text('指定地址', style: TextStyle(fontSize: 14)),
+                              title:
+                                  Text('指定地址', style: TextStyle(fontSize: 14)),
                               groupValue: jiujin ? "就近购买" : "指定地址",
                               onChanged: (value) {
                                 jiujin = !jiujin;
@@ -164,16 +170,49 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                       )),
                     ],
                   )),
-              jiujin?Column(
-                children: <Widget>[
-                  Divider(height: 1,),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: "da"
+              !jiujin
+                  ? Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Divider(
+                          height: 1,
+                        ),
+                        Container(
+                          height: 45,
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          decoration: BoxDecoration(color: Colors.white),
+                          padding: const EdgeInsets.only(left: 10, right: 15),
+                          child: GestureDetector(
+                              onTap: () {
+                                BaiduChannel.getLocation((Location location) {
+                                  if (location.city != null) {
+                                    Routers.push(context, Routers.POIPAGE,
+                                        params: {'city': location.city});
+                                  }
+                                });
+                              },
+                              child: location.province == null
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text("查找地址"),
+                                        Icon(Icons.chevron_right)
+                                      ],
+                                    )
+                                  : Text(
+                                      location.others,
+                                      textAlign: TextAlign.end,
+                                    )),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        )
+                      ],
+                    )
+                  : SizedBox(
+                      height: 25,
                     ),
-                  )
-                ],
-              ):SizedBox(height: 15,),
             ],
           ),
         ),
@@ -186,10 +225,6 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
-              "共0件,",
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-            ),
             Text("合计:"),
             SizedBox(
               width: 3,

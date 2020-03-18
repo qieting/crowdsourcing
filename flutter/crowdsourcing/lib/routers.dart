@@ -3,6 +3,7 @@ import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
+import 'package:crowdsourcing/pages/PoiPage/PoiPage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class Routers {
   static const String OnOfficeAdd = "onAddOfficeAddpage";
   static const String LOCATIONPAGE = "LocationPage";
   static const String ADDLOcationPage = "AddLocationPage";
+  static const String POIPAGE = "poipage";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -61,10 +63,14 @@ class Routers {
         break;
       case LOCATIONPAGE:
         return LocationPage(
-          choose: params==null?null:params["location"],
+          choose: params == null ? null : params["location"],
         );
       case ADDLOcationPage:
         return AddLocationPage();
+      case POIPAGE:
+        return PoiPage(
+          city: params['city'],
+        );
       default:
         break;
     }

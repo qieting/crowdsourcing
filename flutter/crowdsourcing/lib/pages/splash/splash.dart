@@ -17,7 +17,7 @@ class SplashPage extends StatelessWidget {
     //在MaterialApp的builder里使用Builder，因此就在这里初始化
     MyToast.init(context);
     Future.delayed(new Duration(milliseconds: 0), () async {
-      Routers.pushAndRemove(context, Routers.OnOfficeAdd);
+      Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
 //      if (MyDio.token == null) {
 //        Routers.pushAndRemove(context, Routers.LOGIN);
 //      } else {

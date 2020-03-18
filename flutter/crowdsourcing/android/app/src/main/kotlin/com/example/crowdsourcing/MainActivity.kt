@@ -3,13 +3,16 @@ package com.example.crowdsourcing
 //import io.flutter.plugins.GeneratedPluginRegistrant
 
 import android.content.Intent
-import android.location.Location
 import android.util.Log
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.baidu.location.LocationClient
 import com.baidu.location.LocationClientOption
+import com.baidu.mapapi.search.poi.*
 import com.example.crowdsourcing.Utils.Common
+import com.example.crowdsourcing.model.Location
+import com.example.crowdsourcing.model.MyPoi
+import com.google.gson.Gson
 import com.tencent.connect.UserInfo
 import com.tencent.connect.common.Constants
 import com.tencent.tauth.IUiListener
@@ -24,16 +27,19 @@ import org.json.JSONObject
 class MainActivity : FlutterActivity() {
 
     private val Tag: String = "MainActivity";
-    //   private val CHANNEL = "samples.flutter.io/battery"
     private val TencentChannel = "samples.flutter.io/QQ"
     private val BAIDUChannel = "samples.flutter.io/Baidu"
     var _QQinstalled = "QQinstalled"
     var _QQLogin = "loginByQQ"
     var _QQMessage = "QQMessage";
-    var _Locacation ="Location"
+    var _Locacation = "Location"
+    var _Poi = "poi";
+    val City ="CITY";
+    val Keyword ="KEYWORD";
     private val LoginStstus = "ret"
     private val ARGUMENT_KEY_RESULT_MSG = "msg"
     lateinit var mInfo: UserInfo;
+    lateinit var mPoiSearch: PoiSearch;
 
     private val QQLoginCancel = -1;
     private val QQLoginSuccess = -2;
@@ -43,8 +49,8 @@ class MainActivity : FlutterActivity() {
     lateinit var tencent: Tencent;
     lateinit var channel: MethodChannel;
     lateinit var BaiduChannel: MethodChannel;
-    var mLocationClient : LocationClient? = null;
-    lateinit var  myListener :MyLocationListener;
+    var mLocationClient: LocationClient? = null;
+    lateinit var myListener: MyLocationListener;
 
 
     //这是QQ登录返回的监听器,分为erroe，cancel，complete
@@ -75,9 +81,43 @@ class MainActivity : FlutterActivity() {
         }
 
     };
+    //百度地图poi使用
+    var poiListener: OnGetPoiSearchResultListener = object : OnGetPoiSearchResultListener {
+        override fun onGetPoiResult(poiResult: PoiResult) {
+            mPoiSearch.destroy();
+            var pois = poiResult.allPoi;
+            var myPois =pois.map {  MyPoi(it.name,it.address)  }
+
+//            val poiName: String = poi.getName() //获取POI名称
+//
+//            val poiTags: String = poi.getTag() //获取POI类型
+//
+//            val poiAddr: String = poi.getAddr() //获取POI地址 //获取周边POI信息
+
+            val map = HashMap<String,String>()
+            map.put(_Poi, Gson().toJson(myPois))
+//            map.put(ARGUMENT_KEY_RESULT_MSG, json.toString())
+//            print(tencent.openId)
+//            println(json)
+            BaiduChannel.invokeMethod(_Poi, map);
+        }
+
+        override fun onGetPoiDetailResult(poiDetailSearchResult: PoiDetailSearchResult) {
+            mPoiSearch.destroy();
+        }
+
+        override fun onGetPoiIndoorResult(poiIndoorResult: PoiIndoorResult) {
+            mPoiSearch.destroy();
+        }
+
+        //废弃
+        override fun onGetPoiDetailResult(poiDetailResult: PoiDetailResult) {}
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         //GeneratedPluginRegistrant.registerWith(FlutterEngine(this));
+        //在使用SDK各组件之前初始化context信息，传入ApplicationContext
+
 
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TencentChannel)
         channel.setMethodCallHandler { call, result ->
@@ -108,66 +148,70 @@ class MainActivity : FlutterActivity() {
                 //获取个人信息，当第一次QQ登陆后会调用，仅调用一次
                 getUserInfo();
                 result.success(null);
-            } else{
+            } else {
                 result.notImplemented()
             }
         }
         BaiduChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BAIDUChannel)
         BaiduChannel.setMethodCallHandler { call, result ->
-            if (call.method.equals(_Locacation)){
-                if(mLocationClient==null) {
+            if (call.method.equals(_Locacation)) {
+                //此处只有第一次调用需要初始化
+                if (mLocationClient == null) {
                     mLocationClient = LocationClient(getApplicationContext());
                     myListener = MyLocationListener();
                     //声明LocationClient类
                     mLocationClient!!.registerLocationListener(myListener);
                     var option = LocationClientOption();
-
                     option.setIsNeedLocationDescribe(true);
 //可选，是否需要位置描述信息，默认为不需要，即参数为false
 //如果开发者需要获得当前点的位置信息，此处必须为true
-
                     option.setIsNeedAddress(true);
 //可选，是否需要地址信息，默认为不需要，即参数为false
 //如果开发者需要获得当前点的地址信息，此处必须为true
                     option.openGps = true;
                     option.addrType = "all"
-
                     mLocationClient!!.setLocOption(option);
                 }
-                if(!mLocationClient!!.isStarted)
-                mLocationClient!!.start();
+                if (!mLocationClient!!.isStarted)
+                    mLocationClient!!.start();
 //mLocationClient为第二步初始化过的LocationClient对象
 //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
 //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
 
 
-
                 result.success(null);
-            }else{
+            } else if (call.method.equals(_Poi)) {
+                var city = call.argument<String>(City);
+                var key = call.argument<String>(Keyword);
+                mPoiSearch = PoiSearch.newInstance()
+                mPoiSearch.setOnGetPoiSearchResultListener(poiListener);
+                mPoiSearch.searchInCity(PoiCitySearchOption()
+                        .city(city) //必填
+                        .keyword(key)
+                        .pageCapacity(25)//必填
+                        )
+                result.success(null);
+
+            } else {
                 result.notImplemented()
             }
         }
+
     }
-
-
-
 
 
     //此处data可能为空（比如扣扣登陆取消
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         //回调到tencent
         Tencent.onActivityResultData(requestCode, resultCode, data, listener);
     }
 
     fun login() {
-
         if (!tencent.isSessionValid()) {
             //这个是获取相应的简单个人信息
             tencent.login(this, "get_simple_userinfo", listener)
         }
     }
-
 
     //同步获取QQ消息，未使用
     fun getUserInfoInThread() {
@@ -221,15 +265,16 @@ class MainActivity : FlutterActivity() {
 //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
             mLocationClient!!.stop();
             val map = HashMap<String, Any>()
-            var location0 =  Location();
+            var location0 = Location();
             location0.province = location.province
             location0.city = location.city
             location0.plot = location.district
             location0.town = location.town
             location0.street = location.street
-            location0.others =location.street+location.streetNumber+","+location.locationDescribe
+            location0.others = location.street + location.streetNumber + "," + location.locationDescribe
             map.put(_Locacation, location0.toString());
             BaiduChannel.invokeMethod(_Locacation, map)
+
             //获取位置描述信息
         }
     }

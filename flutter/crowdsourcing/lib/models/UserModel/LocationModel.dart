@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crowdsourcing/channel/BaiduChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
 import 'package:crowdsourcing/net/api.dart';
@@ -14,6 +15,7 @@ class LocationModel extends ChangeNotifier {
   Location getLocation(int i) {
     return _locations[i];
   }
+
 
   int get size => locations.length;
 
@@ -40,10 +42,10 @@ class LocationModel extends ChangeNotifier {
   }
 
   addLocation(Location location) {
-    if(location.isMain){
+    if (location.isMain) {
       for (Location location in _locations) {
         if (location.isMain) {
-          location.isMain= false;
+          location.isMain = false;
           break;
         }
       }

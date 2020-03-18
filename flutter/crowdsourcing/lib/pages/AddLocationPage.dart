@@ -222,14 +222,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
                           ? FlatButton(
                               child: Text("使用当前位置"),
                               onPressed: () {
-                                BaiduChannel.getLocation(context,
-                                    (Location location) {
-                                  if (othersController.text != null) {
-                                    othersController.text = location.others;
-                                  }
-                                  _location = location;
-                                  setState(() {});
-                                });
+//                                BaiduChannel.getLocation(context,
+//                                    (Location location) {
+//                                  if (othersController.text != null) {
+//                                    othersController.text = location.others;
+//                                  }
+//                                  _location = location;
+//                                  setState(() {});
+//                                });
                               },
                             )
                           : SizedBox()

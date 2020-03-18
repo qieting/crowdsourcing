@@ -4,8 +4,9 @@ class MyDecoration{
 
   static copyBorder(InputDecoration inputDecoration){
     return inputDecoration.copyWith(
-      border: inputDecoration.border,
+     // border: inputDecoration.border,
       disabledBorder: inputDecoration.border,
+      enabledBorder: inputDecoration.border,
       focusedBorder: inputDecoration.border,
     );
   }

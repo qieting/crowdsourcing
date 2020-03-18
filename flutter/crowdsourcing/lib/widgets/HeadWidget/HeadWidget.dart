@@ -15,7 +15,7 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
           children: <Widget>[
             Image(
               image: userModel.user?.head == null
-                  ? AssetImage("assets/images/start.png")
+                  ? AssetImage("assets/images/deafaultHead.png")
                   : NetworkImage(userModel.user.head),
               height: 80,
               width: 70,
@@ -27,11 +27,11 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Text(
-                    userModel.user.nick,
+                    userModel.user?.nick??"昵称为空",
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    userModel.user.phone ?? "未绑定手机号",
+                    userModel.user?.phone ?? "未绑定手机号",
                     style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 0.5),
                         fontSize: 13),
