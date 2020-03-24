@@ -3,16 +3,22 @@ import 'package:crowdsourcing/pages/FindPage/FindPage.dart';
 import 'package:crowdsourcing/pages/Ipage/IPage.dart';
 import 'package:crowdsourcing/pages/MenoyPage/MeonyPage.dart';
 import 'package:crowdsourcing/pages/MessagePage/MessagePage.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/ChooseOrder/ChooseOrder.dart';
 import 'package:crowdsourcing/widgets/HeadWidget/HeadWidget.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  @override
-  MyHomePageState createState() => MyHomePageState();
+  static MyHomePageState myHomePageState;
 
-  static MyHomePageState of(BuildContext context) {
-    return context.findAncestorStateOfType<MyHomePageState>();
+  @override
+  MyHomePageState createState() {
+    myHomePageState = MyHomePageState();
+    return myHomePageState;
+  }
+
+  static MyHomePageState of() {
+    return myHomePageState;
   }
 }
 
@@ -25,18 +31,28 @@ class MyHomePageState extends State<MyHomePage>
   //当前底部tab选项
   int _selectedIndex = 1;
   Color disableColor, selectedColor;
+  PageController pageController =new PageController();
 
   //相关page
-  List pages;
+  List<Widget> pages;
 
   //记录尺寸
   Size size;
   bool choose = false;
 
   void _onItemTapped(int index) {
+    if(index==_selectedIndex){
+      return ;
+    }
+    _selectedIndex = index;
+    pageController.jumpToPage(index-1);
     setState(() {
-      _selectedIndex = index;
     });
+
+  }
+
+  push(String url, {Map params}) {
+    Routers.push(context, url, params: params);
   }
 
   @override
@@ -44,7 +60,9 @@ class MyHomePageState extends State<MyHomePage>
     // TODO: implement initState
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(() {});
+    _tabController.addListener(() {
+      (pages[0] as MoneyPage).changeTab(_tabController.index);
+    });
     if (pages == null) {
       pages = [MoneyPage(), FindPage(), MessagePage(), IPage()];
     }
@@ -74,7 +92,7 @@ class MyHomePageState extends State<MyHomePage>
             //isScrollable: true,
             indicatorPadding: const EdgeInsets.all(2),
             controller: _tabController,
-            tabs: tabs.map((e) => Tab(text: e)).toList());
+            tabs: tabs.map((e) => Tab(child: Text(e))).toList());
         break;
       case 4:
         return HeadWidget();
@@ -83,6 +101,12 @@ class MyHomePageState extends State<MyHomePage>
         return null;
         break;
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+//    super.dispose();
   }
 
   @override
@@ -105,7 +129,15 @@ class MyHomePageState extends State<MyHomePage>
                 }
                 // FocusScope.of(context).requestFocus(FocusNode());
               },
-              child: pages[_selectedIndex - 1]);
+              child: PageView(
+                controller: pageController ,
+                children: pages,
+                onPageChanged: (index){
+                  _selectedIndex=index+1;
+                  setState(() {
+                  });
+                },
+              ));
         }),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         //

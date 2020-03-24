@@ -1,12 +1,8 @@
 package com.example.crowdsourcing.service;
 
 
-import com.example.crowdsourcing.dao.LocationRepository;
-import com.example.crowdsourcing.dao.LoginRecordRepository;
-import com.example.crowdsourcing.dao.bean.Location;
-import com.example.crowdsourcing.dao.bean.LoginRecord;
-import com.example.crowdsourcing.dao.bean.People;
-import com.example.crowdsourcing.dao.PeopleRepository;
+import com.example.crowdsourcing.dao.*;
+import com.example.crowdsourcing.dao.bean.*;
 import com.example.crowdsourcing.untils.MyToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +19,10 @@ public class PeopleServiceImpl implements PeopleService {
     private LoginRecordRepository loginRecordRepository;
     @Autowired
     private LocationRepository locationRepository;
+    @Autowired
+    private OffineOrderRepository offineOrderRepository;
+    @Autowired
+    private OffineOrderingRepository offineOrderingRepository;
 
     // status为-1代表账号不存在，返回-2代表密码错误，登陆成功则返回1
     public Map<String, Object> login(People people) {
@@ -106,18 +106,19 @@ public class PeopleServiceImpl implements PeopleService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        req.put("location",locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
+        req.put("offineOrdering", getOffineOrdering(people1.getId()));
+        req.put("location", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
         return req;
 
     }
 
     @Override
-    public Map<String ,Object> peopleMessage(int id) {
+    public Map<String, Object> peopleMessage(int id) {
 
-        Map <String ,Object> map = new HashMap<>();
-        map.put("message",peopleRepository.findById(id));
-        map.put("locations",locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(id));
-
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", peopleRepository.findById(id));
+        map.put("locations", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(id));
+        map.put("offineOrdering", getOffineOrdering(id));
         return map;
     }
 
@@ -193,11 +194,16 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
+    public Location getLocation(int peopleid, int locationId) {
+        return locationRepository.findById(locationId).get();
+    }
+
+    @Override
     public void addLocation(int peopleid, Location location) {
         location.setPeopleId(peopleid);
-        if(location.isMain()){
-            Location llll =  locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
-            if(llll!=null){
+        if (location.isMain()) {
+            Location llll = locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
+            if (llll != null) {
                 llll.setMain(false);
                 locationRepository.save(llll);
             }
@@ -208,7 +214,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public void deleteLocation(int peopleid, int id) {
         Location location = locationRepository.findById(id).get();
-        if (location != null){
+        if (location != null) {
             location.setDelete(true);
             locationRepository.save(location);
         }
@@ -216,17 +222,69 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public void changeLocation(int peopleid, Location location) {
-
         location.setPeopleId(peopleid);
-        if(location.isMain()){
-           Location llll =  locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
-           if(llll!=null){
-               llll.setMain(false);
-               locationRepository.save(llll);
-           }
+        if (location.isMain()) {
+            Location llll = locationRepository.findByMainTrueAndDeleteFalseAndPeopleId(peopleid);
+            if (llll != null) {
+                llll.setMain(false);
+                locationRepository.save(llll);
+            }
         }
         locationRepository.save(location);
 
+    }
+
+    @Override
+    public void addOffineOrder(int peopleid, OffineOrder offineOrder) {
+        offineOrder.setPeopleId(peopleid);
+        offineOrderRepository.save(offineOrder);
+    }
+
+    @Override
+    public List<OffineOrder> getOffineOrders(int platForm) {
+        if (platForm == 1) {
+            platForm = 2;
+        } else {
+            platForm = 1;
+        }
+        List<OffineOrder> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndWanchengIsLessThan(platForm, 2);
+        return offineOrders;
+    }
+
+    @Override
+    public void ChangeOffineOrder(int peopleid, OffineOrder offineOrder) {
+        offineOrderRepository.save(offineOrder);
+    }
+
+    @Override
+    public OffineOrdering  addOffineOrdering(int  peopleId, int offineOrderId) {
+
+        OffineOrder offineOrder =offineOrderRepository.findById(offineOrderId).get();
+        if(offineOrder.getWancheng()>0){
+            return null;
+        }else{
+            offineOrder.setWancheng(2);
+        }
+        offineOrderRepository.save(offineOrder);
+
+        OffineOrdering offineOrdering = new OffineOrdering();
+        offineOrdering.setPeopleId(peopleId);
+        offineOrdering.setOffineOrderId(offineOrderId);
+        offineOrdering.setCreateDate(new Date());
+        offineOrderingRepository.save(offineOrdering);
+        return  offineOrdering;
+    }
+
+    @Override
+    public void finishOffineOrdering(int offineOrderingId) {
+        OffineOrdering offineOrdering = offineOrderingRepository.findById(offineOrderingId).get();
+        offineOrdering.setFinishDate(new Date());
+        offineOrderingRepository.save(offineOrdering);
+    }
+
+    @Override
+    public List<OffineOrdering> getOffineOrdering(int peopleId) {
+        return offineOrderingRepository.findByPeopleId(peopleId);
     }
 
 

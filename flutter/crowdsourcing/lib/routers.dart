@@ -3,6 +3,7 @@ import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
+import 'package:crowdsourcing/pages/OrderOffineDetailsPage.dart';
 import 'package:crowdsourcing/pages/PoiPage/PoiPage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class Routers {
   static const String LOCATIONPAGE = "LocationPage";
   static const String ADDLOcationPage = "AddLocationPage";
   static const String POIPAGE = "poipage";
+  static const String ORDEROFFINEDETAILPAGE = 'OrderOffineDetailsPage';
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -71,6 +73,12 @@ class Routers {
         return PoiPage(
           city: params['city'],
         );
+      case ORDEROFFINEDETAILPAGE:
+        return OrderOffineDetailsPage(
+          offineOrder: params["offineOrder"],
+          detail: params['detail'] ?? false,
+          success: params['success'],
+        );
       default:
         break;
     }
@@ -95,5 +103,12 @@ class Routers {
       //这里根据是否有user进行不同的跳转
       return getPage(url, params: params);
     }), (route) => route == null);
+  }
+
+  static Future<T> pushForResult<T>(BuildContext context, String url,
+      {Map params}) async {
+    return await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return getPage(url, params: params);
+    }));
   }
 }

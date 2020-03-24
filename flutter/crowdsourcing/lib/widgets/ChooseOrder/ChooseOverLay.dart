@@ -71,7 +71,7 @@ class ChooseOverLay {
                     flex: 1,
                     child: GestureDetector(
                       onTap: () {
-                        MyHomePage.of(mcontext).changeChoose();
+                        MyHomePage.of().changeChoose();
                         Routers.push(mcontext, Routers.NEWODERONOFFLINE);
                       },
                       child: DecoratedBox(
@@ -108,7 +108,7 @@ class ChooseOverLay {
                     flex: 1,
                     child: GestureDetector(
                       onTap: () {
-                        MyHomePage.of(mcontext).changeChoose();
+                        MyHomePage.of().changeChoose();
                         Routers.push(mcontext, Routers.NEWORDERONNET);
                       },
                       child: DecoratedBox(

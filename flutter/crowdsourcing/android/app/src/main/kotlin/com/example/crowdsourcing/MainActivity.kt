@@ -34,8 +34,8 @@ class MainActivity : FlutterActivity() {
     var _QQMessage = "QQMessage";
     var _Locacation = "Location"
     var _Poi = "poi";
-    val City ="CITY";
-    val Keyword ="KEYWORD";
+    val City = "CITY";
+    val Keyword = "KEYWORD";
     private val LoginStstus = "ret"
     private val ARGUMENT_KEY_RESULT_MSG = "msg"
     lateinit var mInfo: UserInfo;
@@ -86,7 +86,7 @@ class MainActivity : FlutterActivity() {
         override fun onGetPoiResult(poiResult: PoiResult) {
             mPoiSearch.destroy();
             var pois = poiResult.allPoi;
-            var myPois =pois.map {  MyPoi(it.name,it.address)  }
+            var myPois = pois.map { Location(province = it.province, city = it.city, plot = it.area, others = it.address, name = it.name) }
 
 //            val poiName: String = poi.getName() //获取POI名称
 //
@@ -94,7 +94,7 @@ class MainActivity : FlutterActivity() {
 //
 //            val poiAddr: String = poi.getAddr() //获取POI地址 //获取周边POI信息
 
-            val map = HashMap<String,String>()
+            val map = HashMap<String, String>()
             map.put(_Poi, Gson().toJson(myPois))
 //            map.put(ARGUMENT_KEY_RESULT_MSG, json.toString())
 //            print(tencent.openId)
@@ -188,8 +188,9 @@ class MainActivity : FlutterActivity() {
                 mPoiSearch.searchInCity(PoiCitySearchOption()
                         .city(city) //必填
                         .keyword(key)
+                        .scope(2)
                         .pageCapacity(25)//必填
-                        )
+                )
                 result.success(null);
 
             } else {
@@ -231,7 +232,7 @@ class MainActivity : FlutterActivity() {
 
     //异步获取QQ消息
     fun getUserInfo() {
-        //Log.e(Tag, "开始调用"+tencent.qqToken.openId)
+        Log.e(Tag, "开始调用"+tencent.qqToken.openId)
         //初始化userinfo对象进行登录，借鉴的demo，文档没有
         mInfo = UserInfo(this, tencent.getQQToken())
         mInfo.getUserInfo(object : IUiListener {
@@ -265,13 +266,7 @@ class MainActivity : FlutterActivity() {
 //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
             mLocationClient!!.stop();
             val map = HashMap<String, Any>()
-            var location0 = Location();
-            location0.province = location.province
-            location0.city = location.city
-            location0.plot = location.district
-            location0.town = location.town
-            location0.street = location.street
-            location0.others = location.street + location.streetNumber + "," + location.locationDescribe
+            var location0 = Location(province = location.province, city = location.city, plot = location.district, town = location.town, street = location.street, others = location.locationDescribe);
             map.put(_Locacation, location0.toString());
             BaiduChannel.invokeMethod(_Locacation, map)
 

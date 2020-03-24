@@ -13,6 +13,6 @@ class FindPageState extends State<FindPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Text(DemoLocalizations.of(context).mainTitle(2));
+    return Text(DemoLocalizations.of(context).mainTitle(1));
   }
 }

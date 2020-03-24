@@ -1,4 +1,5 @@
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
+import 'package:crowdsourcing/models/object/Location.dart';
 import 'package:crowdsourcing/models/object/MyPoi.dart';
 import 'package:crowdsourcing/widgets/TextFiledHelper.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class PoiPage extends StatefulWidget {
 
 class _PoiPageState extends State<PoiPage> {
   TextEditingController textEditingController = new TextEditingController();
-  List<MyPoi> pois = [];
+  List<Location> pois = [];
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class _PoiPageState extends State<PoiPage> {
               ),
               onPressed: () {
                 String keyWord = textEditingController.text;
-                BaiduChannel.getPois(widget.city, keyWord, (List<MyPoi> pois) {
+                BaiduChannel.getPois(widget.city, keyWord, (List<Location> pois) {
                   this.pois = pois;
                   setState(() {});
                 });
@@ -62,25 +63,34 @@ class _PoiPageState extends State<PoiPage> {
         child: ListView.builder(
             itemCount: pois.length,
             itemBuilder: (context, index) {
-              return Container(
-                height: 50,
-                padding: const EdgeInsets.only(left: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      pois[index].name,
-                      textScaleFactor: 1.2,
+              return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop<Location>(pois[index]);
+                  },
+                  child: Container(
+                    height: 50,
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          pois[index].name,
+                          textScaleFactor: 1.2,
+                        ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          pois[index].others,
+                          textScaleFactor: 0.8,
+                          style: TextStyle(color: Colors.grey[500]),
+                        ),
+                        Divider(
+                          height: 1,
+                        )
+                      ],
                     ),
-                    SizedBox(height: 3,),
-                    Text(
-                      pois[index].address,
-                      textScaleFactor: 0.8,
-                      style: TextStyle(color: Colors.grey[500]),
-                    )
-                  ],
-                ),
-              );
+                  ));
             }),
       ),
     );

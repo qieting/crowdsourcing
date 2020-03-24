@@ -2,9 +2,7 @@ package com.example.crowdsourcing.controller;
 
 
 import com.example.crowdsourcing.Myannotation.CurrentUserId;
-import com.example.crowdsourcing.dao.bean.Location;
-import com.example.crowdsourcing.dao.bean.LoginRecord;
-import com.example.crowdsourcing.dao.bean.People;
+import com.example.crowdsourcing.dao.bean.*;
 import com.example.crowdsourcing.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -71,9 +69,12 @@ public class MyController {
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.GET)
-    public List<Location> getLocations(@CurrentUserId int id) {
-
-        return peopleService.getLocations(id);
+    public Object getLocations(@CurrentUserId int id, @RequestParam(name = "LocationId", defaultValue = "0") int location_id) {
+        if (location_id != 0)
+            return peopleService.getLocations(id);
+        else {
+            return peopleService.getLocation(id, location_id);
+        }
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.PUT)
@@ -82,9 +83,39 @@ public class MyController {
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.DELETE)
-    public void deleteLocation(@CurrentUserId int id,@RequestBody Location location) {
+    public void deleteLocation(@CurrentUserId int id, @RequestBody Location location) {
 
-       peopleService.deleteLocation(id,location.getId());
+        peopleService.deleteLocation(id, location.getId());
+    }
+
+    @RequestMapping(value = "/offineOrder", method = RequestMethod.POST)
+    public void addOffineOrder(@RequestBody OffineOrder offineOrder, @CurrentUserId int id) {
+        peopleService.addOffineOrder(id, offineOrder);
+    }
+
+    @RequestMapping(value = "/offineOrder", method = RequestMethod.GET)
+    public List<OffineOrder> getOffineOrders(@RequestParam("platForm") int platForm) {
+        return peopleService.getOffineOrders(platForm);
+    }
+
+
+
+
+
+    @RequestMapping(value = "/offineOrdering", method = RequestMethod.POST)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public OffineOrdering  addOffineOrdering( @RequestBody Integer  offineOrderId, @CurrentUserId int id) {
+       return  peopleService.addOffineOrdering(id, offineOrderId);
+    }
+
+    @RequestMapping(value = "/offineOrdering", method = RequestMethod.PUT)
+    public void finishOffineOrdering(@RequestParam("offineOrderId") int  offineOrderId) {
+        peopleService.finishOffineOrdering(offineOrderId);
+    }
+
+    @RequestMapping(value = "/offineOrdering", method = RequestMethod.GET)
+    public List<OffineOrdering> getOffineOrderings(@CurrentUserId  int id) {
+        return peopleService.getOffineOrdering(id);
     }
 
 

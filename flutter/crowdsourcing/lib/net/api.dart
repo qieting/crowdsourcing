@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/OffineOrdering.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/routers.dart';
@@ -58,6 +62,12 @@ class MyDio {
         }
 
         Provider.of<LocationModel>(context, listen: false).addLocations(list);
+        List<OffineOrdering> list1 =
+            (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+          return OffineOrdering.fromJsonMap(f);
+        }).toList();
+        Provider.of<OffineOrderingModel>(context, listen: false)
+            .addOffineOrderings(list1);
         return true;
       } else {
         MyToast.toast(failStatus(response.statusCode));
@@ -122,10 +132,20 @@ class MyDio {
         StorageManager.localStorage.setItem(Token, token);
         User user = User.fromJsonMap(body['message']);
         Provider.of<UserModel>(context, listen: false).saveUser(user);
-        List<Location> list = json.decode(body['location']);
-        Provider.of<LocationModel>(context, listen: false).addLocations(list);
+
         if (body['register'] != null) {
           QQChannel.qqMessage();
+        } else {
+          List<Location> list = (body['location'] as List).map<Location>((f) {
+            return Location.fromJsonMap(f);
+          }).toList();
+          Provider.of<LocationModel>(context, listen: false).addLocations(list);
+          List<OffineOrdering> list1 =
+              (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+            return OffineOrdering.fromJsonMap(f);
+          }).toList();
+          Provider.of<OffineOrderingModel>(context, listen: false)
+              .addOffineOrderings(list1);
         }
         Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
             params: {"title": "as"});
@@ -135,6 +155,7 @@ class MyDio {
       }
     } catch (e) {
       if (failed != null) failed();
+      print(e);
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
@@ -153,7 +174,7 @@ class MyDio {
         showError(context, failStatus(response.statusCode));
       }
     } catch (e) {
-      e.toString();
+      print(e);
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
@@ -192,6 +213,84 @@ class MyDio {
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
+
+  static addOffineOrder(OffineOrder offineOrder,
+      {BuildContext context, Function success}) async {
+    try {
+      print(1.toString());
+      Response response =
+          await dio.post(MyUrl.offineOrder, data: offineOrder.toJson());
+      if (response.statusCode == 200) {
+        MyToast.toast("增加成功");
+        success();
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static getOffineOrders(BuildContext context, Function success) async {
+    try {
+      int paltForm = Platform.isAndroid ? 1 : 2;
+      Response response = await dio.get(MyUrl.offineOrder,
+          queryParameters: {'platForm': paltForm.toString()});
+      if (response.statusCode == 200) {
+        var body = response.data;
+        List<OffineOrder> offineOrders = body.map<OffineOrder>((it) {
+          return OffineOrder.fromJsonMap(it);
+        }).toList();
+        success(offineOrders);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      return false;
+    }
+  }
+
+  static addOffineOrdering(int offerding,
+      {BuildContext context, Function success}) async {
+    try {
+      Response response = await dio
+          .post(MyUrl.offineOrdering, data: offerding);
+      if (response.statusCode == 200) {
+
+        success(response.data);
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static changeOffineOrdering(int offineOrderId,
+      {BuildContext context, Function success()}) async {
+    try {
+      //FocusScope.of(context).unfocus();
+      Response response = await dio
+          .put(MyUrl.offineOrdering, data: {"offineOrderId": offineOrderId});
+      if (response.statusCode == 200) {
+        success();
+
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e.toString());
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+
+
 }
 
 class UnTokenException implements Exception {

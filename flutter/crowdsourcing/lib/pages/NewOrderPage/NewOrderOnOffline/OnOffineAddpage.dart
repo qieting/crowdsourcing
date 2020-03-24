@@ -1,6 +1,9 @@
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
+import 'package:crowdsourcing/models/object/BuyMessage.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/MyPoi.dart';
 import 'package:crowdsourcing/routers.dart';
+import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:crowdsourcing/widgets/TextFiledHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +15,12 @@ class OnOfficeAddpage extends StatefulWidget {
 }
 
 class _OnOffineAddpageState extends State<OnOfficeAddpage> {
-  TextEditingController price = new TextEditingController();
   bool jiujin = true;
   Location location = new Location();
+  TextEditingController thingsController = new TextEditingController(),
+      priceController = new TextEditingController(),
+      disController = new TextEditingController(),
+      phoneController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +42,14 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text("请输入想要购买的物品"),
+              Text("请输入想要购买/代拿的物品"),
               Container(
 //          height: 35,
                   decoration: BoxDecoration(color: Colors.white),
                   padding: const EdgeInsets.only(left: 10, right: 15),
                   margin: const EdgeInsets.only(top: 4),
                   child: TextField(
+                    controller: thingsController,
                       maxLines: 3,
                       decoration: MyDecoration.copyBorder(InputDecoration(
                         isDense: false,
@@ -59,7 +66,13 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                       Container(
                         width: 100,
                         child: TextField(
-                            controller: price,
+                            textAlign: TextAlign.end,
+                            keyboardType: TextInputType.number,
+                            controller: priceController,
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(RegExp("[0-9]")),
+                              LengthLimitingTextInputFormatter(5)
+                            ],
                             decoration: MyDecoration.copyBorder(
                               InputDecoration(
                                   isDense: false, border: InputBorder.none),
@@ -96,7 +109,7 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                             isDense: true,
                             contentPadding:
                                 EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                            hintText: "最长40字",
+                            hintText: "最长40字,可为空",
                             disabledBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
@@ -120,6 +133,11 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                       Expanded(
                         child: TextField(
                             textAlign: TextAlign.end,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(RegExp('[0-9]')),
+                              LengthLimitingTextInputFormatter(11)
+                            ],
                             decoration: MyDecoration.copyBorder(
                               InputDecoration(
                                   hintText: "如需要联系对方请填写",
@@ -185,14 +203,17 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                           padding: const EdgeInsets.only(left: 10, right: 15),
                           child: GestureDetector(
                               onTap: () {
-                                BaiduChannel.getLocation((Location location) {
-                                  if (location.city != null) {
-                                    Routers.push(context, Routers.POIPAGE,
-                                        params: {'city': location.city});
+                                BaiduChannel.getLocation(
+                                    (Location _location) async {
+                                  if (_location.city != null) {
+                                    location = await Routers.pushForResult(
+                                        context, Routers.POIPAGE,
+                                        params: {'city': _location.city})??location;
+                                    setState(() {});
                                   }
                                 });
                               },
-                              child: location.province == null
+                              child: location.name == null
                                   ? Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
@@ -201,7 +222,7 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                                       ],
                                     )
                                   : Text(
-                                      location.others,
+                                      location.name,
                                       textAlign: TextAlign.end,
                                     )),
                         ),
@@ -225,14 +246,7 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text("合计:"),
-            SizedBox(
-              width: 3,
-            ),
-            Text(
-              "0.00",
-              style: TextStyle(fontSize: 20, color: Colors.amberAccent[700]),
-            ),
+
             SizedBox(
               width: 10,
             ),
@@ -243,7 +257,41 @@ class _OnOffineAddpageState extends State<OnOfficeAddpage> {
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.all(Radius.circular(35))),
               child: Text("提交订单"),
-              onPressed: () {},
+              onPressed: () {
+                BuyMessage buyMessage = new BuyMessage();
+                String goods =thingsController.text;
+                if(goods.length>0){
+                  buyMessage.goods=goods;
+                }else{
+                  MyToast.toast("物品不能为空");
+                  return ;
+                }
+
+                String price = priceController.text;
+                if (price.length > 0 && double.parse(price) != 0) {
+                  buyMessage.price=double.parse(price);
+                }else{
+                  MyToast.toast("预估价格必须填写");
+                  return;
+                }
+                String describe =disController.text;
+                buyMessage.describe=describe;
+
+                String phone = phoneController.text;
+                if (phone.length == 11) {
+                  location.phone = phone;
+                } else if (phone.length != 0) {
+                  MyToast.toast("请输入正确的手机号");
+                }
+
+                if(!jiujin&&location.name==null){
+                  MyToast.toast("请选择位置或者设置就近购买");
+                  return ;
+                }
+                buyMessage.location=location;
+                Navigator.of(context).pop<BuyMessage>(buyMessage);
+
+              },
             )
           ],
         ),

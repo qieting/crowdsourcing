@@ -55,9 +55,9 @@ class BaiduChannel {
           case _Poi:
             String status = await methodCall.arguments[_Poi];
              var pois = json.decode(status);
-             List<MyPoi> mypois = [];
+             List<Location> mypois = [];
              for(var poi in pois){
-               mypois.add(MyPoi.fromJsonMap(poi));
+               mypois.add(Location.fromJsonMap(poi));
              }
              if(_changePoi!=null){
                _changePoi(mypois);

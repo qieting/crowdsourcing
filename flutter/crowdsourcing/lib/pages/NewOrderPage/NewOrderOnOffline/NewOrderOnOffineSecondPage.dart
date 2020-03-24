@@ -1,13 +1,22 @@
+import 'package:crowdsourcing/models/object/BuyMessage.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
 import 'package:crowdsourcing/routers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewOrderOnDoofliceSecondPage extends StatelessWidget {
-  NewOrderOnDoofliceSecondPage({@required this.locations, @required this.to,@required this.setTo});
+  NewOrderOnDoofliceSecondPage(
+      {@required this.bugMessages,
+      @required this.to,
+        this.child,
+      @required this.commit});
 
-  final List locations;
+  final List<BuyMessage> bugMessages;
   final Location to;
-  final Function setTo ;
+  final Function commit;
+  final Widget child;
+  bool end =true;
 
   @override
   Widget build(BuildContext context) {
@@ -15,62 +24,85 @@ class NewOrderOnDoofliceSecondPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FlatButton.icon(
-              shape: OutlineInputBorder(borderSide: BorderSide.none),
-              onPressed: () {
-                Routers.push(context, Routers.OnOfficeAdd);
-              },
-              icon: Icon(Icons.add),
-              label: Text("增加代拿代买地")),
-          ListView.builder(
-              itemCount: locations.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(title: Text("$index"));
-                ;
-              }),
-          Divider(),
-          Text("目的地"),
-          Card(
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 15, right: 0, top: 5, bottom: 15),
-              child: Row(
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(
-                    child: Column(children: <Widget>[
-                      to.province == null
-                          ? Text("设置目的地")
-                          : Row(
-                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
+                  FlatButton.icon(
+                      shape: OutlineInputBorder(borderSide: BorderSide.none),
+                      onPressed: () async {
+                        BuyMessage bu = await Routers.pushForResult<BuyMessage>(
+                            context, Routers.OnOfficeAdd);
+                        if (bu!=null&&bu.goods != null) bugMessages.add(bu);
+                      },
+                      icon: Icon(Icons.add),
+                      label: Text("增加代拿代买地")),
+                  ListView.builder(
+                      itemCount: bugMessages.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15, top: 15),
+                            child: Row(
                               children: <Widget>[
-                                Text(to.name),
-                                SizedBox(
-                                  width: 30,
+                                Expanded(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(bugMessages[index].goods),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(bugMessages[index].location.name ??
+                                          "就近购买")
+                                    ],
+                                  ),
                                 ),
-                                Text(
-                                  to.phone,
-                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {},
+                                )
                               ],
                             ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(to.locationToString()),
-                    ]),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    child: Icon(Icons.chevron_right),
-                    onTap: () {
-                     setTo();
-                    },
-                  )
+                          ),
+                        );
+                        ;
+                      }),
+                  Divider(),
+                  Text("目的地"),
+                  child,
+
                 ],
               ),
+            ),
+          ),
+          Container(
+            color: Colors.grey[100],
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 40),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: RaisedButton(
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide.none),
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      "预览",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      commit();
+                    },
+                  ),
+                ),
+              ],
             ),
           )
         ],

@@ -10,12 +10,15 @@ import java.util.Date;
 public class Location {
     private static final long serialVersionUID = 1L;
 
-
+    public Location() {
+        main = false;
+        delete = false;
+    }
 
 
     @Id
     @GeneratedValue
-    private  int id;
+    private int id;
 
     @Column(name = "people_id")
     private int peopleId;
@@ -28,28 +31,23 @@ public class Location {
     private boolean main;
 
     @Column
-    private String  name;
+    private String name;
     @Column
-    private String  number;
+    private String number;
 
     @Column
     private String province;
     @Column
-    private String  city;
+    private String city;
     @Column
-    private String  street;
+    private String street;
     @Column
-    private String  others;
+    private String others;
     @Column
     private String plot;
 
     @Column(name = "del")
-    private  boolean delete;
-
-    Location(){
-        main=false;
-        delete=false;
-    }
+    private boolean delete;
 
 
     public int getId() {

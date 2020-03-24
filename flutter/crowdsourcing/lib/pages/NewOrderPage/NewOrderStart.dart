@@ -9,15 +9,18 @@ class NewOrderStart extends StatelessWidget {
       this.platformController,
       this.limitController,
       this.mobileController,
+      this.child1,
+        this.priceController,
       this.child});
 
   final TextEditingController titleController,
       descriptionController,
       platformController,
       limitController,
+  priceController,
       mobileController;
 
-  final child;
+  final child, child1;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +127,7 @@ class NewOrderStart extends StatelessWidget {
                       child: TextField(
                           maxLengthEnforced: true,
                           textAlign: TextAlign.end,
-                          controller: descriptionController,
+                          controller: limitController,
                           maxLines: 3,
                           style: TextStyle(fontSize: 15),
                           inputFormatters: [
@@ -167,20 +170,79 @@ class NewOrderStart extends StatelessWidget {
                   ],
                 ),
               ),
+              Container(
+//          height: 35,
+                decoration: BoxDecoration(color: Colors.white),
+                padding: const EdgeInsets.only(left: 10, right: 15),
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text("接单截止时间"),
+                      padding: EdgeInsets.only(top: 10),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(),
+                    ),
+                    child1
+                  ],
+                ),
+              ),
+              Container(
+//          height: 35,
+                decoration: BoxDecoration(color: Colors.white),
+                padding: const EdgeInsets.only(left: 10, right: 15),
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text("悬赏金额"),
+                      padding: EdgeInsets.only(top: 10),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: TextField(
+                          maxLengthEnforced: true,
+                          textAlign: TextAlign.end,
+                          controller: priceController,
+                          style: TextStyle(fontSize: 15),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(5),
+                            WhitelistingTextInputFormatter(RegExp("[0-9/.]"))
+                          ],
+                          decoration: InputDecoration(
+                            //decoration设置后让textfiled有了默认最小尺寸，因此我们设置
+                            //isdence让该限制取消
+                            isDense: true,
+                            contentPadding:
+                                EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                            hintText: "金额决定接单速度哦",
+                            disabledBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            border: InputBorder.none,
+                          )),
+                    ),
+                  ],
+                ),
+              ),
             ])),
           ),
         ),
         Container(
           color: Colors.grey[100],
-          padding: const EdgeInsets.only(left: 15, right: 15,bottom: 40),
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 40),
           child: Row(
             children: <Widget>[
               Expanded(
                 child: RaisedButton(
-                  shape:OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide.none
-                  ),
+                  shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide.none),
                   color: Theme.of(context).primaryColor,
                   child: Text(
                     "下一步",

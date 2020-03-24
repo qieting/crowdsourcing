@@ -1,18 +1,87 @@
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/models/object/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/OnlineOrder.dart';
+import 'package:crowdsourcing/models/object/Order.dart';
+import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class MoneyPage extends StatefulWidget {
+  MoneyPageState moneyPageState;
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return MoneyPageState();
+    moneyPageState = MoneyPageState();
+    return moneyPageState;
+  }
+
+  void changeTab( int index) {
+    this.moneyPageState.changeState(index);
   }
 }
 
-class MoneyPageState extends State<MoneyPage> {
+class MoneyPageState extends State<MoneyPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  List<OffineOrder> offineOrders;
+  List<OnlineOrder> onlineOrders;
+
+  List<Order> orders = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getOrders();
+  }
+
+  void changeState( int index) {
+    if (index== 0) {
+      orders = onlineOrders ?? [];
+    } else {
+      orders = offineOrders ?? [];
+    }
+    setState(() {});
+  }
+
+  void getOrders() {
+
+      MyDio.getOffineOrders(context, (t) {
+        offineOrders = t;
+        setState(() {});
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Text(DemoLocalizations.of(context).mainTitle(1));
+    super.build(context);//必须添加
+    return Container(
+      child: orders.length == 0
+          ? ListTile(
+              title: Text("暂时没有数据"),
+            )
+          : ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                    onTap: () {
+                      if (orders == offineOrders) {
+                        Routers.push(context, Routers.ORDEROFFINEDETAILPAGE,
+                            params: {
+                              "offineOrder": orders[index],
+                              'detail': true
+                            });
+                      } else {
+                        orders = offineOrders ?? [];
+                      }
+                    },
+                    child: ListTile(title: Text(orders[index].title)));
+              }),
+    );
   }
 }
