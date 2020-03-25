@@ -47,6 +47,7 @@ public interface PeopleService {
 
 	public void  addOffineOrder(int peopleid, OffineOrder offineOrder);
 	public List<OffineOrder>  getOffineOrders(int platForm);
+	public List<OffineOrder>  getOffineOrdersByPeople(int peopleId);
 	public void   ChangeOffineOrder(int peopleid, OffineOrder  offineOrder);
 
 	public OffineOrdering  addOffineOrdering(int  offineOrderId ,int peopleId);

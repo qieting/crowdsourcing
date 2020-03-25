@@ -1,87 +1,80 @@
 import 'dart:convert';
 
+
 import 'package:crowdsourcing/common/StorageManager.dart';
-import 'package:crowdsourcing/models/object/OffineOrdering.dart';
-import 'package:crowdsourcing/models/object/Order.dart';
+import 'package:crowdsourcing/models/object/OffineOrder.dart';
 import 'package:flutter/cupertino.dart';
 
-class OffineOrderingModel extends ChangeNotifier {
-  static const String offineOrderingsS = 'offineOrderingings';
-  List<OffineOrdering> _offineOrderings;
+class OffineOrderModel extends ChangeNotifier {
+  static const String offineOrdersS = 'offineOrders';
+  List<OffineOrder> _offineOrders;
 
-  List<OffineOrdering> get offineOrderings => _offineOrderings;
+  List<OffineOrder> get offineOrders => _offineOrders;
 
-  int get length => offineOrderings?.length ?? 0;
+  int get length => offineOrders?.length ?? 0;
 
-  OffineOrderingModel() {
-    var s = StorageManager.localStorage.getItem(offineOrderingsS);
-    _offineOrderings = [];
+  OffineOrderModel() {
+    var s = StorageManager.localStorage.getItem(offineOrdersS);
+    _offineOrders = [];
     if (s != null) {
       for (var i in s) {
-        offineOrderings.add(OffineOrdering.fromJsonMap(i));
+        offineOrders.add(OffineOrder.fromJsonMap(i));
       }
     }
   }
 
-  saveOffineOrderings() {
+  saveOffineOrders() {
     StorageManager.localStorage
-        .setItem(offineOrderingsS,_offineOrderings);
+        .setItem(offineOrdersS,_offineOrders);
   }
 
   /// 清除持久化的用户数据
-  clearOffineOrdering() {
-    _offineOrderings.clear();
+  clearOffineOrder() {
+    _offineOrders.clear();
   }
 
-  addOffineOrdering(OffineOrdering offineOrdering) {
-    _offineOrderings.add(offineOrdering);
+  addOffineOrder(OffineOrder offineOrder) {
+    _offineOrders.add(offineOrder);
     notifyListeners();
-    saveOffineOrderings();
+    saveOffineOrders();
   }
 
-  addOffineOrderings(List<OffineOrdering> offineOrderings) {
-    clearOffineOrdering();
-    _offineOrderings.addAll(offineOrderings);
+  addOffineOrders(List<OffineOrder> offineOrders) {
+    clearOffineOrder();
+    _offineOrders.addAll(offineOrders);
     notifyListeners();
-    saveOffineOrderings();
+    saveOffineOrders();
   }
 
-  OffineOrdering getByOfferOrderId(int offerOrderId) {
-    for (var i in offineOrderings) {
-      if (i.offineOrderId == offerOrderId) {
-        return i;
+  int notStartnumber(){
+    int i = 0;
+    for(var ii in _offineOrders){
+      if(ii.wancheng==0){
+        i++;
       }
     }
+    return i;
   }
 
-  void finishOfferOrdering(int offerOrdering) {
-    for (var i in offineOrderings) {
-      if (i.offineOrderId == offerOrdering) {
-        i.finishDate = DateTime.now();
-        break;
+
+  int finishnumber(){
+    int i = 0;
+    for(var ii in _offineOrders){
+      if(ii.wancheng==3){
+        i++;
       }
     }
+    return i;
+  }
+  int doingnumber(){
+    int i = 0;
+    for(var ii in _offineOrders){
+      if(ii.wancheng==1||ii.wancheng==2){
+        i++;
+      }
+    }
+    return i;
   }
 
-  bool hasTake(int peopleId) =>
-      _offineOrderings.any((it) => it.peopleId == peopleId);
 
-//  changeOffineOrdering(int i, OffineOrdering ffineOrder) {
-//    _offineOrderings[i] = offineOrdering;
-//    notifyListeners();
-//    saveOffineOrderings();
-//  }
-//
-//
-//  deleteOffineOrde(int id) {
-//    for (OffineOrdeoffineOrdering in _offineOrderings) {
-//      if (offineOrdering.id == id) {
-//        _offineOrderings.remove(offineOrdering);
-//        break;
-//      }
-//    }
-//    MyDio.deleteOffineOrde(id);
-//
-//    saveOffineOrdes();
-//  }
 }

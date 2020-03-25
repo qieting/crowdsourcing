@@ -5,6 +5,7 @@ import 'package:crowdsourcing/channel/QQChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
@@ -68,6 +69,13 @@ class MyDio {
         }).toList();
         Provider.of<OffineOrderingModel>(context, listen: false)
             .addOffineOrderings(list1);
+
+        List<OffineOrder> list2 =
+        (body['offineOrder'] as List).map<OffineOrder>((f) {
+          return OffineOrder.fromJsonMap(f);
+        }).toList();
+        Provider.of<OffineOrderModel>(context, listen: false).addOffineOrders(list2);
+
         return true;
       } else {
         MyToast.toast(failStatus(response.statusCode));
@@ -146,6 +154,11 @@ class MyDio {
           }).toList();
           Provider.of<OffineOrderingModel>(context, listen: false)
               .addOffineOrderings(list1);
+          List<OffineOrder> list2 =
+          (body['offineOrder'] as List).map<OffineOrder>((f) {
+            return OffineOrder.fromJsonMap(f);
+          }).toList();
+          Provider.of<OffineOrderModel>(context, listen: false).addOffineOrders(list2);
         }
         Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
             params: {"title": "as"});

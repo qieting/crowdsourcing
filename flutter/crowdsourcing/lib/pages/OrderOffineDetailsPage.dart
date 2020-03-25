@@ -1,4 +1,4 @@
-import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/BuyMessage.dart';
 import 'package:crowdsourcing/models/object/Location.dart';
@@ -233,31 +233,27 @@ class OrderOffineDetailsPage extends StatelessWidget {
               if (detail) {
                 if (take != null) {
                   if (take.finishDate != null) {
-
                   } else {
                     MyDio.changeOffineOrdering(offineOrder.id, success: () {
                       offineOrderingModel.finishOfferOrdering(take.id);
                     });
                   }
                   return;
-                } else
-                  if(offineOrder.wancheng>=2){
-
+                } else if (offineOrder.wancheng >= 2) {}
+                MyDio.addOffineOrdering(offineOrder.id, success: (data) {
+                  if (data == null) {
+                    MyToast.toast("抢单失败，请重新进入");
+                    return;
                   }
-                  MyDio.addOffineOrdering(offineOrder.id, success: (data) {
-                    if(data==null){
-                      MyToast.toast("抢单失败，请重新进入");
-                      return ;
-                    }
-                    offineOrderingModel.addOffineOrdering(OffineOrdering.fromJsonMap(data));
-                    Navigator.of(context).pop();
-                    MyHomePage.of().push(Routers.ORDEROFFINEDETAILPAGE,
-                        params: {
-                          "offineOrder": offineOrder,
-                          'detail': true,
-                          "take": true
-                        });
+                  offineOrderingModel
+                      .addOffineOrdering(OffineOrdering.fromJsonMap(data));
+                  Navigator.of(context).pop();
+                  MyHomePage.of().push(Routers.ORDEROFFINEDETAILPAGE, params: {
+                    "offineOrder": offineOrder,
+                    'detail': true,
+                    "take": true
                   });
+                });
               } else {
                 MyDio.addOffineOrder(offineOrder, context: context,
                     success: () {
@@ -270,7 +266,7 @@ class OrderOffineDetailsPage extends StatelessWidget {
               detail
                   ? (take != null
                       ? (take.finishDate == null ? "完成提交" : "已完成")
-                      :offineOrder.wancheng>=2? "已被接走" :'接单')
+                      : offineOrder.wancheng >= 2 ? "已被接走" : '接单')
                   : "发布",
               style: TextStyle(color: Colors.white),
             ),

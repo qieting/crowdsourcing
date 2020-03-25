@@ -1,4 +1,5 @@
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
+import 'package:crowdsourcing/widgets/MyImage.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,13 +14,12 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
       child: Consumer<UserModel>(builder: (context, userModel, child) {
         return Row(
           children: <Widget>[
-            Image(
-              image: userModel.user?.head == null
+            MyImage(
+              userModel.user?.head == null
                   ? AssetImage("assets/images/deafaultHead.png")
                   : NetworkImage(userModel.user.head),
               height: 80,
               width: 70,
-              fit: BoxFit.contain,
             ),
             Container(
               padding: const EdgeInsets.only(left: 50, top: 10),

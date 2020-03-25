@@ -107,6 +107,7 @@ public class PeopleServiceImpl implements PeopleService {
             e.printStackTrace();
         }
         req.put("offineOrdering", getOffineOrdering(people1.getId()));
+        req.put("offineOrder", getOffineOrdersByPeople(people1.getId()));
         req.put("location", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
         return req;
 
@@ -119,6 +120,7 @@ public class PeopleServiceImpl implements PeopleService {
         map.put("message", peopleRepository.findById(id));
         map.put("locations", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(id));
         map.put("offineOrdering", getOffineOrdering(id));
+        map.put("offineOrder", getOffineOrdersByPeople(id));
         return map;
     }
 
@@ -249,6 +251,11 @@ public class PeopleServiceImpl implements PeopleService {
         }
         List<OffineOrder> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndWanchengIsLessThan(platForm, 2);
         return offineOrders;
+    }
+
+    @Override
+    public List<OffineOrder> getOffineOrdersByPeople(int peopleId) {
+        return offineOrderRepository.findByPeopleId(peopleId);
     }
 
     @Override

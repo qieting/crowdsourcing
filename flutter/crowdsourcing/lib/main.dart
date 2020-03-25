@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
-import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
 import 'package:crowdsourcing/net/api.dart';
@@ -15,6 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'i10n/localization_intl.dart';
 import 'package:provider/provider.dart';
 
+import 'models/OrderModel/OffineOrderModel.dart';
 import 'models/UserModel/LocationModel.dart';
 
 void main() {
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<OffineOrderingModel>(
           create: (context) =>OffineOrderingModel(),
+        ),
+        ChangeNotifierProvider<OffineOrderModel>(
+          create: (context) =>OffineOrderModel(),
         ),
       ],
       child: Consumer<ViewThemeModel>(builder: (context, viewThemeMode, child) {

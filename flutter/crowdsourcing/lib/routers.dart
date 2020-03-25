@@ -3,6 +3,7 @@ import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
+import 'package:crowdsourcing/pages/OffineOrdersPage.dart';
 import 'package:crowdsourcing/pages/OrderOffineDetailsPage.dart';
 import 'package:crowdsourcing/pages/PoiPage/PoiPage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
@@ -22,6 +23,7 @@ class Routers {
   static const String ADDLOcationPage = "AddLocationPage";
   static const String POIPAGE = "poipage";
   static const String ORDEROFFINEDETAILPAGE = 'OrderOffineDetailsPage';
+  static const String OFFINEORDERSPAGE ='OffineOrdersPage';
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -79,6 +81,8 @@ class Routers {
           detail: params['detail'] ?? false,
           success: params['success'],
         );
+      case OFFINEORDERSPAGE:
+        return OffineOrdersPage();
       default:
         break;
     }
