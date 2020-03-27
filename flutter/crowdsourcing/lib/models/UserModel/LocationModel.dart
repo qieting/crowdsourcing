@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:flutter/cupertino.dart';
 

@@ -8,9 +8,10 @@ import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/OffineOrder.dart';
-import 'package:crowdsourcing/models/object/OffineOrdering.dart';
+
+import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/order/offine/OffineOrdering.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/routers.dart';
@@ -71,10 +72,11 @@ class MyDio {
             .addOffineOrderings(list1);
 
         List<OffineOrder> list2 =
-        (body['offineOrder'] as List).map<OffineOrder>((f) {
+            (body['offineOrder'] as List).map<OffineOrder>((f) {
           return OffineOrder.fromJsonMap(f);
         }).toList();
-        Provider.of<OffineOrderModel>(context, listen: false).addOffineOrders(list2);
+        Provider.of<OffineOrderModel>(context, listen: false)
+            .addOffineOrders(list2);
 
         return true;
       } else {
@@ -155,10 +157,11 @@ class MyDio {
           Provider.of<OffineOrderingModel>(context, listen: false)
               .addOffineOrderings(list1);
           List<OffineOrder> list2 =
-          (body['offineOrder'] as List).map<OffineOrder>((f) {
+              (body['offineOrder'] as List).map<OffineOrder>((f) {
             return OffineOrder.fromJsonMap(f);
           }).toList();
-          Provider.of<OffineOrderModel>(context, listen: false).addOffineOrders(list2);
+          Provider.of<OffineOrderModel>(context, listen: false)
+              .addOffineOrders(list2);
         }
         Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
             params: {"title": "as"});
@@ -270,10 +273,8 @@ class MyDio {
   static addOffineOrdering(int offerding,
       {BuildContext context, Function success}) async {
     try {
-      Response response = await dio
-          .post(MyUrl.offineOrdering, data: offerding);
+      Response response = await dio.post(MyUrl.offineOrdering, data: offerding);
       if (response.statusCode == 200) {
-
         success(response.data);
       } else {
         showError(context, failStatus(response.statusCode));
@@ -292,7 +293,6 @@ class MyDio {
           .put(MyUrl.offineOrdering, data: {"offineOrderId": offineOrderId});
       if (response.statusCode == 200) {
         success();
-
       } else {
         showError(context, failStatus(response.statusCode));
       }
@@ -302,8 +302,43 @@ class MyDio {
     }
   }
 
+  static Future<File> getImage(String filePath,BuildContext context, Function success) async {
+    try {
+      int paltForm = Platform.isAndroid ? 1 : 2;
+      Response response = await dio.get(MyUrl.imageUp,
+          queryParameters: {'filePath': filePath});
+      if (response.statusCode == 200) {
+        var body = response.data;
+        List<OffineOrder> offineOrders = body.map<OffineOrder>((it) {
+          return OffineOrder.fromJsonMap(it);
+        }).toList();
+        success(offineOrders);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
 
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
 
+    }
+  }
+
+  static Future<String> FileUp(File file, String fileName,
+      {BuildContext context, Function success}) async {
+    try {
+      Response response = await dio.post(MyUrl.imageUp,
+          data: UploadFileInfo(file, fileName));
+      if (response.statusCode == 200) {
+        return response.data['url'];
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
 }
 
 class UnTokenException implements Exception {

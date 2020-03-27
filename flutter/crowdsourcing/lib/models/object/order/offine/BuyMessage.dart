@@ -1,4 +1,6 @@
-import 'Location.dart';
+
+
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 
 class BuyMessage {
   double price;

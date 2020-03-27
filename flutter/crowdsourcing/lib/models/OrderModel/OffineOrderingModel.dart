@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:crowdsourcing/common/StorageManager.dart';
-import 'package:crowdsourcing/models/object/OffineOrdering.dart';
-import 'package:crowdsourcing/models/object/Order.dart';
+import 'package:crowdsourcing/models/object/order/Order.dart';
+import 'package:crowdsourcing/models/object/order/offine/OffineOrdering.dart';
 import 'package:flutter/cupertino.dart';
 
 class OffineOrderingModel extends ChangeNotifier {

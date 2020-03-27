@@ -11,6 +11,7 @@ class NewOrderStart extends StatelessWidget {
       this.mobileController,
       this.child1,
         this.priceController,
+        this.jump,
       this.child});
 
   final TextEditingController titleController,
@@ -21,6 +22,7 @@ class NewOrderStart extends StatelessWidget {
       mobileController;
 
   final child, child1;
+  final Function jump;
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +251,7 @@ class NewOrderStart extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    NewOrderOnOffline.of(context).jumpToPage(1.0);
+                    jump(1.0);
                   },
                 ),
               ),

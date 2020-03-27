@@ -1,6 +1,7 @@
 import 'package:crowdsourcing/pages/AddLocationPage.dart';
 import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
+import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/AddOnlineStepPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
 import 'package:crowdsourcing/pages/OffineOrdersPage.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'pages/NewOrderPage/NewOrderOnOffline/OnOffineAddpage.dart';
 import 'pages/splash/splash.dart';
+
 
 class Routers {
   static const String SPLASH = "splash";
@@ -24,7 +26,7 @@ class Routers {
   static const String POIPAGE = "poipage";
   static const String ORDEROFFINEDETAILPAGE = 'OrderOffineDetailsPage';
   static const String OFFINEORDERSPAGE ='OffineOrdersPage';
-
+  static const String ADDONLINEPAGE ='addOnlinStepePage';
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
   //②换为type存入，但是不支持反射，根据type生成对象（并且效率问题也存在）
@@ -83,6 +85,8 @@ class Routers {
         );
       case OFFINEORDERSPAGE:
         return OffineOrdersPage();
+      case ADDONLINEPAGE:
+        return AddOnlineStepPage();
       default:
         break;
     }

@@ -203,8 +203,12 @@ class MainActivity : FlutterActivity() {
 
     //此处data可能为空（比如扣扣登陆取消
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode==11101){
+            Tencent.onActivityResultData(requestCode, resultCode, data, listener);
+        }else
         //回调到tencent
-        Tencent.onActivityResultData(requestCode, resultCode, data, listener);
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     fun login() {

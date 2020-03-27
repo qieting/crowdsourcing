@@ -1,7 +1,8 @@
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
-import 'package:crowdsourcing/models/object/BuyMessage.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/order/offine/BuyMessage.dart';
+
+import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffineSecondPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderStart.dart';
@@ -14,9 +15,6 @@ class NewOrderOnOffline extends StatefulWidget {
   @override
   NewOrderOnOfflineState createState() => NewOrderOnOfflineState();
 
-  static NewOrderOnOfflineState of(BuildContext context) {
-    return context.findAncestorStateOfType<NewOrderOnOfflineState>();
-  }
 }
 
 class NewOrderOnOfflineState extends State<NewOrderOnOffline> {
@@ -78,6 +76,7 @@ class NewOrderOnOfflineState extends State<NewOrderOnOffline> {
         controller: _pageController,
         children: <Widget>[
           NewOrderStart(
+            jump: jumpToPage,
             titleController: titleController,
             priceController: priceController,
             descriptionController: descriptionController,

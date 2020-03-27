@@ -1,9 +1,10 @@
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
-import 'package:crowdsourcing/models/object/BuyMessage.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/OffineOrder.dart';
-import 'package:crowdsourcing/models/object/OffineOrdering.dart';
+import 'package:crowdsourcing/models/object/order/offine/BuyMessage.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
+import 'package:crowdsourcing/models/object/order/offine/OffineOrdering.dart';
+
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';

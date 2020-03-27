@@ -1,5 +1,5 @@
-import 'package:crowdsourcing/models/object/BuyMessage.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/BuyMessage.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:flutter/cupertino.dart';

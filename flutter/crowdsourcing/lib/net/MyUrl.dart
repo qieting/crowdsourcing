@@ -14,4 +14,6 @@ class MyUrl {
   //离线订单接单消息等
   static const String offineOrdering = "offineOrdering";
 
+  static const String imageUp = 'imageUp';
+
 }

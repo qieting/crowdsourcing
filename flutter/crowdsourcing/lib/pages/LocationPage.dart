@@ -1,5 +1,5 @@
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

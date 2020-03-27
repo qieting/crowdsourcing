@@ -1,7 +1,7 @@
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
 import 'package:crowdsourcing/common/LocationALL.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';

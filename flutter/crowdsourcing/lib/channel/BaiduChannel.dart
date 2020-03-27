@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:crowdsourcing/common/MyPrimission.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/MyPoi.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/MyPoi.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/cupertino.dart';

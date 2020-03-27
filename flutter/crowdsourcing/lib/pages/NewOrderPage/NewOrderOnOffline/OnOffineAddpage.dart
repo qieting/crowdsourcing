@@ -1,7 +1,7 @@
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
-import 'package:crowdsourcing/models/object/BuyMessage.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/MyPoi.dart';
+import 'package:crowdsourcing/models/object/order/offine/BuyMessage.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/MyPoi.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:crowdsourcing/widgets/TextFiledHelper.dart';

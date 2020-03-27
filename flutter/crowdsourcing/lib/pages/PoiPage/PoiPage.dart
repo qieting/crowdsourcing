@@ -1,6 +1,6 @@
 import 'package:crowdsourcing/channel/BaiduChannel.dart';
-import 'package:crowdsourcing/models/object/Location.dart';
-import 'package:crowdsourcing/models/object/MyPoi.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
+import 'package:crowdsourcing/models/object/order/offine/location/MyPoi.dart';
 import 'package:crowdsourcing/widgets/TextFiledHelper.dart';
 import 'package:flutter/material.dart';
 

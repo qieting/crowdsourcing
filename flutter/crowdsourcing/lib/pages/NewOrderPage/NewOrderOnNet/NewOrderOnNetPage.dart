@@ -1,3 +1,6 @@
+import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
+import 'package:crowdsourcing/models/object/order/online/OnlineStep.dart';
+import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetSecondPage.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 
@@ -5,24 +8,72 @@ import '../NewOrderStart.dart';
 
 class NewOrderOnNet extends StatefulWidget {
   @override
-  _NewOrderOnNetState createState() => _NewOrderOnNetState();
+  NewOrderOnNetState createState() => NewOrderOnNetState();
+
+  static NewOrderOnNetState of(BuildContext context) {
+    return context.findAncestorStateOfType<NewOrderOnNetState>();
+  }
 }
 
-class _NewOrderOnNetState extends State<NewOrderOnNet> {
+class NewOrderOnNetState extends State<NewOrderOnNet> {
   int platform = 1;
   PageController _pageController = new PageController();
   String time = '无限制';
+  List<OnlineStep> onLineSteps = [];
 
   TextEditingController titleController = new TextEditingController(),
       descriptionController = new TextEditingController(),
       platformController = new TextEditingController(),
       priceController = new TextEditingController(),
+      numberController = new TextEditingController(),
       limitController = new TextEditingController();
 
   jumpToPage(double nextPage) {
     _pageController.nextPage(
         duration: Duration(milliseconds: 500),
         curve: Interval(0, 1, curve: Curves.easeOut));
+  }
+
+  submit(){
+    String title = titleController.text;
+    if (title.length == 0) {
+      MyToast.toast("标题不能为空");
+      return;
+    }
+    String des = descriptionController.text;
+    if (des.length == 0) {
+      MyToast.toast("描述不能为空");
+      return;
+    }
+    String limit = limitController.text;
+    if (limit.length == 0) {
+      MyToast.toast("报名条件不能为空");
+      return;
+    }
+    String price = priceController.text;
+    if (price.length != 0 && double.parse(price) > 0) {
+    } else {
+      MyToast.toast("请输入价格");
+      return;
+    }
+    String number  =numberController.text;
+    if (number.length != 0 && int.parse(number) > 0) {
+    } else {
+      MyToast.toast("请输入正确的人数");
+      return;
+    }
+
+    OnlineOrder offineOrder = OnlineOrder(
+        title: title,
+        describe: des,
+        number: int.parse(number),
+        platFormLimit: platform,
+        limitedTime: time,
+        onlineSteps: onLineSteps,
+        price: double.parse(price),
+        require: limit);
+
+
   }
 
   @override
@@ -47,6 +98,7 @@ class _NewOrderOnNetState extends State<NewOrderOnNet> {
         controller: _pageController,
         children: <Widget>[
           NewOrderStart(
+            jump: jumpToPage,
             titleController: titleController,
             priceController: priceController,
             descriptionController: descriptionController,
@@ -145,6 +197,7 @@ class _NewOrderOnNetState extends State<NewOrderOnNet> {
               },
             ),
           ),
+          NewOrderOnNetSecondPage(onLineSteps,numberController,submit)
         ],
       ),
     );
