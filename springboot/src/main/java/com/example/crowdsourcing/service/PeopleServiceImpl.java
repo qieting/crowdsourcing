@@ -23,6 +23,10 @@ public class PeopleServiceImpl implements PeopleService {
     private OffineOrderRepository offineOrderRepository;
     @Autowired
     private OffineOrderingRepository offineOrderingRepository;
+    @Autowired
+    private OnlineOrderingRepository onlineOrderingRepository;
+    @Autowired
+    private OnlineOrderRepository onlineOrderRepository;
 
     // status为-1代表账号不存在，返回-2代表密码错误，登陆成功则返回1
     public Map<String, Object> login(People people) {
@@ -107,7 +111,9 @@ public class PeopleServiceImpl implements PeopleService {
             e.printStackTrace();
         }
         req.put("offineOrdering", getOffineOrdering(people1.getId()));
-        req.put("offineOrder", getOffineOrdersByPeople(people1.getId()));
+        req.put("offineOrder", getOnLineOrdersByPeople(people1.getId()));
+        req.put("onlineOrdering", getOnLineOrdering(people1.getId()));
+        req.put("onlineOrder", getOnLineOrdersByPeople(people1.getId()));
         req.put("location", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
         return req;
 
@@ -249,7 +255,7 @@ public class PeopleServiceImpl implements PeopleService {
         } else {
             platForm = 1;
         }
-        List<OffineOrder> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndWanchengIsLessThan(platForm, 2);
+        List<OffineOrder> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
         return offineOrders;
     }
 
@@ -267,10 +273,10 @@ public class PeopleServiceImpl implements PeopleService {
     public OffineOrdering  addOffineOrdering(int  peopleId, int offineOrderId) {
 
         OffineOrder offineOrder =offineOrderRepository.findById(offineOrderId).get();
-        if(offineOrder.getWancheng()>0){
+        if(offineOrder.getRemain()==0){
             return null;
         }else{
-            offineOrder.setWancheng(2);
+            offineOrder.remainMinus();
         }
         offineOrderRepository.save(offineOrder);
 
@@ -292,6 +298,41 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public List<OffineOrdering> getOffineOrdering(int peopleId) {
         return offineOrderingRepository.findByPeopleId(peopleId);
+    }
+
+    @Override
+    public void addOnLineOrder(int peopleid, OnLineOrder offineOrder) {
+
+    }
+
+    @Override
+    public List<OnLineOrder> getOnLineOrders(int platForm) {
+        return  onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0);
+    }
+
+    @Override
+    public List<OnLineOrder> getOnLineOrdersByPeople(int peopleId) {
+        return null;
+    }
+
+    @Override
+    public void ChangeOnLineOrder(int peopleid, OnLineOrder onLineOrder) {
+
+    }
+
+    @Override
+    public OnLineOrdering addOnLineOrdering(int onLineOrderId, int peopleId) {
+        return null;
+    }
+
+    @Override
+    public void finishOnLineOrdering(int onLineOrderingId) {
+
+    }
+
+    @Override
+    public List<OnLineOrdering> getOnLineOrdering(int peopleId) {
+        return onlineOrderingRepository.findByPeopleId(peopleId);
     }
 
 

@@ -1,9 +1,6 @@
 package com.example.crowdsourcing.service;
 
-import com.example.crowdsourcing.dao.bean.Location;
-import com.example.crowdsourcing.dao.bean.OffineOrder;
-import com.example.crowdsourcing.dao.bean.OffineOrdering;
-import com.example.crowdsourcing.dao.bean.People;
+import com.example.crowdsourcing.dao.bean.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.jws.Oneway;
@@ -53,6 +50,17 @@ public interface PeopleService {
 	public OffineOrdering  addOffineOrdering(int  offineOrderId ,int peopleId);
 	public void  finishOffineOrdering(int  offineOrderingId);
 	public List<OffineOrdering>  getOffineOrdering(int  peopleId);
+
+
+
+	public void  addOnLineOrder(int peopleid, OnLineOrder offineOrder);
+	public List<OnLineOrder>  getOnLineOrders(int platForm);
+	public List<OnLineOrder>  getOnLineOrdersByPeople(int peopleId);
+	public void   ChangeOnLineOrder(int peopleid, OnLineOrder  onLineOrder);
+
+	public OnLineOrdering  addOnLineOrdering(int  onLineOrderId ,int peopleId);
+	public void  finishOnLineOrdering(int  onLineOrderingId);
+	public List<OnLineOrdering>  getOnLineOrdering(int  peopleId);
 
 
 

@@ -90,7 +90,7 @@ class NewOrderOnNetSecondPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                     decoration: BoxDecoration(
-                        color: Colors.primaries[index % 7],
+                        color: Colors.primaries[index % 7][300],
                         borderRadius: BorderRadius.horizontal(
                             right: Radius.circular(35),
                             left: Radius.circular(5))),

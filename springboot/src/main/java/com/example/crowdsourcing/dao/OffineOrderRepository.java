@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OffineOrderRepository extends JpaRepository<OffineOrder, Integer> {
 
-    List<OffineOrder> findByPlatFormLimitNotAndWanchengIsLessThan(int platForm, int lessthan);
+    List<OffineOrder> findByPlatFormLimitNotAndRemainIsGreaterThan(int platForm, int lessthan);
 
     List<OffineOrder> findByPeopleId(int peopleId);
 

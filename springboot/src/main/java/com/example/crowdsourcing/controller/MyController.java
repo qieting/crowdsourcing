@@ -119,4 +119,20 @@ public class MyController {
     }
 
 
+    @RequestMapping(value = "/onLineOrder", method = RequestMethod.POST)
+    public void addOnLineOrder(@RequestBody Map<String,Object> aaa, @CurrentUserId int id) {
+        System.out.println('1');
+    }
+
+    @RequestMapping(value = "/onLineOrder", method = RequestMethod.GET)
+    public List<OnLineOrder> getOnLineOrders(@RequestParam("platForm") int platForm) {
+        return peopleService.getOnLineOrders(platForm);
+    }
+
+    @RequestMapping(value = "/onLineOrdering", method = RequestMethod.GET)
+    public List<OnLineOrdering> getOnLineOrderings(@CurrentUserId  int id) {
+        return peopleService.getOnLineOrdering(id);
+    }
+
+
 }

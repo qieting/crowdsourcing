@@ -23,6 +23,8 @@ class OnlineOrder extends Order {
         platFormLimit,
         buyMessages,
         int wancheng,
+        int total,
+        int remain ,
         double price,
         int id,
         int peopleId,
@@ -36,7 +38,8 @@ class OnlineOrder extends Order {
     this.limitedTime = limitedTime;
     this.require = require;
     this.platFormLimit = platFormLimit;
-    this.wancheng = wancheng;
+    this.total =total??number;
+    this.remain=remain??number;
     this.id = id;
     this.peopleId = peopleId;
     this.finishTime=finishTime;
@@ -47,7 +50,8 @@ class OnlineOrder extends Order {
     if (map == null) return null;
     return OnlineOrder(
         title: map[Order.TITLE],
-        wancheng: map[Order.WANCHENG] ?? 0,
+        total: map[Order.TOTAL] ,
+        remain: map[Order.REMAIN]?? map[Order.TOTAL],
         describe: map[Order.DESCRIBE],
         require: map[Order.REQUIRE],
         limitedTime: map[Order.LIMITEDTIME],
@@ -70,7 +74,8 @@ class OnlineOrder extends Order {
       Order.LIMITEDTIME: limitedTime,
       Order.PLATFORMLIMIT: platFormLimit,
       Order.Price: price,
-      Order.WANCHENG: wancheng,
+      Order.TOTAL:total,
+      Order.REMAIN:remain,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
       Order.CREATEDTIME:createdTime.microsecondsSinceEpoch,

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
 import 'package:crowdsourcing/net/api.dart';
@@ -58,6 +60,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<OffineOrderModel>(
           create: (context) =>OffineOrderModel(),
+        ),
+        ChangeNotifierProvider<OnlineOrderModel>(
+          create: (context) =>OnlineOrderModel(),
+        ),
+        ChangeNotifierProvider<OnlineOrderingModel>(
+          create: (context) =>OnlineOrderingModel(),
         ),
       ],
       child: Consumer<ViewThemeModel>(builder: (context, viewThemeMode, child) {

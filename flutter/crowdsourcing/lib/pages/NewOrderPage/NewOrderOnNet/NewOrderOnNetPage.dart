@@ -1,6 +1,9 @@
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineStep.dart';
+import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetSecondPage.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 
@@ -72,6 +75,15 @@ class NewOrderOnNetState extends State<NewOrderOnNet> {
         onlineSteps: onLineSteps,
         price: double.parse(price),
         require: limit);
+
+    Routers.push(context, Routers.ORDERONLINEDETAILSPAGE, params: {
+      "offineOrder": offineOrder,
+      'success': () {
+        Navigator.of(context).pop();
+        MyHomePage.of().push(Routers.ORDERONLINEDETAILSPAGE,
+            params: {"offineOrder": offineOrder, 'detail': true});
+      }
+    });
 
 
   }

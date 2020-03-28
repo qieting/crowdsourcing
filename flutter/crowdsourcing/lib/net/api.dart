@@ -302,20 +302,14 @@ class MyDio {
     }
   }
 
-  static Future<File> getImage(String filePath,BuildContext context, Function success) async {
+  static Future<Response> getImage(String filePath) async {
     try {
-      int paltForm = Platform.isAndroid ? 1 : 2;
       Response response = await dio.get(MyUrl.imageUp,
-          queryParameters: {'filePath': filePath});
+          queryParameters: {'filePath': filePath},options: Options(responseType: ResponseType.bytes));
       if (response.statusCode == 200) {
-        var body = response.data;
-        List<OffineOrder> offineOrders = body.map<OffineOrder>((it) {
-          return OffineOrder.fromJsonMap(it);
-        }).toList();
-        success(offineOrders);
+        return response;
       } else {
         MyToast.toast(failStatus(response.statusCode));
-
       }
     } catch (e) {
       print(e);
@@ -328,7 +322,7 @@ class MyDio {
       {BuildContext context, Function success}) async {
     try {
       Response response = await dio.post(MyUrl.imageUp,
-          data: UploadFileInfo(file, fileName));
+          data: UploadFileInfo(file, fileName),);
       if (response.statusCode == 200) {
         return response.data['url'];
       } else {

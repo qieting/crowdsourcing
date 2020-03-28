@@ -20,9 +20,10 @@ class OffineOrder extends Order {
       String limitedTime,
       platFormLimit,
       buyMessages,
-      int wancheng,
       double price,
       int id,
+        int total=1,
+        int remain ,
       int peopleId,
       Location end,
         DateTime createdTime,
@@ -34,7 +35,8 @@ class OffineOrder extends Order {
     this.limitedTime = limitedTime;
     this.require = require;
     this.platFormLimit = platFormLimit;
-    this.wancheng = wancheng;
+    this.total =total;
+    this.remain=remain??total;
     this.id = id;
     this.peopleId = peopleId;
     this.finishTime=finishTime;
@@ -45,7 +47,8 @@ class OffineOrder extends Order {
     if (map == null) return null;
     return OffineOrder(
         title: map[Order.TITLE],
-        wancheng: map[Order.WANCHENG] ?? 0,
+        total: map[Order.TOTAL] ,
+        remain: map[Order.REMAIN]?? map[Order.TOTAL],
         describe: map[Order.DESCRIBE],
         require: map[Order.REQUIRE],
         limitedTime: map[Order.LIMITEDTIME],
@@ -70,7 +73,8 @@ class OffineOrder extends Order {
       Order.PLATFORMLIMIT: platFormLimit,
       END: end?.id ?? '-1',
       Order.Price: price,
-      Order.WANCHENG: wancheng,
+      Order.TOTAL:total,
+      Order.REMAIN:remain,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
       Order.CREATEDTIME:createdTime.microsecondsSinceEpoch,

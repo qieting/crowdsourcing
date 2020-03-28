@@ -49,7 +49,7 @@ class OffineOrderModel extends ChangeNotifier {
   int notStartnumber(){
     int i = 0;
     for(var ii in _offineOrders){
-      if(ii.wancheng==0){
+      if(ii.total==ii.remain){
         i++;
       }
     }
@@ -60,7 +60,7 @@ class OffineOrderModel extends ChangeNotifier {
   int finishnumber(){
     int i = 0;
     for(var ii in _offineOrders){
-      if(ii.wancheng==3){
+      if(ii.remain==0){
         i++;
       }
     }
@@ -69,7 +69,7 @@ class OffineOrderModel extends ChangeNotifier {
   int doingnumber(){
     int i = 0;
     for(var ii in _offineOrders){
-      if(ii.wancheng==1||ii.wancheng==2){
+      if(ii.remain>0&&ii.remain<ii.total){
         i++;
       }
     }

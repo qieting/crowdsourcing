@@ -6,13 +6,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class OffineOrder {
+public class OnLineOrder {
 
+    public OnLineOrder(){
+
+    }
+
+    @Column
+    String onlineSteps;
 
     @Id
     @GeneratedValue
     private int id;
-
 
     @Column
     int peopleId;
@@ -27,44 +32,19 @@ public class OffineOrder {
     @Column
     int platFormLimit;
     @Column
-    String buyMessages;
-
-    @Column
     int total;
     @Column
     int remain;
 
-
-
-
-
-    @Column
-    int end;
     @Column
     double price;
 
-    public int getTotal() {
-        return total;
+    public String getOnlineSteps() {
+        return onlineSteps;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public int getRemain() {
-        return remain;
-    }
-
-    public void setRemain(int remain) {
-        this.remain = remain;
-    }
-
-    public int getEnd() {
-        return end;
-    }
-
-    public void setEnd(int end) {
-        this.end = end;
+    public void setOnlineSteps(String onlineSteps) {
+        this.onlineSteps = onlineSteps;
     }
 
     public int getId() {
@@ -91,6 +71,14 @@ public class OffineOrder {
         this.title = title;
     }
 
+    public String getLimitedTime() {
+        return limitedTime;
+    }
+
+    public void setLimitedTime(String limitedTime) {
+        this.limitedTime = limitedTime;
+    }
+
     public String getDescribe() {
         return describe;
     }
@@ -107,14 +95,6 @@ public class OffineOrder {
         this.require = require;
     }
 
-    public String getLimitedTime() {
-        return limitedTime;
-    }
-
-    public void setLimitedTime(String limitedTime) {
-        this.limitedTime = limitedTime;
-    }
-
     public int getPlatFormLimit() {
         return platFormLimit;
     }
@@ -123,12 +103,20 @@ public class OffineOrder {
         this.platFormLimit = platFormLimit;
     }
 
-    public String getBuyMessages() {
-        return buyMessages;
+    public int getTotal() {
+        return total;
     }
 
-    public void setBuyMessages(String buyMessages) {
-        this.buyMessages = buyMessages;
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getRemain() {
+        return remain;
+    }
+
+    public void setRemain(int remain) {
+        this.remain = remain;
     }
 
     public double getPrice() {
@@ -138,10 +126,4 @@ public class OffineOrder {
     public void setPrice(double price) {
         this.price = price;
     }
-
-    public void remainMinus(){
-        remain--;
-    }
-
-
 }

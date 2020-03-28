@@ -108,7 +108,7 @@ class OrderOffineDetailsPage extends StatelessWidget {
                           text: "  ",
                           style:
                               TextStyle(color: Colors.grey[400], fontSize: 13)),
-                      TextSpan(text: offineOrder.describe)
+                      TextSpan(text: offineOrder.require)
                     ])),
                   ],
                 )),
@@ -234,13 +234,14 @@ class OrderOffineDetailsPage extends StatelessWidget {
               if (detail) {
                 if (take != null) {
                   if (take.finishDate != null) {
+
                   } else {
                     MyDio.changeOffineOrdering(offineOrder.id, success: () {
                       offineOrderingModel.finishOfferOrdering(take.id);
                     });
                   }
                   return;
-                } else if (offineOrder.wancheng >= 2) {}
+                } else if (offineOrder.remain >= 0) {}
                 MyDio.addOffineOrdering(offineOrder.id, success: (data) {
                   if (data == null) {
                     MyToast.toast("抢单失败，请重新进入");
@@ -267,7 +268,7 @@ class OrderOffineDetailsPage extends StatelessWidget {
               detail
                   ? (take != null
                       ? (take.finishDate == null ? "完成提交" : "已完成")
-                      : offineOrder.wancheng >= 2 ? "已被接走" : '接单')
+                      : offineOrder.remain >= 2 ? "已被接走" : '接单')
                   : "发布",
               style: TextStyle(color: Colors.white),
             ),
