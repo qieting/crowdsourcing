@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class OnlineOrdering {
   int id;
 
@@ -9,7 +11,7 @@ class OnlineOrdering {
   DateTime submitDate;
   DateTime finishDate;
 
-  List<String> resources;
+  Map<int, String> resources;
 
   static const String Id = "id";
   static const String PeopleId = 'peopleId';
@@ -30,9 +32,14 @@ class OnlineOrdering {
 
   static OnlineOrdering fromJsonMap(Map<String, dynamic> map) {
     if (map == null) return null;
+    print(map[RESOURCES]);
     return OnlineOrdering(
         id: map[Id],
-        resources: map[RESOURCES],
+        resources: map[RESOURCES] == null
+            ? null
+            : (json.decode(map[RESOURCES]) as Map).map<int, String>((k, v) {
+              return MapEntry(int.parse(k),v);
+        }),
         peopleId: map[PeopleId],
         submitDate: map[SUBMITTIME] != null
             ? DateTime.fromMicrosecondsSinceEpoch(map[SUBMITTIME])
@@ -49,7 +56,7 @@ class OnlineOrdering {
   Map toJson() => {
         Id: id,
         PeopleId: peopleId,
-        RESOURCES: resources,
+        RESOURCES: resources==null?null:json.encode(resources),
         OnlineOrderId: onlineOrderId,
         CreateDate: createDate?.microsecondsSinceEpoch,
         SUBMITTIME: submitDate?.microsecondsSinceEpoch,

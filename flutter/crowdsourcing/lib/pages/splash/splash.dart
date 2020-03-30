@@ -17,18 +17,18 @@ class SplashPage extends StatelessWidget {
     //在MaterialApp的builder里使用Builder，因此就在这里初始化
     MyToast.init(context);
     Future.delayed(new Duration(milliseconds: 0), () async {
-     Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
-//      if (MyDio.token == null) {
-//        Routers.pushAndRemove(context, Routers.LOGIN);
-//      } else {
-//        bool success = await MyDio.getPeople(context);
-//        if (success) {
-//          return Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
-//              params: {'title': 'hi'});
-//        } else {
-//          return Routers.pushAndRemove(context, Routers.LOGIN);
-//        }
-//      }
+     //Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
+      if (MyDio.token == null) {
+        Routers.pushAndRemove(context, Routers.LOGIN);
+      } else {
+        bool success = await MyDio.getPeople(context);
+        if (success) {
+          return Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
+              params: {'title': 'hi'});
+        } else {
+          return Routers.pushAndRemove(context, Routers.LOGIN);
+        }
+      }
     });
 
     return Center(

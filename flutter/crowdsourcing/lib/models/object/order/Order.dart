@@ -3,7 +3,7 @@ class Order {
   static const String DESCRIBE = 'describe';
   static const String REQUIRE = 'require';
   static const String LIMITEDTIME = 'limitedTime';
-  static const String PLATFORMLIMIT = 'platformLimit';
+  static const String PLATFORMLIMIT = 'platFormLimit';
   static const String Price = 'price';
   static const String ID = "id";
   static const String PEOPLEID = 'peopleId';

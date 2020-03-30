@@ -6,8 +6,13 @@ import com.example.crowdsourcing.dao.bean.*;
 import com.example.crowdsourcing.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,19 +124,46 @@ public class MyController {
     }
 
 
-    @RequestMapping(value = "/onLineOrder", method = RequestMethod.POST)
-    public void addOnLineOrder(@RequestBody Map<String,Object> aaa, @CurrentUserId int id) {
-        System.out.println('1');
+    @RequestMapping(value = "/onlineOrder", method = RequestMethod.POST)
+    public OnLineOrder addOnLineOrder(OnLineOrder onLineOrder, List<MultipartFile> files, @CurrentUserId int id) {
+
+      return   peopleService.addOnLineOrder(id,onLineOrder,files);
     }
 
-    @RequestMapping(value = "/onLineOrder", method = RequestMethod.GET)
+    @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)
     public List<OnLineOrder> getOnLineOrders(@RequestParam("platForm") int platForm) {
         return peopleService.getOnLineOrders(platForm);
     }
 
-    @RequestMapping(value = "/onLineOrdering", method = RequestMethod.GET)
+    @RequestMapping(value = "/onlineOrdering", method = RequestMethod.GET)
     public List<OnLineOrdering> getOnLineOrderings(@CurrentUserId  int id) {
         return peopleService.getOnLineOrdering(id);
+    }
+
+    @RequestMapping(value = "/order", method = RequestMethod.GET)
+    public Map<String ,List> getorders(@RequestParam("platForm") int platForm) {
+        return peopleService.getOrders(platForm);
+    }
+
+    @RequestMapping(value = "/onlineOrdering", method = RequestMethod.POST)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public OnLineOrdering  addOnLineOrdering( @RequestBody Integer  onlineOrderId, @CurrentUserId int id) {
+        return  peopleService.addOnLineOrdering(onlineOrderId,id);
+    }
+
+    @RequestMapping(value = "/onlineOrdering", method = RequestMethod.PUT)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public OnLineOrdering  addOnLineOrdering(  HttpServletRequest request) {
+        MultipartHttpServletRequest params=((MultipartHttpServletRequest) request);
+        Map<String,MultipartFile> files = params.getFileMap();
+        Map<String,String> phones =new HashMap<>();
+        Enumeration<String>  ss =params.getParameterNames();
+        while (ss.hasMoreElements()){
+            String as =ss.nextElement();
+             phones.put(as,params.getParameter(as));
+        }
+     //   return  null;
+        return  peopleService. ChangeOnlineOrdering(phones,files);
     }
 
 

@@ -19,7 +19,7 @@ class NewOrderOnNet extends StatefulWidget {
 }
 
 class NewOrderOnNetState extends State<NewOrderOnNet> {
-  int platform = 1;
+  int platform = 0;
   PageController _pageController = new PageController();
   String time = '无限制';
   List<OnlineStep> onLineSteps = [];
@@ -77,11 +77,11 @@ class NewOrderOnNetState extends State<NewOrderOnNet> {
         require: limit);
 
     Routers.push(context, Routers.ORDERONLINEDETAILSPAGE, params: {
-      "offineOrder": offineOrder,
-      'success': () {
+      "onlineOrder": offineOrder,
+      'success': (_o) {
         Navigator.of(context).pop();
         MyHomePage.of().push(Routers.ORDERONLINEDETAILSPAGE,
-            params: {"offineOrder": offineOrder, 'detail': true});
+            params: {"onlineOrder": _o, 'detail': true});
       }
     });
 
@@ -122,15 +122,15 @@ class NewOrderOnNetState extends State<NewOrderOnNet> {
               items: [
                 DropdownMenuItem(
                   child: Text("无限制"),
-                  value: 1,
+                  value: 0,
                 ),
                 DropdownMenuItem(
                   child: Text("安卓"),
-                  value: 2,
+                  value: 1,
                 ),
                 DropdownMenuItem(
                   child: Text("ios"),
-                  value: 3,
+                  value: 2,
                 )
               ],
               onChanged: (value) {

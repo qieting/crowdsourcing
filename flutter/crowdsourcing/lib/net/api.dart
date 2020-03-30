@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,12 +7,16 @@ import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 
 import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
 import 'package:crowdsourcing/models/object/order/offine/OffineOrdering.dart';
 import 'package:crowdsourcing/models/object/order/offine/location/Location.dart';
+import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
+import 'package:crowdsourcing/models/object/order/online/OnlineOrdering.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/routers.dart';
@@ -34,7 +39,7 @@ class MyDio {
     //从内存读取token
     token = await StorageManager.localStorage.getItem(Token);
     dio = Dio(BaseOptions(
-        connectTimeout: 3000,
+        connectTimeout: 5000,
         baseUrl: MyUrl.baseUrl,
         headers: token == null ? {} : {Token: token}));
     //这里增加拦截器，如果请求没有token并且不是登录请求，那么就抛出异常，实际上基本没有这种情况
@@ -77,6 +82,19 @@ class MyDio {
         }).toList();
         Provider.of<OffineOrderModel>(context, listen: false)
             .addOffineOrders(list2);
+
+        List<OnlineOrder> list3 =
+            (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+          return OnlineOrder.fromJsonMap(f);
+        }).toList();
+        Provider.of<OnlineOrderModel>(context, listen: false)
+            .addOnlineOrders(list3);
+        List<OnlineOrdering> list4 =
+            (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+          return OnlineOrdering.fromJsonMap(f);
+        }).toList();
+        Provider.of<OnlineOrderingModel>(context, listen: false)
+            .addOnlineOrderings(list4);
 
         return true;
       } else {
@@ -162,6 +180,19 @@ class MyDio {
           }).toList();
           Provider.of<OffineOrderModel>(context, listen: false)
               .addOffineOrders(list2);
+
+          List<OnlineOrder> list3 =
+              (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+            return OnlineOrder.fromJsonMap(f);
+          }).toList();
+          Provider.of<OnlineOrderModel>(context, listen: false)
+              .addOnlineOrders(list3);
+          List<OnlineOrdering> list4 =
+              (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+            return OnlineOrdering.fromJsonMap(f);
+          }).toList();
+          Provider.of<OnlineOrderingModel>(context, listen: false)
+              .addOnlineOrderings(list4);
         }
         Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
             params: {"title": "as"});
@@ -238,6 +269,8 @@ class MyDio {
           await dio.post(MyUrl.offineOrder, data: offineOrder.toJson());
       if (response.statusCode == 200) {
         MyToast.toast("增加成功");
+        Provider.of<OffineOrderModel>(context, listen: false)
+            .addOffineOrder(offineOrder);
         success();
       } else {
         showError(context, failStatus(response.statusCode));
@@ -259,6 +292,33 @@ class MyDio {
           return OffineOrder.fromJsonMap(it);
         }).toList();
         success(offineOrders);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      return false;
+    }
+  }
+
+  static getOrders(BuildContext context, Function success) async {
+    try {
+      int paltForm = Platform.isAndroid ? 1 : 2;
+      Response response = await dio
+          .get(MyUrl.order, queryParameters: {'platForm': paltForm.toString()});
+      if (response.statusCode == 200) {
+        var body = response.data;
+        List<OffineOrder> offineOrders =
+            (body["offineOrder"] as List).map<OffineOrder>((it) {
+          return OffineOrder.fromJsonMap(it);
+        }).toList();
+        List<OnlineOrder> onlineOrders =
+            (body["onlineOrder"] as List).map<OnlineOrder>((it) {
+          return OnlineOrder.fromJsonMap(it);
+        }).toList();
+        success(offineOrders, onlineOrders);
       } else {
         MyToast.toast(failStatus(response.statusCode));
         return false;
@@ -304,8 +364,8 @@ class MyDio {
 
   static Future<Response> getImage(String filePath) async {
     try {
-      Response response = await dio.get(MyUrl.imageUp,
-          queryParameters: {'filePath': filePath},options: Options(responseType: ResponseType.bytes));
+      Response response = await dio.get(MyUrl.imageUp + filePath,
+          options: Options(responseType: ResponseType.bytes));
       if (response.statusCode == 200) {
         return response;
       } else {
@@ -314,15 +374,16 @@ class MyDio {
     } catch (e) {
       print(e);
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-
     }
   }
 
   static Future<String> FileUp(File file, String fileName,
       {BuildContext context, Function success}) async {
     try {
-      Response response = await dio.post(MyUrl.imageUp,
-          data: UploadFileInfo(file, fileName),);
+      Response response = await dio.post(
+        MyUrl.imageUp,
+        data: UploadFileInfo(file, fileName),
+      );
       if (response.statusCode == 200) {
         return response.data['url'];
       } else {
@@ -330,6 +391,83 @@ class MyDio {
       }
     } catch (e) {
       print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static addOnlineOrder(OnlineOrder onlineOrder,
+      {BuildContext context, Function success}) async {
+    try {
+      Map<String, dynamic> map = new Map();
+
+      map.addAll({
+        'files': onlineOrder.onlineSteps.map<UploadFileInfo>((it) {
+          if (it.imageUrl != null)
+            return UploadFileInfo(new File(it.imageUrl),
+                it.imageUrl.split("/")[it.imageUrl.split("/").length - 1]);
+        }).toList()
+          ..remove(null)
+          ..remove(null)
+          ..remove(null)
+          ..remove(null)
+      });
+      onlineOrder.onlineSteps.forEach((it) {
+        if (it.imageUrl != null)
+          it.imageUrl =
+              it.imageUrl.split("/")[it.imageUrl.split("/").length - 1];
+      });
+      map.addAll(onlineOrder.toJson());
+      FormData formData = new FormData.from(map);
+      Response response = await dio.post(MyUrl.onlineOrder, data: formData);
+      if (response.statusCode == 200) {
+        MyToast.toast("增加成功");
+        OnlineOrder onlineOrder = OnlineOrder.fromJsonMap(response.data);
+        Provider.of<OnlineOrderModel>(context, listen: false)
+            .addOnlineOrder(onlineOrder);
+        success(onlineOrder);
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static addOnlineOrdering(int offerding,
+      {BuildContext context, Function success}) async {
+    try {
+      Response response = await dio.post(MyUrl.onlineOrdering, data: offerding);
+      if (response.statusCode == 200) {
+        success(response.data);
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static changeOnlineOrdering(int onlineOrderId, Map images, Map phones,
+      {BuildContext context, success}) async {
+    try {
+      //FocusScope.of(context).unfocus();
+      Map<String, dynamic> map = {"onlineOrderId": onlineOrderId};
+      map.addAll(phones.map((k,v){return MapEntry(k.toString(),v);}));
+      map.addAll(images.map<String, UploadFileInfo>((k, v) {
+        return MapEntry(
+            k.toString(), UploadFileInfo(File(v), v.split("/")[v.split("/").length - 1]));
+      }));
+      FormData formData = new FormData.from(map);
+      Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
+      if (response.statusCode == 200) {
+        //success(response.data);
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e.toString());
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }

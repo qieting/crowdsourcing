@@ -62,11 +62,11 @@ class OnlineOrder extends Order {
         finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.FINISHTIME]):null,
         price: map[Order.Price],
       number: map[NUMBER],
-      onlineSteps: (map[ONLINESTEPS] as List).map<OnlineStep>((f){ return OnlineStep.fromJsonMap(f);}).toList()
+      onlineSteps: (json.decode(map[ONLINESTEPS]) as List).map<OnlineStep>((f){ return OnlineStep.fromJsonMap(f);}).toList()
     );
   }
 
-  Map toJson() {
+  Map<String,dynamic> toJson() {
     return {
       Order.TITLE: title,
       Order.DESCRIBE: describe,
@@ -78,8 +78,8 @@ class OnlineOrder extends Order {
       Order.REMAIN:remain,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
-      Order.CREATEDTIME:createdTime.microsecondsSinceEpoch,
-      Order.FINISHTIME:finishTime.microsecondsSinceEpoch,
+      Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,
+      Order.FINISHTIME:finishTime?.microsecondsSinceEpoch,
       NUMBER:number,
       ONLINESTEPS: json.encode(onlineSteps.map((f){ return f.toJson();}).toList())
     };

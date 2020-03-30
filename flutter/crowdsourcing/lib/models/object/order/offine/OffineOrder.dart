@@ -19,15 +19,16 @@ class OffineOrder extends Order {
       String require,
       String limitedTime,
       platFormLimit,
-      buyMessages,
+
       double price,
       int id,
         int total=1,
         int remain ,
       int peopleId,
-      Location end,
+      this.end,
         DateTime createdTime,
         DateTime finishTime,
+        this.buyMessages
       }) {
     this.title = title;
     this.price = price;
@@ -77,8 +78,8 @@ class OffineOrder extends Order {
       Order.REMAIN:remain,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
-      Order.CREATEDTIME:createdTime.microsecondsSinceEpoch,
-      Order.FINISHTIME:finishTime.microsecondsSinceEpoch,
+      Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,
+      Order.FINISHTIME:finishTime?.microsecondsSinceEpoch,
       BUYMESSAGES: json.encode(buyMessages.map((it) {
         return it.toJson();
       }).toList())

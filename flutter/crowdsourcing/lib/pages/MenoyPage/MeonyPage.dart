@@ -17,7 +17,7 @@ class MoneyPage extends StatefulWidget {
     return moneyPageState;
   }
 
-  void changeTab( int index) {
+  void changeTab(int index) {
     this.moneyPageState.changeState(index);
   }
 }
@@ -29,7 +29,7 @@ class MoneyPageState extends State<MoneyPage>
 
   List<OffineOrder> offineOrders;
   List<OnlineOrder> onlineOrders;
-
+  ScrollController scrollController = new ScrollController();
   List<Order> orders = [];
 
   @override
@@ -39,8 +39,8 @@ class MoneyPageState extends State<MoneyPage>
     getOrders();
   }
 
-  void changeState( int index) {
-    if (index== 0) {
+  void changeState(int index) {
+    if (index == 0) {
       orders = onlineOrders ?? [];
     } else {
       orders = offineOrders ?? [];
@@ -48,24 +48,34 @@ class MoneyPageState extends State<MoneyPage>
     setState(() {});
   }
 
-  void getOrders() {
-
-      MyDio.getOffineOrders(context, (t) {
-        offineOrders = t;
-        setState(() {});
-      });
+  void  getOrders() {
+    MyDio.getOrders(context, (a, b) {
+      offineOrders = a;
+      onlineOrders = b;
+      changeState(0);
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    super.build(context);//必须添加
+    super.build(context); //必须添加
     return Container(
       child: orders.length == 0
           ? ListTile(
               title: Text("暂时没有数据"),
             )
-          : ListView.builder(
+          : RefreshIndicator(
+        onRefresh: () async {
+          getOrders();
+          await Future.delayed(Duration(seconds: 2),(){
+
+          }
+          );
+          return ;
+        },
+          child: ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -77,11 +87,15 @@ class MoneyPageState extends State<MoneyPage>
                               'detail': true
                             });
                       } else {
-                        orders = offineOrders ?? [];
+                        Routers.push(context, Routers.ORDERONLINEDETAILSPAGE,
+                            params: {
+                              "onlineOrder": orders[index],
+                              'detail': true
+                            });
                       }
                     },
                     child: ListTile(title: Text(orders[index].title)));
-              }),
+              })),
     );
   }
 }

@@ -6,8 +6,12 @@ import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrdering.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineStep.dart';
+import 'package:crowdsourcing/net/MyUrl.dart';
 import 'package:crowdsourcing/net/api.dart';
-import 'package:crowdsourcing/widgets/ChooseImage.dart';
+import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
+import 'package:crowdsourcing/routers.dart';
+import 'package:crowdsourcing/widgets/ChooseImage/ChooseImage.dart';
+import 'package:crowdsourcing/widgets/ChooseImage/ListOfChooseImage.dart';
 import 'package:crowdsourcing/widgets/MyImage.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +31,13 @@ class OrderOnlineDetailsPage extends StatefulWidget {
 }
 
 class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
+  ListOfChooseImage listOfChooseImage = new ListOfChooseImage();
+  ListOfTextEditingController listOfTextEditingController =
+      new ListOfTextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.detail ? "详情" : "预览"),
@@ -193,10 +202,14 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                               .onlineSteps[index].explain),
                                           MyImage(
                                             widget.detail
-                                                ? NetworkImage(widget
-                                                    .onlineOrder
-                                                    .onlineSteps[index]
-                                                    .imageUrl)
+                                                ? NetworkImage(MyUrl.imageUrl +
+                                                    widget.onlineOrder.id
+                                                        .toString() +
+                                                    "\$" +
+                                                    widget
+                                                        .onlineOrder
+                                                        .onlineSteps[index]
+                                                        .imageUrl)
                                                 : FileImage(File(widget
                                                     .onlineOrder
                                                     .onlineSteps[index]
@@ -208,7 +221,7 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                               onPressed: () async {
                                                 bool success =
                                                     await MyImages.saveImage(
-                                                        widget
+                                                       widget.onlineOrder.id.toString()+"\$"+widget
                                                             .onlineOrder
                                                             .onlineSteps[index]
                                                             .imageUrl);
@@ -249,10 +262,23 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                           ),
                                           Text(widget.onlineOrder
                                               .onlineSteps[index].explain),
-                                          MyImage(NetworkImage(widget
-                                              .onlineOrder
-                                              .onlineSteps[index]
-                                              .imageUrl)),
+                                          MyImage(
+                                            widget.detail
+                                                ? NetworkImage(MyUrl.imageUrl +
+                                                    widget.onlineOrder.id
+                                                        .toString() +
+                                                    "\$" +
+                                                    widget
+                                                        .onlineOrder
+                                                        .onlineSteps[index]
+                                                        .imageUrl)
+                                                : FileImage(File(widget
+                                                    .onlineOrder
+                                                    .onlineSteps[index]
+                                                    .imageUrl)),
+                                            width: 150,
+                                            height: 150,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -330,11 +356,24 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                           ),
                                           Text(widget.onlineOrder
                                               .onlineSteps[index].explain),
-                                          MyImage(NetworkImage(widget
-                                              .onlineOrder
-                                              .onlineSteps[index]
-                                              .imageUrl)),
-                                          ChooseImage()
+                                          MyImage(
+                                            widget.detail
+                                                ? NetworkImage(MyUrl.imageUrl +
+                                                    widget.onlineOrder.id
+                                                        .toString() +
+                                                    "\$" +
+                                                    widget
+                                                        .onlineOrder
+                                                        .onlineSteps[index]
+                                                        .imageUrl)
+                                                : FileImage(File(widget
+                                                    .onlineOrder
+                                                    .onlineSteps[index]
+                                                    .imageUrl)),
+                                            width: 150,
+                                            height: 150,
+                                          ),
+                                          listOfChooseImage[index]
                                         ],
                                       ),
                                     ),
@@ -368,6 +407,13 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                           ),
                                           Text(widget.onlineOrder
                                               .onlineSteps[index].explain),
+                                          TextField(
+                                            controller:
+                                                listOfTextEditingController[
+                                                    index],
+                                            decoration: InputDecoration(
+                                                hintText: "请输入要求上传的手机号"),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -388,43 +434,61 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
           return RaisedButton(
             color: Theme.of(context).primaryColor,
             onPressed: () {
-//              if (widget.detail) {
-//                if (take != null) {
-//                  if (take.finishDate != null) {
-//                  } else {
-//                    MyDio.changeOffineOrdering(widget.onlineOrder.id,
-//                        success: () {
-//                      widget.onlineOrderingModel.finishOfferOrdering(take.id);
-//                    });
-//                  }
-//                  return;
-//                } else if (widget.onlineOrder.wancheng >= 2) {}
-//                MyDio.addOffineOrdering(widget.onlineOrder.id, success: (data) {
-//                  if (data == null) {
-//                    MyToast.toast("抢单失败，请重新进入");
-//                    return;
-//                  }
-//                  widget.onlineOrderingModel
-//                      .addOffineOrdering(OffineOrdering.fromJsonMap(data));
-//                  Navigator.of(context).pop();
-//                  MyHomePage.of().push(Routers.ORDEROFFINEDETAILPAGE, params: {
-//                    "onlineOrder": widget.onlineOrder,
-//                    'detail': true,
-//                    "take": true
-//                  });
-//                });
-//              } else {
-//                MyDio.addOffineOrder(widget.onlineOrder, context: context,
-//                    success: () {
-//                  Navigator.of(context).pop();
-//                  success();
-//                });
-//              }
+              if (widget.detail) {
+                if (take != null) {
+                  if (take.submitDate == null) {
+                    //提交操作
+                    if (listOfTextEditingController.valiad() &&
+                        listOfChooseImage.valiad()) {
+                      MyDio.changeOnlineOrdering(take.id,
+                          listOfChooseImage.map.map<int,String>((k, v) {
+                        return MapEntry(k, v.path);
+                      }), listOfTextEditingController.map.map<int,String>((k, v) {
+                        return MapEntry(k, v.text);
+                      }));
+                    } else {
+                      MyToast.toast("您还有信息没有填写");
+                    }
+                  } else if (take.finishDate == null) {
+                    //不可操作
+                  } else {
+                    //不可操作
+                  }
+                  return;
+                } else if (widget.onlineOrder.remain > 0) {
+                  //接单操作
+                  MyDio.addOnlineOrdering(widget.onlineOrder.id,
+                      success: (data) {
+                    if (data == null) {
+                      MyToast.toast("抢单失败，请重新进入");
+                      return;
+                    }
+                    MyToast.toast("接单成功");
+                    onlineOrderingModel
+                        .addOnlineOrdering(OnlineOrdering.fromJsonMap(data));
+//                    Navigator.of(context).pop();
+//                    MyHomePage.of().push(Routers.ORDERONLINEDETAILSPAGE,
+//                        params: {
+//                          "onlineOrder": widget.onlineOrder,
+//                          'detail': true,
+//                          "take": true
+//                        });
+                  });
+                }
+              } else {
+                MyDio.addOnlineOrder(widget.onlineOrder, context: context,
+                    success: (_0) {
+                  Navigator.of(context).pop();
+                  widget.success(_0);
+                });
+              }
             },
             child: Text(
               widget.detail
                   ? (take != null
-                      ? (take.finishDate == null ? "完成提交" : "已完成")
+                      ? (take.submitDate == null
+                          ? "提交"
+                          : take.finishDate == null ? '等待审核' : "已完成")
                       : widget.onlineOrder.remain == 0 ? "已被抢完" : '接单')
                   : "发布",
               style: TextStyle(color: Colors.white),

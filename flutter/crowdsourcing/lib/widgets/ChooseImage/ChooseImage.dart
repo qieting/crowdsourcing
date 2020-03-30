@@ -78,8 +78,8 @@ class _ChooseImageState extends State<ChooseImage> {
           }
         }:null,
         child: Image(
-          height: 200,
-          width: 200,
+          height: 150,
+          width: 150,
           image: _image==null? AssetImage(url):FileImage(_image),
         ),
       )

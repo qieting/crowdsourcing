@@ -23,9 +23,9 @@ class OnlineStep {
         name: map[NAME],
         explain: map[EXPLAIN],
         imageUrl: map[IMAGEURL],
-        myAction: map[MYACTION]);
+        myAction: MyAction.values[map[MYACTION]]);
   }
 
   Map toJson() =>
-      {NAME: name, EXPLAIN: explain, IMAGEURL: imageUrl, MYACTION: myAction};
+      {NAME: name, EXPLAIN: explain, IMAGEURL: imageUrl, MYACTION: myAction.index};
 }

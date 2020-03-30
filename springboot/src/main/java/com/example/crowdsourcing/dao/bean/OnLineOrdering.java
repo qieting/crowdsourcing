@@ -23,7 +23,15 @@ public class OnLineOrdering {
     int peopleId;
 
     @Column
-    int offineOrderId;
+    int onlineOrderId;
+
+    public int getOnlineOrderId() {
+        return onlineOrderId;
+    }
+
+    public void setOnlineOrderId(int onlineOrderId) {
+        this.onlineOrderId = onlineOrderId;
+    }
 
     @Column
     Date createDate;
@@ -53,13 +61,6 @@ public class OnLineOrdering {
         this.peopleId = peopleId;
     }
 
-    public int getOffineOrderId() {
-        return offineOrderId;
-    }
-
-    public void setOffineOrderId(int offineOrderId) {
-        this.offineOrderId = offineOrderId;
-    }
 
     public Date getCreateDate() {
         return createDate;

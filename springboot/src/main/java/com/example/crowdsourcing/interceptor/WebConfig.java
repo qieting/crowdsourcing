@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,6 +27,13 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
 
 
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**").addResourceLocations("file:" + "E:/crowdsourcing/images/");
+    }
+
+
     @Bean
     public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
         return new CurrentUserMethodArgumentResolver();
@@ -37,6 +45,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         List<String> tokenExclude = new ArrayList<>();
         tokenExclude.add("/error");
         tokenExclude.add("/");
+        tokenExclude.add("/images/**");
         registry.addInterceptor(new TokenInterceptor()).excludePathPatterns(tokenExclude);
 
 

@@ -2,8 +2,8 @@ package com.example.crowdsourcing.service;
 
 import com.example.crowdsourcing.dao.bean.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.jws.Oneway;
 import java.util.List;
 import java.util.Map;
 
@@ -53,14 +53,18 @@ public interface PeopleService {
 
 
 
-	public void  addOnLineOrder(int peopleid, OnLineOrder offineOrder);
+	public OnLineOrder  addOnLineOrder(int peopleid, OnLineOrder offineOrder, List<MultipartFile> files);
 	public List<OnLineOrder>  getOnLineOrders(int platForm);
 	public List<OnLineOrder>  getOnLineOrdersByPeople(int peopleId);
 	public void   ChangeOnLineOrder(int peopleid, OnLineOrder  onLineOrder);
 
 	public OnLineOrdering  addOnLineOrdering(int  onLineOrderId ,int peopleId);
 	public void  finishOnLineOrdering(int  onLineOrderingId);
+	public OnLineOrdering ChangeOnlineOrdering( Map<String ,String> phones , Map<String ,MultipartFile>files);
 	public List<OnLineOrdering>  getOnLineOrdering(int  peopleId);
+
+
+	public  Map<String,List>  getOrders(int platForm);
 
 
 

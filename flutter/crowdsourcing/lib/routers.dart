@@ -91,7 +91,7 @@ class Routers {
         return AddOnlineStepPage();
       case ORDERONLINEDETAILSPAGE:
         return OrderOnlineDetailsPage(
-          onlineOrder: params["offineOrder"],
+          onlineOrder: params["onlineOrder"],
           detail: params['detail'] ?? false,
           success: params['success'],
         );

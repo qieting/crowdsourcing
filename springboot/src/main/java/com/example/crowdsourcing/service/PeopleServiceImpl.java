@@ -4,9 +4,13 @@ package com.example.crowdsourcing.service;
 import com.example.crowdsourcing.dao.*;
 import com.example.crowdsourcing.dao.bean.*;
 import com.example.crowdsourcing.untils.MyToken;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -111,7 +115,7 @@ public class PeopleServiceImpl implements PeopleService {
             e.printStackTrace();
         }
         req.put("offineOrdering", getOffineOrdering(people1.getId()));
-        req.put("offineOrder", getOnLineOrdersByPeople(people1.getId()));
+        req.put("offineOrder", getOffineOrdersByPeople(people1.getId()));
         req.put("onlineOrdering", getOnLineOrdering(people1.getId()));
         req.put("onlineOrder", getOnLineOrdersByPeople(people1.getId()));
         req.put("location", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
@@ -127,6 +131,8 @@ public class PeopleServiceImpl implements PeopleService {
         map.put("locations", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(id));
         map.put("offineOrdering", getOffineOrdering(id));
         map.put("offineOrder", getOffineOrdersByPeople(id));
+        map.put("onlineOrdering", getOnLineOrdering(id));
+        map.put("onlineOrder", getOnLineOrdersByPeople(id));
         return map;
     }
 
@@ -301,8 +307,14 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public void addOnLineOrder(int peopleid, OnLineOrder offineOrder) {
-
+    public OnLineOrder addOnLineOrder(int peopleid, OnLineOrder onlineOrder, List<MultipartFile> files) {
+        onlineOrder.setPeopleId(peopleid);
+        onlineOrder =onlineOrderRepository.save(onlineOrder);
+        for (MultipartFile m: files
+             ) {
+            save(m,"images/"+onlineOrder.getId()+"$"+m.getOriginalFilename());
+        }
+        return onlineOrder;
     }
 
     @Override
@@ -312,7 +324,7 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public List<OnLineOrder> getOnLineOrdersByPeople(int peopleId) {
-        return null;
+        return onlineOrderRepository.findByPeopleId(peopleId);
     }
 
     @Override
@@ -322,7 +334,12 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public OnLineOrdering addOnLineOrdering(int onLineOrderId, int peopleId) {
-        return null;
+        OnLineOrdering onLineOrdering = new OnLineOrdering();
+        onLineOrdering.setPeopleId(peopleId);
+        onLineOrdering.setOnlineOrderId(onLineOrderId);
+        onLineOrdering.setCreateDate(new Date());
+        onLineOrdering = onlineOrderingRepository.save(onLineOrdering);
+        return onLineOrdering;
     }
 
     @Override
@@ -331,9 +348,73 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
+    public OnLineOrdering ChangeOnlineOrdering(Map<String, String> phones, Map<String , MultipartFile> files) {
+        int onLineOrderingId =Integer.parseInt(phones.get("onlineOrderId"));
+        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(onLineOrderingId).get();
+        onLineOrdering.setSubmitDate(new Date());
+        Map<String ,String> myMap =new HashMap<>();
+        for (String key : phones.keySet()) {
+            if(!key.equals("onlineOrderId")){
+              myMap.put(key,phones.get(key));
+            }
+        }
+        for (String key : files.keySet()) {
+            myMap.put(key,files.get(key).getOriginalFilename());
+            save(files.get(key),"images/"+onLineOrdering.getId()+"$$"+files.get(key).getOriginalFilename());
+        }
+        onLineOrdering.setResources(new Gson().toJson(phones));
+        onlineOrderingRepository.save(onLineOrdering);
+        return  onLineOrdering;
+
+    }
+
+    @Override
     public List<OnLineOrdering> getOnLineOrdering(int peopleId) {
         return onlineOrderingRepository.findByPeopleId(peopleId);
     }
 
+    @Override
+    public Map<String, List> getOrders(int platForm) {
+        Map<String ,List> map =new HashMap<>();
+        if (platForm == 1) {
+            platForm = 2;
+        } else {
+            platForm = 1;
+        }
+        map.put("offineOrder",offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0));
+        map.put("onlineOrder",onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0));
+
+        return  map;
+    }
+
+
+    public void  save(MultipartFile file ,String path){
+        if (file.isEmpty()) {
+            System.out.println("上传文件为空");
+            return;
+        }
+        //加个时间戳，尽量避免文件名称重复
+        path = "E:/crowdsourcing/" +path;
+
+        //创建文件路径
+        File dest = new File(path);
+
+        //判断文件是否已经存在
+        if (dest.exists()) {
+            System.out.println("文件已经存在"+path); return ;
+        }
+        //判断文件父目录是否存在
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdir();
+        }
+
+        try {
+            //上传文件
+            dest.createNewFile();
+            file.transferTo(dest); //保存文件
+        } catch (IOException e) {
+           System.out.println(e.getMessage());
+        }
+    }
 
 }

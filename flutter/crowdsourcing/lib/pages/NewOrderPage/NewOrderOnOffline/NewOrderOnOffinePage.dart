@@ -295,6 +295,11 @@ class NewOrderOnOfflineState extends State<NewOrderOnOffline> {
                 return;
               }
 
+              if(buyMessages.length==0){
+                MyToast.toast("购买信息不可为空");
+                return;
+              }
+
               OffineOrder offineOrder = OffineOrder(
                   title: title,
                   describe: des,
@@ -304,6 +309,7 @@ class NewOrderOnOfflineState extends State<NewOrderOnOffline> {
                   end: end ? to : null,
                   price: double.parse(price),
                   require: limit);
+              print(offineOrder.toJson().toString());
               Routers.push(context, Routers.ORDEROFFINEDETAILPAGE, params: {
                 "offineOrder": offineOrder,
                 'success': () {
