@@ -2,6 +2,8 @@ import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
+import 'package:crowdsourcing/models/object/order/Order.dart';
+import 'package:crowdsourcing/pages/MyOrderPage.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/WhiteblockWidget/WhiteblockWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,8 +33,10 @@ class IState extends State<IPage> {
                 child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Container(child: Consumer2<OffineOrderingModel,OnlineOrderingModel>(
-                    builder: (context, offineOrderingModel,onlineOrdingModel, child) {
+                Container(child:
+                    Consumer2<OffineOrderingModel, OnlineOrderingModel>(builder:
+                        (context, offineOrderingModel, onlineOrdingModel,
+                            child) {
                   return Expanded(
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
@@ -52,31 +56,26 @@ class IState extends State<IPage> {
                                 left: 15,
                               ),
                               Positioned(
-                                child: Text.rich(
-                                   TextSpan(
-                                     children:
-                                       [
-                                         TextSpan(
-                                           text: '线上:',
-                                           recognizer: TapGestureRecognizer()..onTap=(){},
-                                           style: TextStyle(fontSize: 14)
-                                         ),
-                                         TextSpan(
-                                             text: onlineOrdingModel.taking().toString(),
-                                             style: TextStyle(fontSize: 16)
-                                         ),
-                                         TextSpan(text: "  "),
-                                         TextSpan(
-                                             text: '线下:',
-                                             style: TextStyle(fontSize: 14)
-                                         ),
-                                         TextSpan(
-                                             text: offineOrderingModel.taking().toString(),
-                                             style: TextStyle(fontSize: 16)
-                                         )
-                                       ]
-                                   )
-                                ),
+                                child: Text.rich(TextSpan(children: [
+                                  TextSpan(
+                                      text: '线上:',
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {},
+                                      style: TextStyle(fontSize: 14)),
+                                  TextSpan(
+                                      text:
+                                          onlineOrdingModel.taking().toString(),
+                                      style: TextStyle(fontSize: 16)),
+                                  TextSpan(text: "  "),
+                                  TextSpan(
+                                      text: '线下:',
+                                      style: TextStyle(fontSize: 14)),
+                                  TextSpan(
+                                      text: offineOrderingModel
+                                          .taking()
+                                          .toString(),
+                                      style: TextStyle(fontSize: 16))
+                                ])),
                                 bottom: 15,
                                 right: 30,
                               )
@@ -100,30 +99,25 @@ class IState extends State<IPage> {
                                   left: 15,
                                 ),
                                 Positioned(
-                                  child: Text.rich(
-                                      TextSpan(
-                                          children:
-                                          [
-                                            TextSpan(
-                                                text: '线上:',
-                                                style: TextStyle(fontSize: 14)
-                                            ),
-                                            TextSpan(
-                                                text: onlineOrdingModel.hasfinish().toString(),
-                                                style: TextStyle(fontSize: 16)
-                                            ),
-                                            TextSpan(text: "  "),
-                                            TextSpan(
-                                                text: '线下:',
-                                                style: TextStyle(fontSize: 14)
-                                            ),
-                                            TextSpan(
-                                                text: offineOrderingModel.hasfinish().toString(),
-                                                style: TextStyle(fontSize: 16)
-                                            )
-                                          ]
-                                      )
-                                  ),
+                                  child: Text.rich(TextSpan(children: [
+                                    TextSpan(
+                                        text: '线上:',
+                                        style: TextStyle(fontSize: 14)),
+                                    TextSpan(
+                                        text: onlineOrdingModel
+                                            .hasfinish()
+                                            .toString(),
+                                        style: TextStyle(fontSize: 16)),
+                                    TextSpan(text: "  "),
+                                    TextSpan(
+                                        text: '线下:',
+                                        style: TextStyle(fontSize: 14)),
+                                    TextSpan(
+                                        text: offineOrderingModel
+                                            .hasfinish()
+                                            .toString(),
+                                        style: TextStyle(fontSize: 16))
+                                  ])),
                                   bottom: 15,
                                   right: 30,
                                 )
@@ -139,32 +133,58 @@ class IState extends State<IPage> {
                     child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(color: Colors.cyanAccent),
-                        child: Stack(
-                          children: <Widget>[
-                            Positioned(
-                              child: Text(
-                                "我发布的",
-                                textScaleFactor: 1.3,
+                        child: Consumer2<OffineOrderModel, OnlineOrderModel>(
+                            builder: (context, offineOrderModel,
+                                onlineOrderModel, child) {
+                          return Stack(
+                            children: <Widget>[
+                              Positioned(
+                                child: Text(
+                                  "我发布的",
+                                  textScaleFactor: 1.3,
+                                ),
+                                left: 15,
+                                top: 15,
                               ),
-                              left: 15,
-                              top: 15,
-                            ),
-                            Positioned(
-                              child: Container(child:
-                                  Consumer2<OffineOrderModel,OnlineOrderModel>(builder:
-                                      (context, offineOrderModel, onlineOrderModel,child) {
-                                return Row(
+                              Positioned(
+                                child: GestureDetector(
+                                  onTap:onlineOrderModel.submit()+offineOrderModel.submit()==0?null: () {
+                                    Routers.push(context,Routers.MYORDERPAGE,params: {"status":OrderStatus.submit});
+
+                                  },
+                                  child: Text.rich(TextSpan(children: [
+                                    TextSpan(
+                                        text: '待我审核',
+                                        style: TextStyle(fontSize: 14)),
+                                    TextSpan(
+                                        text: (onlineOrderModel.submit()+offineOrderModel.submit()).toString(),
+                                        style: TextStyle(fontSize: 16)),
+                                  ])),
+                                ),
+                                right: 15,
+                                top: 15,
+                              ),
+                              Positioned(
+                                child: Container(
+                                    child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     Expanded(
                                       flex: 1,
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Routers.push(context,Routers.MYORDERPAGE,params: {"status":OrderStatus.no});
+
+                                        },
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text("  未被接  "),
-                                            Text((onlineOrderModel.notStartnumber()+offineOrderModel.notStartnumber()).toString())
+                                            Text((onlineOrderModel
+                                                        .notStartnumber() +
+                                                    offineOrderModel
+                                                        .notStartnumber())
+                                                .toString())
                                           ],
                                         ),
                                       ),
@@ -172,12 +192,17 @@ class IState extends State<IPage> {
                                     Expanded(
                                       flex: 1,
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Routers.push(context,Routers.MYORDERPAGE,params: {"status":OrderStatus.take});
+
+                                        },
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text("  进行中  "),
-                                            Text(offineOrderModel.doingnumber().toString())
+                                            Text((offineOrderModel
+                                                .doingnumber()+onlineOrderModel.doingnumber())
+                                                .toString())
                                           ],
                                         ),
                                       ),
@@ -185,25 +210,29 @@ class IState extends State<IPage> {
                                     Expanded(
                                       flex: 1,
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Routers.push(context,Routers.MYORDERPAGE,params: {"status":OrderStatus.finish});
+                                        },
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text("  已完成  "),
-                                            Text(offineOrderModel.finishnumber().toString())
+                                            Text((offineOrderModel
+                                                .finishnumber()+onlineOrderModel.finishnumber())
+                                                .toString())
                                           ],
                                         ),
                                       ),
                                     )
                                   ],
-                                );
-                              })),
-                              left: 15,
-                              right: 15,
-                              bottom: 15,
-                            )
-                          ],
-                        )))
+                                )),
+                                left: 15,
+                                right: 15,
+                                bottom: 15,
+                              )
+                            ],
+                          );
+                        })))
               ],
             ))),
         WhiteblockWidget(

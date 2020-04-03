@@ -31,13 +31,45 @@ public class OnLineOrder {
     // 0 代表无限制    1代表安卓 2代表苹果
     @Column
     int platFormLimit;
-    @Column
-    int total;
-    @Column
-    int remain;
+
 
     @Column
     double price;
+
+
+    //总数
+    @Column
+    int total;
+    //剩余未领
+    @Column
+    int remain;
+    //等待审核
+    @Column
+    int  submit;
+
+
+    //已经完成
+    @Column
+    int finish;
+    //还有一个，就是领了任务还没有做的，那么就是t-r-s-f
+
+
+    public int getSubmit() {
+        return submit;
+    }
+
+    public void setSubmit(int submit) {
+        this.submit = submit;
+    }
+
+
+    public int getFinish() {
+        return finish;
+    }
+
+    public void setFinish(int finish) {
+        this.finish = finish;
+    }
 
     public String getOnlineSteps() {
         return onlineSteps;
@@ -125,5 +157,12 @@ public class OnLineOrder {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void sumbitAdd(){
+        submit--;
+    }
+    public void remainMinus(){
+        remain--;
     }
 }

@@ -21,8 +21,9 @@ class OnlineOrder extends Order {
         String require,
         String limitedTime,
         platFormLimit,
+        int finish,
         buyMessages,
-        int wancheng,
+        int submit,
         int total,
         int remain ,
         double price,
@@ -34,6 +35,7 @@ class OnlineOrder extends Order {
       }) {
     this.title = title;
     this.price = price;
+    this.submit =submit;
     this.describe = describe;
     this.limitedTime = limitedTime;
     this.require = require;
@@ -41,6 +43,7 @@ class OnlineOrder extends Order {
     this.total =total??number;
     this.remain=remain??number;
     this.id = id;
+    this.finish=finish;
     this.peopleId = peopleId;
     this.finishTime=finishTime;
     this.createdTime=createdTime;
@@ -57,7 +60,9 @@ class OnlineOrder extends Order {
         limitedTime: map[Order.LIMITEDTIME],
         platFormLimit: map[Order.PLATFORMLIMIT],
         peopleId: map[Order.PEOPLEID],
+        submit: map[Order.SUBMIT],
         id: map[Order.ID],
+        finish: map[Order.FINISH],
         createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.CREATEDTIME]):null,
         finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.FINISHTIME]):null,
         price: map[Order.Price],
@@ -75,7 +80,9 @@ class OnlineOrder extends Order {
       Order.PLATFORMLIMIT: platFormLimit,
       Order.Price: price,
       Order.TOTAL:total,
+      Order.FINISH:finish,
       Order.REMAIN:remain,
+      Order.SUBMIT :submit,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
       Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,

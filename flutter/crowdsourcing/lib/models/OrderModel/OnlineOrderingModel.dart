@@ -23,8 +23,9 @@ class OnlineOrderingModel extends ChangeNotifier {
   }
 
   saveOnlineOrderings() {
-    StorageManager.localStorage
-        .setItem(onlineOrderingsS,_onlineOrderings);
+    StorageManager.localStorage.setItem(
+        onlineOrderingsS,
+        _onlineOrderings);
   }
 
   /// 清除持久化的用户数据
@@ -65,24 +66,35 @@ class OnlineOrderingModel extends ChangeNotifier {
   bool hasTake(int peopleId) =>
       _onlineOrderings.any((it) => it.peopleId == peopleId);
 
-
-  int hasfinish(){
+  int hasfinish() {
     int i = 0;
-    for(var ii in _onlineOrderings){
-      if(ii.finishDate!=null){
+    for (var ii in _onlineOrderings) {
+      if (ii.finishDate != null) {
         i++;
       }
     }
     return i;
   }
 
-  int taking(){
+  int taking() {
     int i = 0;
-    for(var ii in _onlineOrderings){
-      if(ii.finishDate==null){
+    for (var ii in _onlineOrderings) {
+      if (ii.finishDate == null) {
         i++;
       }
     }
     return i;
+  }
+
+  void refresh(OnlineOrdering onlineOrdering) {
+    for (var ii in _onlineOrderings) {
+      if (ii.id == onlineOrdering.id) {
+        onlineOrderings.remove(ii);
+        onlineOrderings.add(onlineOrdering);
+        break;
+      }
+    }
+    notifyListeners();
+    saveOnlineOrderings();
   }
 }

@@ -114,11 +114,14 @@ public class PeopleServiceImpl implements PeopleService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         req.put("offineOrdering", getOffineOrdering(people1.getId()));
-        req.put("offineOrder", getOffineOrdersByPeople(people1.getId()));
         req.put("onlineOrdering", getOnLineOrdering(people1.getId()));
-        req.put("onlineOrder", getOnLineOrdersByPeople(people1.getId()));
         req.put("location", locationRepository.findByPeopleIdAndDeleteFalseOrderByMain(people1.getId()));
+
+        req.put("offineOrder", getOffineOrdersByPeople(people1.getId()));
+        req.put("onlineOrder", getOnLineOrdersByPeople(people1.getId()));
+
         return req;
 
     }
@@ -251,6 +254,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public void addOffineOrder(int peopleid, OffineOrder offineOrder) {
         offineOrder.setPeopleId(peopleid);
+        offineOrder.setRemain(offineOrder.getTotal());
         offineOrderRepository.save(offineOrder);
     }
 
@@ -276,12 +280,12 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public OffineOrdering  addOffineOrdering(int  peopleId, int offineOrderId) {
+    public OffineOrdering addOffineOrdering(int peopleId, int offineOrderId) {
 
-        OffineOrder offineOrder =offineOrderRepository.findById(offineOrderId).get();
-        if(offineOrder.getRemain()==0){
+        OffineOrder offineOrder = offineOrderRepository.findById(offineOrderId).get();
+        if (offineOrder.getRemain() == 0) {
             return null;
-        }else{
+        } else {
             offineOrder.remainMinus();
         }
         offineOrderRepository.save(offineOrder);
@@ -291,7 +295,7 @@ public class PeopleServiceImpl implements PeopleService {
         offineOrdering.setOffineOrderId(offineOrderId);
         offineOrdering.setCreateDate(new Date());
         offineOrderingRepository.save(offineOrdering);
-        return  offineOrdering;
+        return offineOrdering;
     }
 
     @Override
@@ -299,6 +303,10 @@ public class PeopleServiceImpl implements PeopleService {
         OffineOrdering offineOrdering = offineOrderingRepository.findById(offineOrderingId).get();
         offineOrdering.setFinishDate(new Date());
         offineOrderingRepository.save(offineOrdering);
+        OffineOrder offineOrder = offineOrderRepository.findById(offineOrdering.getOffineOrderId()).get();
+        offineOrder.sumbitR();
+        offineOrderRepository.save(offineOrder);
+
     }
 
     @Override
@@ -309,17 +317,18 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public OnLineOrder addOnLineOrder(int peopleid, OnLineOrder onlineOrder, List<MultipartFile> files) {
         onlineOrder.setPeopleId(peopleid);
-        onlineOrder =onlineOrderRepository.save(onlineOrder);
-        for (MultipartFile m: files
-             ) {
-            save(m,"images/"+onlineOrder.getId()+"$"+m.getOriginalFilename());
+        onlineOrder = onlineOrderRepository.save(onlineOrder);
+        onlineOrder.setRemain(onlineOrder.getTotal());
+        for (MultipartFile m : files
+        ) {
+            save(m, "images/" + onlineOrder.getId() + "$" + m.getOriginalFilename());
         }
         return onlineOrder;
     }
 
     @Override
     public List<OnLineOrder> getOnLineOrders(int platForm) {
-        return  onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0);
+        return onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
     }
 
     @Override
@@ -334,6 +343,16 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public OnLineOrdering addOnLineOrdering(int onLineOrderId, int peopleId) {
+
+        OnLineOrder offineOrder =onlineOrderRepository.findById(onLineOrderId).get();
+        if (offineOrder.getRemain() == 0) {
+            return null;
+        } else {
+            offineOrder.remainMinus();
+        }
+        onlineOrderRepository.save(offineOrder);
+
+
         OnLineOrdering onLineOrdering = new OnLineOrdering();
         onLineOrdering.setPeopleId(peopleId);
         onLineOrdering.setOnlineOrderId(onLineOrderId);
@@ -348,23 +367,26 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public OnLineOrdering ChangeOnlineOrdering(Map<String, String> phones, Map<String , MultipartFile> files) {
-        int onLineOrderingId =Integer.parseInt(phones.get("onlineOrderId"));
+    public OnLineOrdering ChangeOnlineOrdering(Map<String, String> phones, Map<String, MultipartFile> files) {
+        int onLineOrderingId = Integer.parseInt(phones.get("onlineOrderId"));
         OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(onLineOrderingId).get();
         onLineOrdering.setSubmitDate(new Date());
-        Map<String ,String> myMap =new HashMap<>();
+        Map<String, String> myMap = new HashMap<>();
         for (String key : phones.keySet()) {
-            if(!key.equals("onlineOrderId")){
-              myMap.put(key,phones.get(key));
+            if (!key.equals("onlineOrderId")) {
+                myMap.put(key, phones.get(key));
             }
         }
         for (String key : files.keySet()) {
-            myMap.put(key,files.get(key).getOriginalFilename());
-            save(files.get(key),"images/"+onLineOrdering.getId()+"$$"+files.get(key).getOriginalFilename());
+            myMap.put(key, files.get(key).getOriginalFilename());
+            save(files.get(key), "images/" + onLineOrdering.getId() + "$$" + files.get(key).getOriginalFilename());
         }
-        onLineOrdering.setResources(new Gson().toJson(phones));
+        onLineOrdering.setResources(new Gson().toJson(myMap));
         onlineOrderingRepository.save(onLineOrdering);
-        return  onLineOrdering;
+        OnLineOrder onLineOrder = onlineOrderRepository.findById(onLineOrdering.getOnlineOrderId()).get();
+        onLineOrder.sumbitAdd();
+        onlineOrderRepository.save(onLineOrder);
+        return onLineOrdering;
 
     }
 
@@ -375,33 +397,34 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public Map<String, List> getOrders(int platForm) {
-        Map<String ,List> map =new HashMap<>();
+        Map<String, List> map = new HashMap<>();
         if (platForm == 1) {
             platForm = 2;
         } else {
             platForm = 1;
         }
-        map.put("offineOrder",offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0));
-        map.put("onlineOrder",onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm,0));
+        map.put("offineOrder", offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0));
+        map.put("onlineOrder", onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0));
 
-        return  map;
+        return map;
     }
 
 
-    public void  save(MultipartFile file ,String path){
+    public void save(MultipartFile file, String path) {
         if (file.isEmpty()) {
             System.out.println("上传文件为空");
             return;
         }
         //加个时间戳，尽量避免文件名称重复
-        path = "E:/crowdsourcing/" +path;
+        path = "E:/crowdsourcing/" + path;
 
         //创建文件路径
         File dest = new File(path);
 
         //判断文件是否已经存在
         if (dest.exists()) {
-            System.out.println("文件已经存在"+path); return ;
+            System.out.println("文件已经存在" + path);
+            return;
         }
         //判断文件父目录是否存在
         if (!dest.getParentFile().exists()) {
@@ -413,7 +436,7 @@ public class PeopleServiceImpl implements PeopleService {
             dest.createNewFile();
             file.transferTo(dest); //保存文件
         } catch (IOException e) {
-           System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

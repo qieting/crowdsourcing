@@ -19,9 +19,10 @@ class OffineOrder extends Order {
       String require,
       String limitedTime,
       platFormLimit,
-
+        int submit,
       double price,
       int id,
+        int finish,
         int total=1,
         int remain ,
       int peopleId,
@@ -31,8 +32,10 @@ class OffineOrder extends Order {
         this.buyMessages
       }) {
     this.title = title;
+    this.submit =submit;
     this.price = price;
     this.describe = describe;
+    this.finish=finish;
     this.limitedTime = limitedTime;
     this.require = require;
     this.platFormLimit = platFormLimit;
@@ -53,6 +56,7 @@ class OffineOrder extends Order {
         describe: map[Order.DESCRIBE],
         require: map[Order.REQUIRE],
         limitedTime: map[Order.LIMITEDTIME],
+        submit: map[Order.SUBMIT],
         platFormLimit: map[Order.PLATFORMLIMIT],
         end: Location(id: map[END]),
         buyMessages: ((json.decode(map[BUYMESSAGES])) as List).map<BuyMessage>((it) {
@@ -60,6 +64,7 @@ class OffineOrder extends Order {
         }).toList(),
         peopleId: map[Order.PEOPLEID],
         id: map[Order.ID],
+        finish: map[Order.FINISH],
         createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.CREATEDTIME]):null,
         finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.FINISHTIME]):null,
         price: map[Order.Price]);
@@ -76,7 +81,9 @@ class OffineOrder extends Order {
       Order.Price: price,
       Order.TOTAL:total,
       Order.REMAIN:remain,
+      Order.SUBMIT :submit,
       Order.ID: id,
+      Order.FINISH:finish,
       Order.PEOPLEID: peopleId,
       Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,
       Order.FINISHTIME:finishTime?.microsecondsSinceEpoch,

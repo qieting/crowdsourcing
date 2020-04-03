@@ -1,6 +1,7 @@
 import 'package:crowdsourcing/pages/AddLocationPage.dart';
 import 'package:crowdsourcing/pages/LocationPage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
+import 'package:crowdsourcing/pages/MyOrderPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/AddOnlineStepPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/NewOrderOnNetPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOffinePage.dart';
@@ -28,6 +29,7 @@ class Routers {
   static const String OFFINEORDERSPAGE = 'OffineOrdersPage';
   static const String ADDONLINEPAGE = 'addOnlinStepePage';
   static const String ORDERONLINEDETAILSPAGE = 'OrderOnlineDetailsPage';
+  static const String MYORDERPAGE ="MyOrderPage";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -95,6 +97,8 @@ class Routers {
           detail: params['detail'] ?? false,
           success: params['success'],
         );
+      case MYORDERPAGE:
+        return MyOrderPage(params['status']);
       default:
         break;
     }

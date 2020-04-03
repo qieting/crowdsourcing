@@ -37,7 +37,6 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.detail ? "详情" : "预览"),
@@ -219,9 +218,12 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                           ),
                                           RaisedButton.icon(
                                               onPressed: () async {
-                                                bool success =
-                                                    await MyImages.saveImage(
-                                                       widget.onlineOrder.id.toString()+"\$"+widget
+                                                bool success = await MyImages
+                                                    .saveImage(widget
+                                                            .onlineOrder.id
+                                                            .toString() +
+                                                        "\$" +
+                                                        widget
                                                             .onlineOrder
                                                             .onlineSteps[index]
                                                             .imageUrl);
@@ -441,11 +443,17 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                     if (listOfTextEditingController.valiad() &&
                         listOfChooseImage.valiad()) {
                       MyDio.changeOnlineOrdering(take.id,
-                          listOfChooseImage.map.map<int,String>((k, v) {
+                          listOfChooseImage.map.map<int, String>((k, v) {
                         return MapEntry(k, v.path);
-                      }), listOfTextEditingController.map.map<int,String>((k, v) {
+                      }), listOfTextEditingController.map
+                              .map<int, String>((k, v) {
                         return MapEntry(k, v.text);
-                      }));
+                      }), success: (OnlineOrdering o) {
+                        onlineOrderingModel.refresh(o);
+                        setState(() {
+
+                        });
+                          });
                     } else {
                       MyToast.toast("您还有信息没有填写");
                     }

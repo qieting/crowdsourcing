@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:crowdsourcing/common/BmobMessage.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
+import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
@@ -13,11 +14,8 @@ import 'package:data_plugin/bmob/bmob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'i10n/localization_intl.dart';
 import 'package:provider/provider.dart';
-
-import 'models/OrderModel/OffineOrderModel.dart';
 import 'models/UserModel/LocationModel.dart';
 
 void main() {
@@ -56,16 +54,16 @@ class MyApp extends StatelessWidget {
           create: (context) => LocationModel(),
         ),
         ChangeNotifierProvider<OffineOrderingModel>(
-          create: (context) =>OffineOrderingModel(),
+          create: (context) => OffineOrderingModel(),
         ),
         ChangeNotifierProvider<OffineOrderModel>(
-          create: (context) =>OffineOrderModel(),
+          create: (context) => OffineOrderModel(),
         ),
         ChangeNotifierProvider<OnlineOrderModel>(
-          create: (context) =>OnlineOrderModel(),
+          create: (context) => OnlineOrderModel(),
         ),
         ChangeNotifierProvider<OnlineOrderingModel>(
-          create: (context) =>OnlineOrderingModel(),
+          create: (context) => OnlineOrderingModel(),
         ),
       ],
       child: Consumer<ViewThemeModel>(builder: (context, viewThemeMode, child) {
@@ -76,7 +74,6 @@ class MyApp extends StatelessWidget {
               ? SystemUiOverlayStyle.dark
               : SystemUiOverlayStyle.light,
           child: MaterialApp(
-
               builder: (context, child) {
                 //初始化语言包
                 DemoLocalizations.init(context);

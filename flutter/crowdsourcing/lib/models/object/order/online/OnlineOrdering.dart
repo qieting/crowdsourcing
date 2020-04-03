@@ -32,14 +32,13 @@ class OnlineOrdering {
 
   static OnlineOrdering fromJsonMap(Map<String, dynamic> map) {
     if (map == null) return null;
-    print(map[RESOURCES]);
     return OnlineOrdering(
         id: map[Id],
         resources: map[RESOURCES] == null
             ? null
             : (json.decode(map[RESOURCES]) as Map).map<int, String>((k, v) {
-              return MapEntry(int.parse(k),v);
-        }),
+                return MapEntry(int.parse(k), v);
+              }),
         peopleId: map[PeopleId],
         submitDate: map[SUBMITTIME] != null
             ? DateTime.fromMicrosecondsSinceEpoch(map[SUBMITTIME])
@@ -53,13 +52,17 @@ class OnlineOrdering {
             : null);
   }
 
-  Map toJson() => {
-        Id: id,
-        PeopleId: peopleId,
-        RESOURCES: resources==null?null:json.encode(resources),
-        OnlineOrderId: onlineOrderId,
-        CreateDate: createDate?.microsecondsSinceEpoch,
-        SUBMITTIME: submitDate?.microsecondsSinceEpoch,
-        FinishDate: finishDate?.microsecondsSinceEpoch
-      };
+  Map toJson() {
+    print(resources.toString());
+   // print(json.encode(resources));
+    return {
+      Id: id,
+      PeopleId: peopleId,
+      //RESOURCES: resources == null ? null : resources.toString(),
+      OnlineOrderId: onlineOrderId,
+      CreateDate: createDate?.microsecondsSinceEpoch,
+      SUBMITTIME: submitDate?.microsecondsSinceEpoch,
+      FinishDate: finishDate?.microsecondsSinceEpoch
+    };
+  }
 }

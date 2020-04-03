@@ -11,4 +11,7 @@ public interface OffineOrderingRepository extends JpaRepository<OffineOrdering, 
 
 
     List<OffineOrdering> findByPeopleId(int peopleId);
+    List<OffineOrdering> findByOffineOrderIdIsIn(List<Integer> offineOrders);
+
+
 }

@@ -361,6 +361,22 @@ class MyDio {
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
+  static Future<OffineOrdering> getOffineOrderingByOrderId(BuildContext context,int orderId) async {
+    try {
+      Response response = await dio.get(MyUrl.offineOrdering,
+          queryParameters: {'orderid': orderId});
+      if (response.statusCode == 200) {
+        return OffineOrdering.fromJsonMap(response.data);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      return null;
+    }
+  }
 
   static Future<Response> getImage(String filePath) async {
     try {
@@ -450,7 +466,7 @@ class MyDio {
   }
 
   static changeOnlineOrdering(int onlineOrderId, Map images, Map phones,
-      {BuildContext context, success}) async {
+      {BuildContext context,@required success}) async {
     try {
       //FocusScope.of(context).unfocus();
       Map<String, dynamic> map = {"onlineOrderId": onlineOrderId};
@@ -462,7 +478,7 @@ class MyDio {
       FormData formData = new FormData.from(map);
       Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
       if (response.statusCode == 200) {
-        //success(response.data);
+        success(OnlineOrdering.fromJsonMap(response.data));
       } else {
         showError(context, failStatus(response.statusCode));
       }

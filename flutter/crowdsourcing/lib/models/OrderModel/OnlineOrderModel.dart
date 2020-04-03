@@ -2,6 +2,7 @@ import 'dart:convert';
 
 
 import 'package:crowdsourcing/common/StorageManager.dart';
+import 'package:crowdsourcing/models/object/order/Order.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -60,7 +61,7 @@ class OnlineOrderModel extends ChangeNotifier {
   int finishnumber(){
     int i = 0;
     for(var ii in _onlineOrders){
-      if(ii.remain==0){
+      if(ii.finish==ii.total){
         i++;
       }
     }
@@ -69,11 +70,77 @@ class OnlineOrderModel extends ChangeNotifier {
   int doingnumber(){
     int i = 0;
     for(var ii in _onlineOrders){
-      if(ii.remain>0&&ii.remain<ii.total){
+      if(ii.finish<ii.total&&ii.remain<ii.total){
         i++;
       }
     }
     return i;
   }
+
+
+  int submit(){
+    int i = 0;
+    for(var ii in _onlineOrders){
+      if(ii.submit>0){
+        i+=ii.submit;
+      }
+    }
+    return i;
+
+  }
+
+  List  getOrder(OrderStatus orderStatus){
+    List<OnlineOrder> myOrders =[];
+
+    switch(orderStatus){
+      case OrderStatus.take:
+        for(var  i in _onlineOrders){
+          if(i.finish<i.total){
+            myOrders.add(i);
+          }
+        }
+
+        // TODO: Handle this case.
+        break;
+      case OrderStatus.submit:
+      // TODO: Handle this case.
+        for(var  i in _onlineOrders){
+          if(i.submit!=0){
+            myOrders.add(i);
+          }
+        }
+        break;
+      case OrderStatus.finish:
+      // TODO: Handle this case.
+        for(var  i in _onlineOrders){
+          if(i.finish==i.total){
+            myOrders.add(i);
+          }
+        }
+        break;
+      case OrderStatus.no:
+      // TODO: Handle this case.
+        for(var  i in _onlineOrders){
+          if(i.remain==i.total){
+            myOrders.add(i);
+          }
+        }
+        break;
+      case OrderStatus.all:
+      // TODO: Handle this case.
+        myOrders.addAll(_onlineOrders);
+        break;
+      case OrderStatus.takeNoSubmit:
+      // TODO: Handle this case.
+        for(var  i in _onlineOrders){
+          if(i.submit+i.finish+i.remain<i.total){
+            myOrders.add(i);
+          }
+        }
+        break;
+    }
+    return myOrders;
+  }
+
 
 }

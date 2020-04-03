@@ -26,13 +26,12 @@ public class OffineOrder {
     // 0 代表无限制    1代表安卓 2代表苹果
     @Column
     int platFormLimit;
+
+
     @Column
     String buyMessages;
 
-    @Column
-    int total;
-    @Column
-    int remain;
+
 
 
 
@@ -42,6 +41,41 @@ public class OffineOrder {
     int end;
     @Column
     double price;
+
+    //总数
+    @Column
+    int total;
+    //剩余未领
+    @Column
+    int remain;
+    //等待审核
+    @Column
+    int  submit;
+
+
+    //已经完成
+    @Column
+    int finish;
+    //还有一个，就是领了任务还没有做的，那么就是t-r-s-f
+
+
+    public int getSubmit() {
+        return submit;
+    }
+
+    public void setSubmit(int submit) {
+        this.submit = submit;
+    }
+
+
+    public int getFinish() {
+        return finish;
+    }
+
+    public void setFinish(int finish) {
+        this.finish = finish;
+    }
+
 
     public int getTotal() {
         return total;
@@ -141,6 +175,10 @@ public class OffineOrder {
 
     public void remainMinus(){
         remain--;
+    }
+
+    public void sumbitR(){
+        finish++;
     }
 
 
