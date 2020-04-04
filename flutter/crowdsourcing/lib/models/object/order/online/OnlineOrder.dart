@@ -35,15 +35,15 @@ class OnlineOrder extends Order {
       }) {
     this.title = title;
     this.price = price;
-    this.submit =submit;
+    this.submit =submit??0;
     this.describe = describe;
     this.limitedTime = limitedTime;
     this.require = require;
     this.platFormLimit = platFormLimit;
     this.total =total??number;
-    this.remain=remain??number;
+    this.remain=remain??this.total;
     this.id = id;
-    this.finish=finish;
+    this.finish=finish??0;
     this.peopleId = peopleId;
     this.finishTime=finishTime;
     this.createdTime=createdTime;
@@ -91,4 +91,6 @@ class OnlineOrder extends Order {
       ONLINESTEPS: json.encode(onlineSteps.map((f){ return f.toJson();}).toList())
     };
   }
+
+
 }

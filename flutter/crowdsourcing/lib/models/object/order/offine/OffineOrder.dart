@@ -32,10 +32,10 @@ class OffineOrder extends Order {
         this.buyMessages
       }) {
     this.title = title;
-    this.submit =submit;
+    this.submit =submit??0;
     this.price = price;
     this.describe = describe;
-    this.finish=finish;
+    this.finish=finish??0;
     this.limitedTime = limitedTime;
     this.require = require;
     this.platFormLimit = platFormLimit;

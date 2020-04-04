@@ -90,12 +90,12 @@ class OnlineOrderModel extends ChangeNotifier {
   }
 
   List  getOrder(OrderStatus orderStatus){
-    List<OnlineOrder> myOrders =[];
+    List<Order> myOrders =[];
 
     switch(orderStatus){
       case OrderStatus.take:
         for(var  i in _onlineOrders){
-          if(i.finish<i.total){
+          if(i.finish<i.total&&i.remain<i.total){
             myOrders.add(i);
           }
         }

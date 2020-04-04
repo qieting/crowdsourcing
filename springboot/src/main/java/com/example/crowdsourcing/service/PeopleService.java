@@ -50,6 +50,7 @@ public interface PeopleService {
 	public OffineOrdering  addOffineOrdering(int  offineOrderId ,int peopleId);
 	public void  finishOffineOrdering(int  offineOrderingId);
 	public List<OffineOrdering>  getOffineOrdering(int  peopleId);
+	public Map<String,Object>  getOffineOrdering(int  peopleId,int OffineOrderid);
 
 
 
@@ -62,6 +63,7 @@ public interface PeopleService {
 	public void  finishOnLineOrdering(int  onLineOrderingId);
 	public OnLineOrdering ChangeOnlineOrdering( Map<String ,String> phones , Map<String ,MultipartFile>files);
 	public List<OnLineOrdering>  getOnLineOrdering(int  peopleId);
+	public Map<String ,Object>  getOnLineOrdering(int  peopleId,int OnlineOrderId);
 
 
 	public  Map<String,List>  getOrders(int platForm);

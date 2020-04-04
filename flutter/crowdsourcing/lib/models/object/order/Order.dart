@@ -38,4 +38,9 @@ class Order {
   //总数，剩余的未接数，提交等待审核数目,已经完成数目
   int total, remain,submit;
   DateTime createdTime, finishTime;
+
+
+  int get take{
+    return total-finish-remain;
+  }
 }

@@ -48,7 +48,7 @@ class MoneyPageState extends State<MoneyPage>
     setState(() {});
   }
 
-  void  getOrders() {
+  void getOrders() {
     MyDio.getOrders(context, (a, b) {
       offineOrders = a;
       onlineOrders = b;
@@ -62,40 +62,48 @@ class MoneyPageState extends State<MoneyPage>
     // TODO: implement build
     super.build(context); //必须添加
     return Container(
-      child: orders.length == 0
-          ? ListTile(
-              title: Text("暂时没有数据"),
-            )
-          : RefreshIndicator(
-        onRefresh: () async {
-          getOrders();
-          await Future.delayed(Duration(seconds: 2),(){
-
-          }
-          );
-          return ;
-        },
-          child: ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () {
-                      if (orders == offineOrders) {
-                        Routers.push(context, Routers.ORDEROFFINEDETAILPAGE,
-                            params: {
-                              "offineOrder": orders[index],
-                              'detail': true
-                            });
-                      } else {
-                        Routers.push(context, Routers.ORDERONLINEDETAILSPAGE,
-                            params: {
-                              "onlineOrder": orders[index],
-                              'detail': true
-                            });
-                      }
-                    },
-                    child: ListTile(title: Text(orders[index].title)));
-              })),
+      child: RefreshIndicator(
+          onRefresh: () async {
+            getOrders();
+            await Future.delayed(Duration(seconds: 2), () {});
+            return;
+          },
+          child: Column(
+            children: <Widget>[
+              orders.length == 0
+                  ? ListTile(
+                      title: Text("暂时没有数据"),
+                    )
+                  : SizedBox(
+                      height: 0,
+                    ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          onTap: () {
+                            if (orders == offineOrders) {
+                              Routers.push(
+                                  context, Routers.ORDEROFFINEDETAILPAGE,
+                                  params: {
+                                    "offineOrder": orders[index],
+                                    'detail': true
+                                  });
+                            } else {
+                              Routers.push(
+                                  context, Routers.ORDERONLINEDETAILSPAGE,
+                                  params: {
+                                    "onlineOrder": orders[index],
+                                    'detail': true
+                                  });
+                            }
+                          },
+                          child: ListTile(title: Text(orders[index].title)));
+                    }),
+              ),
+            ],
+          )),
     );
   }
 }

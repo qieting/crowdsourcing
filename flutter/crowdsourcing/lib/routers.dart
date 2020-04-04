@@ -8,6 +8,8 @@ import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnOffline/NewOrderOnOff
 import 'package:crowdsourcing/pages/OffineOrdersPage.dart';
 import 'package:crowdsourcing/pages/OrderOffineDetailsPage.dart';
 import 'package:crowdsourcing/pages/OrderOnlineDetailsPage.dart';
+import 'package:crowdsourcing/pages/OrderingDetails/OffineOrderingPage.dart';
+import 'package:crowdsourcing/pages/OrderingDetails/OnlineOrderingPage.dart';
 import 'package:crowdsourcing/pages/PoiPage/PoiPage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,8 @@ class Routers {
   static const String ADDONLINEPAGE = 'addOnlinStepePage';
   static const String ORDERONLINEDETAILSPAGE = 'OrderOnlineDetailsPage';
   static const String MYORDERPAGE ="MyOrderPage";
+  static const String OFFINEORDERINGPAGE ="offineOrderPage";
+  static const String ONLINEORDERINGPAGE = 'onlineOrderingPage';
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -99,6 +103,10 @@ class Routers {
         );
       case MYORDERPAGE:
         return MyOrderPage(params['status']);
+      case OFFINEORDERINGPAGE:
+        return OffineOrderingPage(params['order']);
+      case ONLINEORDERINGPAGE:
+        return OnlineOrderingPage(params['order']);
       default:
         break;
     }

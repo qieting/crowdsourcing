@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 public class MyController {
 
@@ -119,8 +118,12 @@ public class MyController {
     }
 
     @RequestMapping(value = "/offineOrdering", method = RequestMethod.GET)
-    public List<OffineOrdering> getOffineOrderings(@CurrentUserId  int id) {
+    public Object getOffineOrderings(@CurrentUserId  int id, @RequestParam(required = false,name="orderid",defaultValue = "-1") int orderId) {
+        if(orderId<0)
         return peopleService.getOffineOrdering(id);
+        else{
+            return  peopleService.getOffineOrdering(id,orderId);
+        }
     }
 
 
@@ -136,8 +139,12 @@ public class MyController {
     }
 
     @RequestMapping(value = "/onlineOrdering", method = RequestMethod.GET)
-    public List<OnLineOrdering> getOnLineOrderings(@CurrentUserId  int id) {
+    public Object getOnLineOrderings(@CurrentUserId  int id,@RequestParam(required = false,name="orderid",defaultValue = "-1") int orderId) {
+        if(orderId<0)
         return peopleService.getOnLineOrdering(id);
+        else{
+            return  peopleService.getOffineOrdering(id,orderId);
+        }
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)

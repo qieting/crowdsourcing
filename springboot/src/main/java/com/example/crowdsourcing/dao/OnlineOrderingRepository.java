@@ -12,4 +12,5 @@ public interface OnlineOrderingRepository extends JpaRepository<OnLineOrdering, 
 
 
     List<OnLineOrdering> findByPeopleId(int peopleId);
+    List<OnLineOrdering> findByOnlineOrderId(int onlineOrderId);
 }

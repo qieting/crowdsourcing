@@ -361,12 +361,12 @@ class MyDio {
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
-  static Future<OffineOrdering> getOffineOrderingByOrderId(BuildContext context,int orderId) async {
+  static Future<Map> getOffineOrderingByOrderId(BuildContext context,int orderId) async {
     try {
       Response response = await dio.get(MyUrl.offineOrdering,
           queryParameters: {'orderid': orderId});
       if (response.statusCode == 200) {
-        return OffineOrdering.fromJsonMap(response.data);
+        return response.data;
       } else {
         MyToast.toast(failStatus(response.statusCode));
         return null;

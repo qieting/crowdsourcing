@@ -64,6 +64,8 @@ flutter:
     - assets/locations.json
     - assets/images/deafaultHead.png
     - assets/images/add.png
+    - assets/images/offineIcon.png
+    - assets/images/onlineIcon.png
 
 
   fonts:

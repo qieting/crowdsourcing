@@ -314,6 +314,17 @@ public class PeopleServiceImpl implements PeopleService {
         return offineOrderingRepository.findByPeopleId(peopleId);
     }
 
+    public Map<String,Object>   getOffineOrdering(int  peopleId,int offineOrderid){
+        Map<String,Object> map =new HashMap<>();
+        OffineOrdering  offineOrderings = offineOrderingRepository.findByOffineOrderId(offineOrderid);
+        if(offineOrderings!=null) {
+            People people = peopleRepository.findById(offineOrderings.getPeopleId());
+            map.put("people",people);
+        }
+        map.put("offineOrderings",offineOrderings);
+        return  map;
+    }
+
     @Override
     public OnLineOrder addOnLineOrder(int peopleid, OnLineOrder onlineOrder, List<MultipartFile> files) {
         onlineOrder.setPeopleId(peopleid);
@@ -394,6 +405,19 @@ public class PeopleServiceImpl implements PeopleService {
     public List<OnLineOrdering> getOnLineOrdering(int peopleId) {
         return onlineOrderingRepository.findByPeopleId(peopleId);
     }
+
+    public Map<String ,Object>  getOnLineOrdering(int  peopleId,int OnlineOrderId){
+        Map<String ,Object> map = new HashMap<>();
+        List<OnLineOrdering>  onLineOrderings = onlineOrderingRepository.findByOnlineOrderId(OnlineOrderId);
+        List<People> peoples = new ArrayList<>();
+        for(int i =0; i<onLineOrderings.size();i++){
+            People people = peopleRepository.findById(onLineOrderings.get(i).getPeopleId());
+            peoples.add(people);
+        }
+        map.put("orders",onLineOrderings);
+        map.put("peoples",peoples);
+        return  map;
+     }
 
     @Override
     public Map<String, List> getOrders(int platForm) {
