@@ -67,6 +67,7 @@ public interface PeopleService {
 
 
 	public  Map<String,List>  getOrders(int platForm);
+	public  OnLineOrdering finishOnlineOrdering(int orderId ,boolean finish ,String reason);
 
 
 

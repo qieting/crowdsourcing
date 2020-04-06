@@ -143,7 +143,7 @@ public class MyController {
         if(orderId<0)
         return peopleService.getOnLineOrdering(id);
         else{
-            return  peopleService.getOffineOrdering(id,orderId);
+            return  peopleService.getOnLineOrdering(id,orderId);
         }
     }
 
@@ -171,6 +171,13 @@ public class MyController {
         }
      //   return  null;
         return  peopleService. ChangeOnlineOrdering(phones,files);
+    }
+
+    @RequestMapping(value = "/finishonlineOrdering", method = RequestMethod.PUT)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public OnLineOrdering  finishOnLineOrdering(  @CurrentUserId int id,int orderingId, boolean check, String reason ) {
+
+        return  peopleService.finishOnlineOrdering(orderingId,check,reason);
     }
 
 

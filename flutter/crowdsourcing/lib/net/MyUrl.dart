@@ -22,6 +22,7 @@ class MyUrl {
 
   //离线订单接单消息等
   static const String onlineOrdering = "onlineOrdering";
+  static const String finishonlineOrdering='finishonlineOrdering';
 
   static const String imageUp = 'images/';
 

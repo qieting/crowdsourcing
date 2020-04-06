@@ -450,10 +450,8 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                         return MapEntry(k, v.text);
                       }), success: (OnlineOrdering o) {
                         onlineOrderingModel.refresh(o);
-                        setState(() {
-
-                        });
-                          });
+                        setState(() {});
+                      });
                     } else {
                       MyToast.toast("您还有信息没有填写");
                     }

@@ -25,6 +25,18 @@ public class OnLineOrdering {
     @Column
     int onlineOrderId;
 
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    @Column
+    String reason;
+
     public int getOnlineOrderId() {
         return onlineOrderId;
     }

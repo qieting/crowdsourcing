@@ -465,6 +465,25 @@ class MyDio {
     }
   }
 
+  static finishOnlineOrdering(context,int onlineOrderId,bool check ,String reason,success) async{
+    try {
+      //FocusScope.of(context).unfocus();
+      Map<String, dynamic> map = {"orderingId": onlineOrderId};
+     map["check"]=check;
+     map["reason"]=reason;
+
+      Response response = await dio.put(MyUrl.onlineOrdering, data:map);
+      if (response.statusCode == 200) {
+        success(OnlineOrdering.fromJsonMap(response.data));
+      } else {
+        showError(context, failStatus(response.statusCode));
+      }
+    } catch (e) {
+      print(e.toString());
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
   static changeOnlineOrdering(int onlineOrderId, Map images, Map phones,
       {BuildContext context,@required success}) async {
     try {
@@ -485,6 +504,23 @@ class MyDio {
     } catch (e) {
       print(e.toString());
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+    }
+  }
+
+  static Future<Map> getOnlineOrderingByOrderId(BuildContext context,int orderId) async {
+    try {
+      Response response = await dio.get(MyUrl.onlineOrdering,
+          queryParameters: {'orderid': orderId});
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      return null;
     }
   }
 }

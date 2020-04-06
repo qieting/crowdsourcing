@@ -11,6 +11,7 @@ class OnlineOrdering {
   DateTime submitDate;
   DateTime finishDate;
 
+  String reason;
   Map<int, String> resources;
 
   static const String Id = "id";
@@ -20,9 +21,11 @@ class OnlineOrdering {
   static const String FinishDate = 'finishDate';
   static const String SUBMITTIME = 'submitDate';
   static const String RESOURCES = 'resources';
+  static const String REASON ="reason";
 
   OnlineOrdering(
       {this.id,
+        this.reason,
       this.submitDate,
       this.peopleId,
       this.resources,
@@ -34,6 +37,7 @@ class OnlineOrdering {
     if (map == null) return null;
     return OnlineOrdering(
         id: map[Id],
+        reason: map[REASON],
         resources: map[RESOURCES] == null
             ? null
             : (json.decode(map[RESOURCES]) as Map).map<int, String>((k, v) {
@@ -57,6 +61,7 @@ class OnlineOrdering {
    // print(json.encode(resources));
     return {
       Id: id,
+      REASON:reason,
       PeopleId: peopleId,
       //RESOURCES: resources == null ? null : resources.toString(),
       OnlineOrderId: onlineOrderId,

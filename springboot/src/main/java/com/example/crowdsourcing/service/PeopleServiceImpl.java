@@ -433,6 +433,17 @@ public class PeopleServiceImpl implements PeopleService {
         return map;
     }
 
+    @Override
+    public OnLineOrdering finishOnlineOrdering(int orderId, boolean finish, String reason) {
+        OnLineOrdering onLineOrdering =onlineOrderingRepository.findById(orderId).get();
+        onLineOrdering.setFinishDate(new Date());
+        if(finish){
+            onLineOrdering.setReason(reason);
+        }
+        onlineOrderingRepository.save(onLineOrdering);
+        return  onLineOrdering;
+    }
+
 
     public void save(MultipartFile file, String path) {
         if (file.isEmpty()) {

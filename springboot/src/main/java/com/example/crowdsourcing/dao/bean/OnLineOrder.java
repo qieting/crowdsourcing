@@ -160,7 +160,7 @@ public class OnLineOrder {
     }
 
     public void sumbitAdd(){
-        submit--;
+        submit++;
     }
     public void remainMinus(){
         remain--;
