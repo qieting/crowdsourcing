@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrdering.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineStep.dart';
@@ -10,8 +12,10 @@ import 'package:crowdsourcing/widgets/MyImage.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 class CheckPage extends StatefulWidget {
-   OnlineOrdering onlineOrdering;
+  final OnlineOrdering onlineOrdering;
   final User user;
   final OnlineOrder onlineOrder;
 
@@ -218,8 +222,13 @@ class _CheckPageState extends State<CheckPage> {
                         child:
                       RaisedButton(
                         onPressed: () {
-                          MyDio.finishOnlineOrdering(context, widget.onlineOrdering.id, false, null, (i){
-                            widget.onlineOrdering=OnlineOrdering.fromJsonMap(i);
+                          MyDio.finishOnlineOrdering(context, widget.onlineOrdering.id, true, null, (i){
+                            Provider.of<OnlineOrderingModel>(context,listen: false)
+                            .refresh(OnlineOrdering.fromJsonMap(i));
+                            widget.onlineOrdering.finishDate
+                            =OnlineOrdering.fromJsonMap(i).finishDate;
+                            widget.onlineOrder.submit--;
+                            widget.onlineOrder.finish++;
                             setState(() {
 
                             });
@@ -236,8 +245,16 @@ class _CheckPageState extends State<CheckPage> {
                         onPressed: () async{
                           String reason =await showReasonDialog();
                           if(reason!=null){
-                            MyDio.finishOnlineOrdering(context, widget.onlineOrdering.id, true, reason, (i){
-                              widget.onlineOrdering=OnlineOrdering.fromJsonMap(i);
+                            MyDio.finishOnlineOrdering(context, widget.onlineOrdering.id, false, reason, (i){
+
+
+                              widget.onlineOrdering.finishDate
+                              =OnlineOrdering.fromJsonMap(i).finishDate;
+                              widget.onlineOrdering.reason=reason;
+                             // Provider.of<OnlineOrderModel>(context,listen: false).
+                              widget.onlineOrder.submit--;
+                              widget.onlineOrder.finish++;
+
                               setState(() {
 
                               });
@@ -250,10 +267,16 @@ class _CheckPageState extends State<CheckPage> {
                       ))
                     ],
                   )
-                : RaisedButton(
+                : Row(
+              children: <Widget>[
+                Expanded(
+                  child:RaisedButton(
                     color: Theme.of(context).primaryColor,
                     child: Text(widget.onlineOrdering.reason ?? "已经审核通过"),
                   ),
+                )
+              ],
+            )
           ],
         ),
       ),

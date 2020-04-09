@@ -45,7 +45,7 @@ public interface PeopleService {
 	public void  addOffineOrder(int peopleid, OffineOrder offineOrder);
 	public List<OffineOrder>  getOffineOrders(int platForm);
 	public List<OffineOrder>  getOffineOrdersByPeople(int peopleId);
-	public void   ChangeOffineOrder(int peopleid, OffineOrder  offineOrder);
+
 
 	public OffineOrdering  addOffineOrdering(int  offineOrderId ,int peopleId);
 	public void  finishOffineOrdering(int  offineOrderingId);
@@ -67,7 +67,10 @@ public interface PeopleService {
 
 
 	public  Map<String,List>  getOrders(int platForm);
+	public  List  getMyTakeOrders(int id, int type,boolean online);
 	public  OnLineOrdering finishOnlineOrdering(int orderId ,boolean finish ,String reason);
+
+	public  void addMoney(int peopleId , double money);
 
 
 

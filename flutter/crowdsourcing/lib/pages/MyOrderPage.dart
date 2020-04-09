@@ -56,30 +56,30 @@ class MyOrderPage extends StatelessWidget {
                 switch (orderStatus) {
                   case OrderStatus.take:
                     return Card(
-                      margin: const EdgeInsets.only(left: 8,right: 8,top: 15),
+                      margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                           if (myOrders[index] is OnlineOrder) {
-                            Routers.push(
-                                context, Routers.ONLINEORDERINGPAGE,
+                            Routers.push(context, Routers.ONLINEORDERINGPAGE,
                                 params: {
                                   "order": myOrders[index],
-
                                 });
                           } else {
                             Routers.push(context, Routers.OFFINEORDERINGPAGE,
                                 params: {
                                   "order": myOrders[index],
-
                                 });
                           }
                         },
                         child: Row(
                           children: <Widget>[
                             Image(
-                              width: 30,height: 30,
-                              image: AssetImage(myOrders[index] is OnlineOrder? "assets/images/onlineIcon.png":"assets/images/offineIcon.png"),
+                              width: 30,
+                              height: 30,
+                              image: AssetImage(myOrders[index] is OnlineOrder
+                                  ? "assets/images/onlineIcon.png"
+                                  : "assets/images/offineIcon.png"),
                             ),
                             SizedBox(
                               width: 15,
@@ -90,11 +90,15 @@ class MyOrderPage extends StatelessWidget {
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
-                                    Text(myOrders[index].title,textScaleFactor: 1.3,),
+                                    Text(
+                                      myOrders[index].title,
+                                      textScaleFactor: 1.3,
+                                    ),
                                     SizedBox(
                                       width: 35,
                                     ),
-                                    Text("进行中"+myOrders[index].take.toString()),
+                                    Text("进行中" +
+                                        myOrders[index].take.toString()),
                                   ],
                                 ),
                                 SizedBox(
@@ -102,16 +106,22 @@ class MyOrderPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Text("剩余名额" + myOrders[index].remain.toString()),
+                                    Text("剩余名额" +
+                                        myOrders[index].remain.toString()),
                                     SizedBox(
                                       width: 15,
                                     ),
-                                    Text("等待审核"+myOrders[index].submit.toString())
+                                    Text("等待审核" +
+                                        myOrders[index].submit.toString())
                                   ],
                                 )
                               ],
                             ),
-                            Expanded(child: Text(myOrders[index].price.toString()+"元",textAlign: TextAlign.right,))
+                            Expanded(
+                                child: Text(
+                              myOrders[index].price.toString() + "元",
+                              textAlign: TextAlign.right,
+                            ))
                           ],
                         ),
                       ),
@@ -119,12 +129,83 @@ class MyOrderPage extends StatelessWidget {
                     // TODO: Handle this case.
                     break;
                   case OrderStatus.submit:
+                    return Card(
+                      margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          if (myOrders[index] is OnlineOrder) {
+                            Routers.push(context, Routers.ONLINEORDERINGPAGE,
+                                params: {
+                                  "order": myOrders[index],
+                                });
+                          } else {
+                            Routers.push(context, Routers.OFFINEORDERINGPAGE,
+                                params: {
+                                  "order": myOrders[index],
+                                });
+                          }
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Image(
+                              width: 30,
+                              height: 30,
+                              image: AssetImage(myOrders[index] is OnlineOrder
+                                  ? "assets/images/onlineIcon.png"
+                                  : "assets/images/offineIcon.png"),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      myOrders[index].title,
+                                      textScaleFactor: 1.3,
+                                    ),
+                                    SizedBox(
+                                      width: 35,
+                                    ),
+                                    Text("进行中" +
+                                        myOrders[index].take.toString()),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text("剩余名额" +
+                                        myOrders[index].remain.toString()),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text("等待审核" +
+                                        myOrders[index].submit.toString())
+                                  ],
+                                )
+                              ],
+                            ),
+                            Expanded(
+                                child: Text(
+                                  myOrders[index].price.toString() + "元",
+                                  textAlign: TextAlign.right,
+                                ))
+                          ],
+                        ),
+                      ),
+                    );
                     // TODO: Handle this case.
                     break;
                   case OrderStatus.finish:
                     // TODO: Handle this case.
                     return Card(
-                      margin: const EdgeInsets.only(left: 8,right: 8,top: 15),
+                      margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
@@ -146,8 +227,11 @@ class MyOrderPage extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             Image(
-                              width: 30,height: 30,
-                              image: AssetImage(myOrders[index] is OnlineOrder? "assets/images/onlineIcon.png":"assets/images/offineIcon.png"),
+                              width: 30,
+                              height: 30,
+                              image: AssetImage(myOrders[index] is OnlineOrder
+                                  ? "assets/images/onlineIcon.png"
+                                  : "assets/images/offineIcon.png"),
                             ),
                             SizedBox(
                               width: 15,
@@ -156,15 +240,21 @@ class MyOrderPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Text(myOrders[index].title,textScaleFactor: 1.3,),
+                                Text(
+                                  myOrders[index].title,
+                                  textScaleFactor: 1.3,
+                                ),
                                 SizedBox(
                                   height: 15,
-
                                 ),
                                 Text("剩余名额" + myOrders[index].remain.toString())
                               ],
                             ),
-                            Expanded(child: Text(myOrders[index].price.toString()+"元",textAlign: TextAlign.right,))
+                            Expanded(
+                                child: Text(
+                              myOrders[index].price.toString() + "元",
+                              textAlign: TextAlign.right,
+                            ))
                           ],
                         ),
                       ),
@@ -172,7 +262,7 @@ class MyOrderPage extends StatelessWidget {
                     break;
                   case OrderStatus.no:
                     return Card(
-                      margin: const EdgeInsets.only(left: 8,right: 8,top: 15),
+                      margin: const EdgeInsets.only(left: 8, right: 8, top: 15),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
@@ -194,8 +284,11 @@ class MyOrderPage extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             Image(
-                              width: 30,height: 30,
-                              image: AssetImage(myOrders[index] is OnlineOrder? "assets/images/onlineIcon.png":"assets/images/offineIcon.png"),
+                              width: 30,
+                              height: 30,
+                              image: AssetImage(myOrders[index] is OnlineOrder
+                                  ? "assets/images/onlineIcon.png"
+                                  : "assets/images/offineIcon.png"),
                             ),
                             SizedBox(
                               width: 15,
@@ -204,15 +297,21 @@ class MyOrderPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Text(myOrders[index].title,textScaleFactor: 1.3,),
+                                Text(
+                                  myOrders[index].title,
+                                  textScaleFactor: 1.3,
+                                ),
                                 SizedBox(
                                   height: 15,
-
                                 ),
                                 Text("剩余名额" + myOrders[index].remain.toString())
                               ],
                             ),
-                            Expanded(child: Text(myOrders[index].price.toString()+"元",textAlign: TextAlign.right,))
+                            Expanded(
+                                child: Text(
+                              myOrders[index].price.toString() + "元",
+                              textAlign: TextAlign.right,
+                            ))
                           ],
                         ),
                       ),

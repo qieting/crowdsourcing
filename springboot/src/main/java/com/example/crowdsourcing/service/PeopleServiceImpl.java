@@ -256,6 +256,9 @@ public class PeopleServiceImpl implements PeopleService {
         offineOrder.setPeopleId(peopleid);
         offineOrder.setRemain(offineOrder.getTotal());
         offineOrderRepository.save(offineOrder);
+        People people = peopleRepository.findById(peopleid);
+        people.minusMoney(offineOrder.getPrice());
+        peopleRepository.save(people);
     }
 
     @Override
@@ -274,10 +277,6 @@ public class PeopleServiceImpl implements PeopleService {
         return offineOrderRepository.findByPeopleId(peopleId);
     }
 
-    @Override
-    public void ChangeOffineOrder(int peopleid, OffineOrder offineOrder) {
-        offineOrderRepository.save(offineOrder);
-    }
 
     @Override
     public OffineOrdering addOffineOrdering(int peopleId, int offineOrderId) {
@@ -306,6 +305,9 @@ public class PeopleServiceImpl implements PeopleService {
         OffineOrder offineOrder = offineOrderRepository.findById(offineOrdering.getOffineOrderId()).get();
         offineOrder.sumbitR();
         offineOrderRepository.save(offineOrder);
+        People people = peopleRepository.findById(offineOrdering.getPeopleId());
+        people.addMoney(offineOrder.getPrice());
+        peopleRepository.save(people);
 
     }
 
@@ -314,19 +316,22 @@ public class PeopleServiceImpl implements PeopleService {
         return offineOrderingRepository.findByPeopleId(peopleId);
     }
 
-    public Map<String,Object>   getOffineOrdering(int  peopleId,int offineOrderid){
-        Map<String,Object> map =new HashMap<>();
-        OffineOrdering  offineOrderings = offineOrderingRepository.findByOffineOrderId(offineOrderid);
-        if(offineOrderings!=null) {
+    public Map<String, Object> getOffineOrdering(int peopleId, int offineOrderid) {
+        Map<String, Object> map = new HashMap<>();
+        OffineOrdering offineOrderings = offineOrderingRepository.findByOffineOrderId(offineOrderid);
+        if (offineOrderings != null) {
             People people = peopleRepository.findById(offineOrderings.getPeopleId());
-            map.put("people",people);
+            map.put("people", people);
         }
-        map.put("offineOrderings",offineOrderings);
-        return  map;
+        map.put("offineOrderings", offineOrderings);
+        return map;
     }
 
     @Override
     public OnLineOrder addOnLineOrder(int peopleid, OnLineOrder onlineOrder, List<MultipartFile> files) {
+        People people = peopleRepository.findById(peopleid);
+        people.minusMoney(onlineOrder.getPrice() * onlineOrder.getTotal());
+        peopleRepository.save(people);
         onlineOrder.setPeopleId(peopleid);
         onlineOrder = onlineOrderRepository.save(onlineOrder);
         onlineOrder.setRemain(onlineOrder.getTotal());
@@ -355,7 +360,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public OnLineOrdering addOnLineOrdering(int onLineOrderId, int peopleId) {
 
-        OnLineOrder offineOrder =onlineOrderRepository.findById(onLineOrderId).get();
+        OnLineOrder offineOrder = onlineOrderRepository.findById(onLineOrderId).get();
         if (offineOrder.getRemain() == 0) {
             return null;
         } else {
@@ -406,18 +411,18 @@ public class PeopleServiceImpl implements PeopleService {
         return onlineOrderingRepository.findByPeopleId(peopleId);
     }
 
-    public Map<String ,Object>  getOnLineOrdering(int  peopleId,int OnlineOrderId){
-        Map<String ,Object> map = new HashMap<>();
-        List<OnLineOrdering>  onLineOrderings = onlineOrderingRepository.findByOnlineOrderId(OnlineOrderId);
+    public Map<String, Object> getOnLineOrdering(int peopleId, int OnlineOrderId) {
+        Map<String, Object> map = new HashMap<>();
+        List<OnLineOrdering> onLineOrderings = onlineOrderingRepository.findByOnlineOrderId(OnlineOrderId);
         List<People> peoples = new ArrayList<>();
-        for(int i =0; i<onLineOrderings.size();i++){
+        for (int i = 0; i < onLineOrderings.size(); i++) {
             People people = peopleRepository.findById(onLineOrderings.get(i).getPeopleId());
             peoples.add(people);
         }
-        map.put("orders",onLineOrderings);
-        map.put("peoples",peoples);
-        return  map;
-     }
+        map.put("orders", onLineOrderings);
+        map.put("peoples", peoples);
+        return map;
+    }
 
     @Override
     public Map<String, List> getOrders(int platForm) {
@@ -434,14 +439,69 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
+    public List getMyTakeOrders(int id, int type, boolean online) {
+        //type:  1代表进行中  2代表完成
+        Map<String, Object> map = new HashMap<>();
+
+        if (online) {
+            List<OnLineOrder> onLineOrders = new ArrayList<>();
+            List<OnLineOrdering> onLineOrderings = onlineOrderingRepository.findByPeopleId(id);
+            for (OnLineOrdering on :
+                    onLineOrderings) {
+                switch (type){
+                    case  1:
+                        if(on.getFinishDate()==null)
+                        onLineOrders.add(onlineOrderRepository.findById(on.getOnlineOrderId()).get());
+                        break;
+                    case  2:
+                        if(on.getFinishDate()!=null)
+                            onLineOrders.add(onlineOrderRepository.findById(on.getOnlineOrderId()).get());
+
+                        break;
+                }
+            }
+            return onLineOrders;
+        } else {
+            List<OffineOrder> onLineOrders = new ArrayList<>();
+            List<OffineOrdering> onLineOrderings = offineOrderingRepository.findByPeopleId(id);
+            for (OffineOrdering on :
+                    onLineOrderings) {
+                switch (type){
+                    case  1:
+                        if(on.getFinishDate()==null)
+                            onLineOrders.add(offineOrderRepository.findById(on.getOffineOrderId()).get());
+                        break;
+                    case  2:
+                        if(on.getFinishDate()!=null)
+                            onLineOrders.add(offineOrderRepository.findById(on.getOffineOrderId()).get());
+
+                        break;
+                }
+            }
+            return onLineOrders;
+        }
+
+    }
+
+    @Override
     public OnLineOrdering finishOnlineOrdering(int orderId, boolean finish, String reason) {
-        OnLineOrdering onLineOrdering =onlineOrderingRepository.findById(orderId).get();
+        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(orderId).get();
         onLineOrdering.setFinishDate(new Date());
-        if(finish){
+        if (!finish) {
             onLineOrdering.setReason(reason);
         }
         onlineOrderingRepository.save(onLineOrdering);
-        return  onLineOrdering;
+        OnLineOrder order =onlineOrderRepository.findById(orderId).get();
+        order.finishOne();
+        onlineOrderRepository.save(order);
+        return onLineOrdering;
+    }
+
+    @Override
+    public void addMoney(int peopleId, double money) {
+        People people = peopleRepository.findById(peopleId);
+        people.addMoney(money);
+        peopleRepository.save(people);
     }
 
 

@@ -74,7 +74,7 @@ class _OnlineOrderingPageState extends State<OnlineOrderingPage> {
     for (var i in onlineOrderings) {
       if (i.finishDate != null) {
         finishOrdering.add(i);
-      } else if (i.submitDate != null) {
+      } else if (i.submitDate != null ) {
         submitOrdering.add(i);
       }
     }
@@ -173,7 +173,8 @@ class _OnlineOrderingPageState extends State<OnlineOrderingPage> {
                         });
                         Routers.push(context, Routers.CHECKPAGE, params: {
                           'ordering': finishOrdering[index],
-                          'user': u
+                          'user': u,
+                          'order':widget.onlineOrder
                         });
                       },
                       child: Column(

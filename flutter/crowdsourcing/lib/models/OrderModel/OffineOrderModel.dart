@@ -62,7 +62,7 @@ class OffineOrderModel extends ChangeNotifier {
   int finishnumber(){
     int i = 0;
     for(var ii in _offineOrders){
-      if(ii.remain==0){
+      if(ii.finish==ii.total){
         i++;
       }
     }

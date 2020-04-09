@@ -42,6 +42,16 @@ public class People implements Serializable {
     @Column
     private String nick;
 
+    @Column
+    private  double money = 100;
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
 
     public People() {
     }
@@ -134,6 +144,9 @@ public class People implements Serializable {
         if (people.getNick() != null) {
             this.setNick(people.getNick());
         }
+        if(people.getMoney()!=0){
+            this.setMoney(people.getMoney());
+        }
         if (people.getHead() != null) {
             this.setHead(people.getHead());
         }
@@ -149,6 +162,14 @@ public class People implements Serializable {
         if (people.getNumber() != null) {
             this.setNumber(people.getNumber());
         }
+    }
+
+    public void addMoney(double money){
+        this.money+=money;
+    }
+
+    public void minusMoney(double money){
+        this.money-=money;
     }
 
 }

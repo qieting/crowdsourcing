@@ -165,4 +165,8 @@ public class OnLineOrder {
     public void remainMinus(){
         remain--;
     }
+    public  void  finishOne(){
+        submit--;
+        finish++;
+    }
 }

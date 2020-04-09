@@ -330,6 +330,24 @@ class MyDio {
     }
   }
 
+  static Future<List> getTakeOrders(
+      BuildContext context, int type, bool online) async {
+    try {
+      Response response = await dio.get(MyUrl.takeOrder,
+          queryParameters: {'type': type, "online": online});
+      if (response.statusCode == 200) {
+        return (response.data as List);
+      } else {
+        MyToast.toast(failStatus(response.statusCode));
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      return null;
+    }
+  }
+
   static addOffineOrdering(int offerding,
       {BuildContext context, Function success}) async {
     try {
@@ -361,10 +379,12 @@ class MyDio {
       MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
     }
   }
-  static Future<Map> getOffineOrderingByOrderId(BuildContext context,int orderId) async {
+
+  static Future<Map> getOffineOrderingByOrderId(
+      BuildContext context, int orderId) async {
     try {
-      Response response = await dio.get(MyUrl.offineOrdering,
-          queryParameters: {'orderid': orderId});
+      Response response = await dio
+          .get(MyUrl.offineOrdering, queryParameters: {'orderid': orderId});
       if (response.statusCode == 200) {
         return response.data;
       } else {
@@ -465,16 +485,20 @@ class MyDio {
     }
   }
 
-  static finishOnlineOrdering(context,int onlineOrderId,bool check ,String reason,success) async{
+  static finishOnlineOrdering(
+      context, int onlineOrderId, bool check, String reason, success) async {
     try {
       //FocusScope.of(context).unfocus();
-      Map<String, dynamic> map = {"orderingId": onlineOrderId};
-     map["check"]=check;
-     map["reason"]=reason;
-
-      Response response = await dio.put(MyUrl.onlineOrdering, data:map);
+//      Map<String, dynamic> map = {"orderingId": onlineOrderId};
+//     map["check"]=check;
+//     map["reason"]=reason??"";
+      Response response = await dio.put(MyUrl.finishonlineOrdering, queryParameters: {
+        "orderingId": onlineOrderId,
+        "check": check,
+        "reason": reason ?? ""
+      });
       if (response.statusCode == 200) {
-        success(OnlineOrdering.fromJsonMap(response.data));
+        success(response.data);
       } else {
         showError(context, failStatus(response.statusCode));
       }
@@ -485,14 +509,16 @@ class MyDio {
   }
 
   static changeOnlineOrdering(int onlineOrderId, Map images, Map phones,
-      {BuildContext context,@required success}) async {
+      {BuildContext context, @required success}) async {
     try {
       //FocusScope.of(context).unfocus();
       Map<String, dynamic> map = {"onlineOrderId": onlineOrderId};
-      map.addAll(phones.map((k,v){return MapEntry(k.toString(),v);}));
+      map.addAll(phones.map((k, v) {
+        return MapEntry(k.toString(), v);
+      }));
       map.addAll(images.map<String, UploadFileInfo>((k, v) {
-        return MapEntry(
-            k.toString(), UploadFileInfo(File(v), v.split("/")[v.split("/").length - 1]));
+        return MapEntry(k.toString(),
+            UploadFileInfo(File(v), v.split("/")[v.split("/").length - 1]));
       }));
       FormData formData = new FormData.from(map);
       Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
@@ -507,10 +533,11 @@ class MyDio {
     }
   }
 
-  static Future<Map> getOnlineOrderingByOrderId(BuildContext context,int orderId) async {
+  static Future<Map> getOnlineOrderingByOrderId(
+      BuildContext context, int orderId) async {
     try {
-      Response response = await dio.get(MyUrl.onlineOrdering,
-          queryParameters: {'orderid': orderId});
+      Response response = await dio
+          .get(MyUrl.onlineOrdering, queryParameters: {'orderid': orderId});
       if (response.statusCode == 200) {
         return response.data;
       } else {

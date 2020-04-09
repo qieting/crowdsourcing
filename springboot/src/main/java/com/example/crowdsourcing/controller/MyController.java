@@ -16,6 +16,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @RestController
 public class MyController {
 
@@ -103,26 +104,23 @@ public class MyController {
     }
 
 
-
-
-
     @RequestMapping(value = "/offineOrdering", method = RequestMethod.POST)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public OffineOrdering  addOffineOrdering( @RequestBody Integer  offineOrderId, @CurrentUserId int id) {
-       return  peopleService.addOffineOrdering(id, offineOrderId);
+    public OffineOrdering addOffineOrdering(@RequestBody Integer offineOrderId, @CurrentUserId int id) {
+        return peopleService.addOffineOrdering(id, offineOrderId);
     }
 
     @RequestMapping(value = "/offineOrdering", method = RequestMethod.PUT)
-    public void finishOffineOrdering(@RequestParam("offineOrderId") int  offineOrderId) {
+    public void finishOffineOrdering(@RequestParam("offineOrderId") int offineOrderId) {
         peopleService.finishOffineOrdering(offineOrderId);
     }
 
     @RequestMapping(value = "/offineOrdering", method = RequestMethod.GET)
-    public Object getOffineOrderings(@CurrentUserId  int id, @RequestParam(required = false,name="orderid",defaultValue = "-1") int orderId) {
-        if(orderId<0)
-        return peopleService.getOffineOrdering(id);
-        else{
-            return  peopleService.getOffineOrdering(id,orderId);
+    public Object getOffineOrderings(@CurrentUserId int id, @RequestParam(required = false, name = "orderid", defaultValue = "-1") int orderId) {
+        if (orderId < 0)
+            return peopleService.getOffineOrdering(id);
+        else {
+            return peopleService.getOffineOrdering(id, orderId);
         }
     }
 
@@ -130,7 +128,7 @@ public class MyController {
     @RequestMapping(value = "/onlineOrder", method = RequestMethod.POST)
     public OnLineOrder addOnLineOrder(OnLineOrder onLineOrder, List<MultipartFile> files, @CurrentUserId int id) {
 
-      return   peopleService.addOnLineOrder(id,onLineOrder,files);
+        return peopleService.addOnLineOrder(id, onLineOrder, files);
     }
 
     @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)
@@ -139,46 +137,57 @@ public class MyController {
     }
 
     @RequestMapping(value = "/onlineOrdering", method = RequestMethod.GET)
-    public Object getOnLineOrderings(@CurrentUserId  int id,@RequestParam(required = false,name="orderid",defaultValue = "-1") int orderId) {
-        if(orderId<0)
-        return peopleService.getOnLineOrdering(id);
-        else{
-            return  peopleService.getOnLineOrdering(id,orderId);
+    public Object getOnLineOrderings(@CurrentUserId int id, @RequestParam(required = false, name = "orderid", defaultValue = "-1") int orderId) {
+        if (orderId < 0)
+            return peopleService.getOnLineOrdering(id);
+        else {
+            return peopleService.getOnLineOrdering(id, orderId);
         }
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
-    public Map<String ,List> getorders(@RequestParam("platForm") int platForm) {
+    public Map<String, List> getorders(@RequestParam("platForm") int platForm) {
         return peopleService.getOrders(platForm);
     }
 
     @RequestMapping(value = "/onlineOrdering", method = RequestMethod.POST)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public OnLineOrdering  addOnLineOrdering( @RequestBody Integer  onlineOrderId, @CurrentUserId int id) {
-        return  peopleService.addOnLineOrdering(onlineOrderId,id);
+    public OnLineOrdering addOnLineOrdering(@RequestBody Integer onlineOrderId, @CurrentUserId int id) {
+        return peopleService.addOnLineOrdering(onlineOrderId, id);
     }
 
     @RequestMapping(value = "/onlineOrdering", method = RequestMethod.PUT)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public OnLineOrdering  addOnLineOrdering(  HttpServletRequest request) {
-        MultipartHttpServletRequest params=((MultipartHttpServletRequest) request);
-        Map<String,MultipartFile> files = params.getFileMap();
-        Map<String,String> phones =new HashMap<>();
-        Enumeration<String>  ss =params.getParameterNames();
-        while (ss.hasMoreElements()){
-            String as =ss.nextElement();
-             phones.put(as,params.getParameter(as));
+    public OnLineOrdering addOnLineOrdering(HttpServletRequest request) {
+        MultipartHttpServletRequest params = ((MultipartHttpServletRequest) request);
+        Map<String, MultipartFile> files = params.getFileMap();
+        Map<String, String> phones = new HashMap<>();
+        Enumeration<String> ss = params.getParameterNames();
+        while (ss.hasMoreElements()) {
+            String as = ss.nextElement();
+            phones.put(as, params.getParameter(as));
         }
-     //   return  null;
-        return  peopleService. ChangeOnlineOrdering(phones,files);
+        //   return  null;
+        return peopleService.ChangeOnlineOrdering(phones, files);
     }
 
     @RequestMapping(value = "/finishonlineOrdering", method = RequestMethod.PUT)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public OnLineOrdering  finishOnLineOrdering(  @CurrentUserId int id,int orderingId, boolean check, String reason ) {
-
-        return  peopleService.finishOnlineOrdering(orderingId,check,reason);
+    public OnLineOrdering finishOnLineOrdering(@RequestParam(name = "orderingId") int orderingId,@RequestParam Boolean check, @RequestParam  String reason) {
+        return peopleService.finishOnlineOrdering(orderingId, check, reason);
     }
 
+    @RequestMapping(value = "/money", method = RequestMethod.POST)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public void addMoney(@CurrentUserId int id, double money) {
+        peopleService.addMoney(id, money);
+    }
+
+    @RequestMapping(value = "/takeOrder", method = RequestMethod.GET)
+    //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
+    public List finishOnLineOrdering(@CurrentUserId int id,@RequestParam(name = "type") int type ,@RequestParam(name = "online") boolean onLine) {
+
+        return peopleService.getMyTakeOrders(id,type,onLine);
+    }
 
 }
