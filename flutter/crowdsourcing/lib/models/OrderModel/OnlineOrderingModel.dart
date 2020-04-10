@@ -97,4 +97,13 @@ class OnlineOrderingModel extends ChangeNotifier {
     notifyListeners();
     saveOnlineOrderings();
   }
+
+
+  findByOrderId(int id){
+    for(var i in _onlineOrderings){
+      if(i.onlineOrderId==id){
+        return i;
+      }
+    }
+  }
 }

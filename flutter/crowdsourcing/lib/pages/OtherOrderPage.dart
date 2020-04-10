@@ -1,3 +1,5 @@
+import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
+import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/order/Order.dart';
 import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
 import 'package:crowdsourcing/models/object/order/offine/OffineOrdering.dart';
@@ -110,16 +112,20 @@ class _OtherOrderPageState extends State<OtherOrderPage> {
                         SizedBox(
                           height: 15,
                         ),
-                        Row(
+                        widget.onLine&&widget.orderStatus==OrderStatus.finish?Row(
                           children: <Widget>[
                             RaisedButton(
                               child: Text("查看我的我的提交"),
                               onPressed: (){
-
+                                Routers.push(context, Routers.CHECKPAGE, params: {
+                                  'ordering': Provider.of<OnlineOrderingModel>(context,listen: false).findByOrderId((orders[index] as OnlineOrder).id),
+                                  'user': null,
+                                  'order': orders[index]
+                                });
                               },
                             )
                           ],
-                        )
+                        ):SizedBox()
                       ],
                     ),
                     Expanded(child: Text(orders[index].price.toString() + "元",

@@ -299,12 +299,14 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public void finishOffineOrdering(int offineOrderingId) {
-        OffineOrdering offineOrdering = offineOrderingRepository.findById(offineOrderingId).get();
-        offineOrdering.setFinishDate(new Date());
-        offineOrderingRepository.save(offineOrdering);
-        OffineOrder offineOrder = offineOrderRepository.findById(offineOrdering.getOffineOrderId()).get();
+        OffineOrder offineOrder = offineOrderRepository.findById(offineOrderingId).get();
         offineOrder.sumbitR();
         offineOrderRepository.save(offineOrder);
+
+        OffineOrdering offineOrdering = offineOrderingRepository.findByOffineOrderId(offineOrderingId);
+        offineOrdering.setFinishDate(new Date());
+        offineOrderingRepository.save(offineOrdering);
+
         People people = peopleRepository.findById(offineOrdering.getPeopleId());
         people.addMoney(offineOrder.getPrice());
         peopleRepository.save(people);

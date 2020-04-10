@@ -239,6 +239,8 @@ class OrderOffineDetailsPage extends StatelessWidget {
                   } else {
                     MyDio.changeOffineOrdering(offineOrder.id, success: () {
                       offineOrderingModel.finishOfferOrdering(take.id);
+                      Navigator.of(context).pop();
+                      MyToast.toast("提交成功");
                     });
                   }
                   return;

@@ -19,7 +19,9 @@ class CheckPage extends StatefulWidget {
   final User user;
   final OnlineOrder onlineOrder;
 
-  CheckPage(this.onlineOrdering, this.user, this.onlineOrder) {}
+  CheckPage(this.onlineOrdering, this.user, this.onlineOrder) {
+
+  }
 
   @override
   _CheckPageState createState() => _CheckPageState();
@@ -215,7 +217,7 @@ class _CheckPageState extends State<CheckPage> {
                       }
                     },
                     itemCount: widget.onlineOrder.onlineSteps.length)),
-            widget.onlineOrdering.finishDate == null
+           widget!=null? ( widget.onlineOrdering.finishDate == null
                 ? Row(
                     children: <Widget>[
                       Expanded(
@@ -276,7 +278,16 @@ class _CheckPageState extends State<CheckPage> {
                   ),
                 )
               ],
-            )
+            )):
+               Row(
+                 children: <Widget>[
+                   Expanded(
+                     child: RaisedButton(
+                       child: Text(widget.onlineOrdering.finishDate==null?"等待审核":(widget.onlineOrdering.reason==null?"审核通过":widget.onlineOrdering.reason)),
+                     ) ,
+                   )
+                 ],
+               )
           ],
         ),
       ),

@@ -368,7 +368,7 @@ class MyDio {
     try {
       //FocusScope.of(context).unfocus();
       Response response = await dio
-          .put(MyUrl.offineOrdering, data: {"offineOrderId": offineOrderId});
+          .put(MyUrl.offineOrdering, queryParameters: {"offineOrderId": offineOrderId});
       if (response.statusCode == 200) {
         success();
       } else {

@@ -24,8 +24,7 @@ class OffineOrderingModel extends ChangeNotifier {
   }
 
   saveOffineOrderings() {
-    StorageManager.localStorage
-        .setItem(offineOrderingsS,_offineOrderings);
+    StorageManager.localStorage.setItem(offineOrderingsS, _offineOrderings);
   }
 
   /// 清除持久化的用户数据
@@ -56,31 +55,31 @@ class OffineOrderingModel extends ChangeNotifier {
 
   void finishOfferOrdering(int offerOrdering) {
     for (var i in offineOrderings) {
-      if (i.offineOrderId == offerOrdering) {
+      if (i.id == offerOrdering) {
         i.finishDate = DateTime.now();
         break;
       }
     }
+    notifyListeners();
   }
 
   bool hasTake(int peopleId) =>
       _offineOrderings.any((it) => it.peopleId == peopleId);
 
-
-  int hasfinish(){
+  int hasfinish() {
     int i = 0;
-    for(var ii in _offineOrderings){
-      if(ii.finishDate!=null){
+    for (var ii in _offineOrderings) {
+      if (ii.finishDate != null) {
         i++;
       }
     }
     return i;
   }
 
-  int taking(){
+  int taking() {
     int i = 0;
-    for(var ii in _offineOrderings){
-      if(ii.finishDate==null){
+    for (var ii in _offineOrderings) {
+      if (ii.finishDate == null) {
         i++;
       }
     }

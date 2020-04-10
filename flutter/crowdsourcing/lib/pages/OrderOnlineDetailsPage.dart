@@ -285,7 +285,6 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                                       ),
                                     ),
                                   );
-
                                 case MyAction.URL:
                                   return Card(
                                     child: Container(

@@ -125,26 +125,34 @@ class IState extends State<IPage> {
                                         text: '线上:',
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = onlineOrdingModel
-                                              .taking()!=0?() {
-                                            Routers.push(
-                                                context, Routers.OTHERORDERPAGE,
-                                                params: {
-                                                  'status': OrderStatus.take,
-                                                  "online": true
-                                                });
-                                          }:null,
+                                                      .taking() !=
+                                                  0
+                                              ? () {
+                                                  Routers.push(context,
+                                                      Routers.OTHERORDERPAGE,
+                                                      params: {
+                                                        'status':
+                                                            OrderStatus.take,
+                                                        "online": true
+                                                      });
+                                                }
+                                              : null,
                                         style: TextStyle(fontSize: 14)),
                                     TextSpan(
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap =onlineOrdingModel
-                                              .taking()!=0? () {
-                                            Routers.push(
-                                                context, Routers.OTHERORDERPAGE,
-                                                params: {
-                                                  'status': OrderStatus.take,
-                                                  "online": true
-                                                });
-                                          }:null,
+                                          ..onTap = onlineOrdingModel
+                                                      .taking() !=
+                                                  0
+                                              ? () {
+                                                  Routers.push(context,
+                                                      Routers.OTHERORDERPAGE,
+                                                      params: {
+                                                        'status':
+                                                            OrderStatus.take,
+                                                        "online": true
+                                                      });
+                                                }
+                                              : null,
                                         text: onlineOrdingModel
                                             .taking()
                                             .toString(),
@@ -153,27 +161,35 @@ class IState extends State<IPage> {
                                     TextSpan(
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = offineOrderingModel
-                                              .taking()!=0? () {
-                                            Routers.push(
-                                                context, Routers.OTHERORDERPAGE,
-                                                params: {
-                                                  'status': OrderStatus.take,
-                                                  "online": false
-                                                });
-                                          }:null,
+                                                      .taking() !=
+                                                  0
+                                              ? () {
+                                                  Routers.push(context,
+                                                      Routers.OTHERORDERPAGE,
+                                                      params: {
+                                                        'status':
+                                                            OrderStatus.take,
+                                                        "online": false
+                                                      });
+                                                }
+                                              : null,
                                         text: '线下:',
                                         style: TextStyle(fontSize: 14)),
                                     TextSpan(
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap =offineOrderingModel
-                                              .taking()!=0? () {
-                                            Routers.push(
-                                                context, Routers.OTHERORDERPAGE,
-                                                params: {
-                                                  'status': OrderStatus.take,
-                                                  "online": false
-                                                });
-                                          }:null,
+                                          ..onTap = offineOrderingModel
+                                                      .taking() !=
+                                                  0
+                                              ? () {
+                                                  Routers.push(context,
+                                                      Routers.OTHERORDERPAGE,
+                                                      params: {
+                                                        'status':
+                                                            OrderStatus.take,
+                                                        "online": false
+                                                      });
+                                                }
+                                              : null,
                                         text: offineOrderingModel
                                             .taking()
                                             .toString(),
@@ -205,8 +221,36 @@ class IState extends State<IPage> {
                                     child: Text.rich(TextSpan(children: [
                                       TextSpan(
                                           text: '线上:',
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = onlineOrdingModel
+                                                        .hasfinish() !=
+                                                    0
+                                                ? () {
+                                                    Routers.push(context,
+                                                        Routers.OTHERORDERPAGE,
+                                                        params: {
+                                                          'status': OrderStatus
+                                                              .finish,
+                                                          "online": true
+                                                        });
+                                                  }
+                                                : null,
                                           style: TextStyle(fontSize: 14)),
                                       TextSpan(
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = onlineOrdingModel
+                                                        .hasfinish() !=
+                                                    0
+                                                ? () {
+                                                    Routers.push(context,
+                                                        Routers.OTHERORDERPAGE,
+                                                        params: {
+                                                          'status': OrderStatus
+                                                              .finish,
+                                                          "online": true
+                                                        });
+                                                  }
+                                                : null,
                                           text: onlineOrdingModel
                                               .hasfinish()
                                               .toString(),
@@ -214,9 +258,36 @@ class IState extends State<IPage> {
                                       TextSpan(text: "  "),
                                       TextSpan(
                                           text: '线下:',
-                                          recognizer: TapGestureRecognizer(),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = onlineOrdingModel
+                                                        .hasfinish() !=
+                                                    0
+                                                ? () {
+                                                    Routers.push(context,
+                                                        Routers.OTHERORDERPAGE,
+                                                        params: {
+                                                          'status': OrderStatus
+                                                              .finish,
+                                                          "online": false
+                                                        });
+                                                  }
+                                                : null,
                                           style: TextStyle(fontSize: 14)),
                                       TextSpan(
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = onlineOrdingModel
+                                                        .hasfinish() !=
+                                                    0
+                                                ? () {
+                                                    Routers.push(context,
+                                                        Routers.OTHERORDERPAGE,
+                                                        params: {
+                                                          'status': OrderStatus
+                                                              .finish,
+                                                          "online": false
+                                                        });
+                                                  }
+                                                : null,
                                           text: offineOrderingModel
                                               .hasfinish()
                                               .toString(),
