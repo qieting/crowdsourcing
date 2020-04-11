@@ -7,6 +7,7 @@ import 'package:crowdsourcing/common/MyThemes.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
+import 'package:data_plugin/bmob/bmob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -140,6 +141,9 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    //初始化Bmobsdk，用于发送登陆注册使用短信
+    Bmob.init("a5b90ee9a94eed7e7a9f9b1b231de856",
+        "85a013002f4a11c488891b995f4d9995");
 //    focusNode1.addListener(() {
 //      if (focusNode1.hasFocus) {
 //        setState(() {

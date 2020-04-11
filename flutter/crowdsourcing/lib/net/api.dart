@@ -29,45 +29,186 @@ import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-class MyDio {
-  static Dio dio;
-  static const String Token = "token";
+//url访问
 
+class MyDio {
+  //单一dio实例，持有token
+  static Dio dio;
+
+  //使用token来做到登陆状态保持
+  static const String Token = "token";
   static String token;
 
+  //初始化
   static init() async {
     //从内存读取token
     token = await StorageManager.localStorage.getItem(Token);
     dio = Dio(BaseOptions(
-        connectTimeout: 5000,
+        connectTimeout: 3000,
         baseUrl: MyUrl.baseUrl,
-        headers: token == null ? {} : {Token: token}));
-    //这里增加拦截器，如果请求没有token并且不是登录请求，那么就抛出异常，实际上基本没有这种情况
-    dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
-      if (!options.headers.containsKey(Token) &&
-          !options.uri.toString().contains("people")) {
-        throw UnTokenException();
-      }
-    }));
+        headers: token == null ? {} : {Token: token}))
+      //这里连缀调用增加拦截器，如果请求没有token并且不是登录请求，那么就抛出异常，实际上基本没有这种情况
+      ..interceptors
+          .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
+        if (!options.headers.containsKey(Token) &&
+            !options.uri.toString().contains("people")) {
+          throw UnTokenException();
+        }
+      }, onError: (DioError e) {
+        //对异常进行处理，这里主要是进行tast提示,然后具体请求会输出异常发生的信息
+        _disposeDioError(e);
+      }));
   }
 
+  //对异常进行处理，这里主要是进行tast提示,然后具体请求会输出异常发生的信息
+  static _disposeDioError(DioError e) {
+    switch (e.type) {
+      case DioErrorType.CONNECT_TIMEOUT:
+        MyToast.toast("连接超时，请检查您的网络连接");
+        break;
+      case DioErrorType.SEND_TIMEOUT:
+        MyToast.toast("发送超时");
+        break;
+      case DioErrorType.RECEIVE_TIMEOUT:
+        MyToast.toast("接受超时");
+        break;
+      case DioErrorType.RESPONSE:
+        switch (e.response.statusCode) {
+          case 200:
+            break;
+          case 401:
+            MyToast.toast(DemoLocalizations.demoLocalizations.status401);
+            break;
+          case 417:
+            MyToast.toast(DemoLocalizations.demoLocalizations.status407);
+            break;
+          case 500:
+            MyToast.toast(DemoLocalizations.demoLocalizations.status500);
+            break;
+          default:
+            MyToast.toast(
+                DemoLocalizations.demoLocalizations.statusOhters + e.message);
+            break;
+        }
+        break;
+      case DioErrorType.CANCEL:
+        MyToast.toast("拒绝访问");
+        break;
+
+      case DioErrorType.DEFAULT:
+        MyToast.toast((e.error?.toString()) ?? e.message);
+        break;
+    }
+  }
+
+  static printDioError(String functionNume, DioError e) {
+    print("异常位置$functionNume,错误信息为" + e.message);
+  }
+
+  //登录，利用token直接获取个人信息
   static getPeople(BuildContext context) async {
     try {
       Response response = await dio.get(MyUrl.people);
-      if (response.statusCode == 200) {
-        var body = json.decode(response.toString());
-        User user = User.fromJsonMap(body['message']);
-        Provider.of<UserModel>(context, listen: false).saveUser(user);
+      //这里会自动解析response的数据，我们服务器传过来的是map，所以这里data会被自动解析为map
+      var body = response.data;
 
-        List<Location> list = [];
-
-        if (body['locations'] != null) {
-          for (var location in body['locations']) {
-            list.add(Location.fromJsonMap(location));
-          }
+      User user = User.fromJsonMap(body['message']);
+      Provider.of<UserModel>(context, listen: false).saveUser(user);
+      //解析location
+      List<Location> list = [];
+      if (body['locations'] != null) {
+        for (var location in body['locations']) {
+          list.add(Location.fromJsonMap(location));
         }
+      }
+      Provider.of<LocationModel>(context, listen: false).addLocations(list);
+      //解析离线订单消息
+      List<OffineOrdering> list1 =
+          (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+        return OffineOrdering.fromJsonMap(f);
+      }).toList();
+      Provider.of<OffineOrderingModel>(context, listen: false)
+          .addOffineOrderings(list1);
+      //解析离线订单
+      List<OffineOrder> list2 =
+          (body['offineOrder'] as List).map<OffineOrder>((f) {
+        return OffineOrder.fromJsonMap(f);
+      }).toList();
+      Provider.of<OffineOrderModel>(context, listen: false)
+          .addOffineOrders(list2);
+      //解析在线订单
+      List<OnlineOrder> list3 =
+          (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+        return OnlineOrder.fromJsonMap(f);
+      }).toList();
+      Provider.of<OnlineOrderModel>(context, listen: false)
+          .addOnlineOrders(list3);
+      //解析在线订单接单
+      List<OnlineOrdering> list4 =
+          (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+        return OnlineOrdering.fromJsonMap(f);
+      }).toList();
+      Provider.of<OnlineOrderingModel>(context, listen: false)
+          .addOnlineOrderings(list4);
+      return true;
+    } on DioError catch (e) {
+      printDioError("login", e);
+      return false;
+    } catch (e) {
+      print("login程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
+      return false;
+    }
+  }
 
+  //更改个人信息
+  static changeMessage(Map map, BuildContext context) async {
+    try {
+      Response response = await dio.put(MyUrl.people, data: map);
+
+      var body = json.decode(response.toString());
+      User user = User.fromJsonMap(body);
+      Provider.of<UserModel>(context, listen: false).saveUser(user);
+    } on DioError catch (e) {
+      printDioError("changeMessage", e);
+      return false;
+    } catch (e) {
+      print("changeMessage程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
+      return false;
+    }
+  }
+
+  //登录 ，其中map内可以包括账号密码，QQ号,以及仅仅手机号（短信登陆）
+  static Login(Map map,
+      {BuildContext context, Function success(), failed}) async {
+    try {
+      //在这里因为可能有mytoast，而mytoast是在系统输入框下的，因此这里先隐藏输入框，让toast可以显示出来
+      FocusScope.of(context).unfocus();
+      Response response = await dio.post(MyUrl.people, data: map);
+      var body = json.decode(response.toString());
+      //登陆失败时
+      if (body['status'] < 0) {
+        Fluttertoast.showToast(msg: body['message']);
+        failed();
+        return;
+      }
+
+      token = body['token'];
+      dio.options.headers[Token] = token;
+      StorageManager.localStorage.setItem(Token, token);
+
+      User user = User.fromJsonMap(body['message']);
+      Provider.of<UserModel>(context, listen: false).saveUser(user);
+
+      //判断是否是QQ的新注册用户，如果是，那么QQ获取相应信息
+      //否则则解析数据
+      if (body['register'] != null) {
+        QQChannel.qqMessage();
+      } else {
+        List<Location> list = (body['location'] as List).map<Location>((f) {
+          return Location.fromJsonMap(f);
+        }).toList();
         Provider.of<LocationModel>(context, listen: false).addLocations(list);
         List<OffineOrdering> list1 =
             (body['offineOrdering'] as List).map<OffineOrdering>((f) {
@@ -75,7 +216,6 @@ class MyDio {
         }).toList();
         Provider.of<OffineOrderingModel>(context, listen: false)
             .addOffineOrderings(list1);
-
         List<OffineOrder> list2 =
             (body['offineOrder'] as List).map<OffineOrder>((f) {
           return OffineOrder.fromJsonMap(f);
@@ -95,357 +235,223 @@ class MyDio {
         }).toList();
         Provider.of<OnlineOrderingModel>(context, listen: false)
             .addOnlineOrderings(list4);
-
-        return true;
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return false;
       }
+      Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
+          params: {"title": "as"});
+    } on DioError catch (e) {
+      printDioError("login", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return false;
+      print("login程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
-  static changeMessage(Map map, BuildContext context) async {
-    try {
-      Response response = await dio.put(MyUrl.people, data: map);
-      if (response.statusCode == 200) {
-        var body = json.decode(response.toString());
-        User user = User.fromJsonMap(body);
-        Provider.of<UserModel>(context, listen: false).saveUser(user);
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static failStatus(int status) {
-    switch (status) {
-      case 200:
-        return true;
-        break;
-      case 401:
-        return DemoLocalizations.demoLocalizations.status401;
-        break;
-      case 417:
-        return DemoLocalizations.demoLocalizations.status407;
-      case 500:
-        return DemoLocalizations.demoLocalizations.status500;
-        break;
-      default:
-        return DemoLocalizations.demoLocalizations.statusOhters +
-            status.toString();
-        break;
-    }
-  }
-
-  static Login(Map map,
-      {BuildContext context, Function success(), failed}) async {
-    try {
-      FocusScope.of(context).unfocus();
-      Response response = await dio.post(MyUrl.people, data: map);
-      if (response.statusCode == 200) {
-        var body = json.decode(response.toString());
-        if (body['status'] < 0) {
-          Fluttertoast.showToast(msg: body['message']);
-          failed();
-          return;
-        }
-        token = body['token'];
-        dio.options.headers[Token] = token;
-        StorageManager.localStorage.setItem(Token, token);
-        User user = User.fromJsonMap(body['message']);
-        Provider.of<UserModel>(context, listen: false).saveUser(user);
-
-        if (body['register'] != null) {
-          QQChannel.qqMessage();
-        } else {
-          List<Location> list = (body['location'] as List).map<Location>((f) {
-            return Location.fromJsonMap(f);
-          }).toList();
-          Provider.of<LocationModel>(context, listen: false).addLocations(list);
-          List<OffineOrdering> list1 =
-              (body['offineOrdering'] as List).map<OffineOrdering>((f) {
-            return OffineOrdering.fromJsonMap(f);
-          }).toList();
-          Provider.of<OffineOrderingModel>(context, listen: false)
-              .addOffineOrderings(list1);
-          List<OffineOrder> list2 =
-              (body['offineOrder'] as List).map<OffineOrder>((f) {
-            return OffineOrder.fromJsonMap(f);
-          }).toList();
-          Provider.of<OffineOrderModel>(context, listen: false)
-              .addOffineOrders(list2);
-
-          List<OnlineOrder> list3 =
-              (body['onlineOrder'] as List).map<OnlineOrder>((f) {
-            return OnlineOrder.fromJsonMap(f);
-          }).toList();
-          Provider.of<OnlineOrderModel>(context, listen: false)
-              .addOnlineOrders(list3);
-          List<OnlineOrdering> list4 =
-              (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
-            return OnlineOrdering.fromJsonMap(f);
-          }).toList();
-          Provider.of<OnlineOrderingModel>(context, listen: false)
-              .addOnlineOrderings(list4);
-        }
-        Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
-            params: {"title": "as"});
-      } else {
-        failed();
-        showError(context, failStatus(response.statusCode));
-      }
-    } catch (e) {
-      if (failed != null) failed();
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-    }
-  }
-
-  static addLocation(Location location,
-      {BuildContext context, Function success()}) async {
+//增加线下订单收货地址
+  static addLocation(Location location, {BuildContext context}) async {
     try {
       FocusScope.of(context).unfocus();
       Response response =
           await dio.post(MyUrl.location, data: location.toJson());
-      if (response.statusCode == 200) {
-        Provider.of<LocationModel>(context, listen: false)
-            .addLocation(location);
-        MyToast.toast("增加位置信息成功");
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+
+      Provider.of<LocationModel>(context, listen: false).addLocation(location);
+      MyToast.toast("增加位置信息成功");
+    } on DioError catch (e) {
+      printDioError("addLocation", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("addLocation程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //更改线下订单位置
   static changeLocation(Location location,
       {BuildContext context, Function success()}) async {
     try {
-      //FocusScope.of(context).unfocus();
       Response response =
           await dio.put(MyUrl.location, data: location.toJson());
-      if (response.statusCode == 200) {
-//        Provider.of<LocationModel>(context, listen: false)
-//            .addLocation(location);
-//        MyToast.toast("增加位置信息成功");
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      MyToast.toast("修改位置信息成功");
+    } on DioError catch (e) {
+      printDioError("changeLocation", e);
     } catch (e) {
-      print(e.toString());
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("changeLocation程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //删除线下订单
   static deleteLocation(int id, {Function success()}) async {
     try {
       //FocusScope.of(context).unfocus();
       Response response = await dio.delete(MyUrl.location,
           data: new Map<String, dynamic>.from({'id': id}));
-      if (response.statusCode == 200) {
-        MyToast.toast("删除成功");
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-      }
+      MyToast.toast("删除成功");
+    } on DioError catch (e) {
+      printDioError("deleteLocation", e);
     } catch (e) {
-      print(e.toString());
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("deleteLocation程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //增加线下订单
   static addOffineOrder(OffineOrder offineOrder,
       {BuildContext context, Function success}) async {
     try {
-      print(1.toString());
       Response response =
           await dio.post(MyUrl.offineOrder, data: offineOrder.toJson());
-      if (response.statusCode == 200) {
-        MyToast.toast("增加成功");
-        Provider.of<OffineOrderModel>(context, listen: false)
-            .addOffineOrder(offineOrder);
-        success();
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+
+      MyToast.toast("增加成功");
+      Provider.of<OffineOrderModel>(context, listen: false)
+          .addOffineOrder(offineOrder);
+      success();
+    } on DioError catch (e) {
+      printDioError("addOffineOrder", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("addOffineOrder程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //获取线下订单列表，没有使用，因为改为主动获取所有所有列表
   static getOffineOrders(BuildContext context, Function success) async {
     try {
       int paltForm = Platform.isAndroid ? 1 : 2;
       Response response = await dio.get(MyUrl.offineOrder,
           queryParameters: {'platForm': paltForm.toString()});
-      if (response.statusCode == 200) {
-        var body = response.data;
-        List<OffineOrder> offineOrders = body.map<OffineOrder>((it) {
-          return OffineOrder.fromJsonMap(it);
-        }).toList();
-        success(offineOrders);
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return false;
-      }
+
+      var body = response.data;
+      List<OffineOrder> offineOrders = body.map<OffineOrder>((it) {
+        return OffineOrder.fromJsonMap(it);
+      }).toList();
+      success(offineOrders);
+    } on DioError catch (e) {
+      printDioError("getOffineOrders", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return false;
+      print("getOffineOrders程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //根据平台获取线下线上的订单
   static getOrders(BuildContext context, Function success) async {
     try {
       int paltForm = Platform.isAndroid ? 1 : 2;
       Response response = await dio
           .get(MyUrl.order, queryParameters: {'platForm': paltForm.toString()});
-      if (response.statusCode == 200) {
-        var body = response.data;
-        List<OffineOrder> offineOrders =
-            (body["offineOrder"] as List).map<OffineOrder>((it) {
-          return OffineOrder.fromJsonMap(it);
-        }).toList();
-        List<OnlineOrder> onlineOrders =
-            (body["onlineOrder"] as List).map<OnlineOrder>((it) {
-          return OnlineOrder.fromJsonMap(it);
-        }).toList();
-        success(offineOrders, onlineOrders);
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return false;
-      }
+      var body = response.data;
+      List<OffineOrder> offineOrders =
+          (body["offineOrder"] as List).map<OffineOrder>((it) {
+        return OffineOrder.fromJsonMap(it);
+      }).toList();
+      List<OnlineOrder> onlineOrders =
+          (body["onlineOrder"] as List).map<OnlineOrder>((it) {
+        return OnlineOrder.fromJsonMap(it);
+      }).toList();
+      success(offineOrders, onlineOrders);
+    } on DioError catch (e) {
+      printDioError("getOrders", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return false;
+      print("getOrders程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //根据类型和线上线下获取自己的相关订单
   static Future<List> getTakeOrders(
       BuildContext context, int type, bool online) async {
     try {
       Response response = await dio.get(MyUrl.takeOrder,
           queryParameters: {'type': type, "online": online});
-      if (response.statusCode == 200) {
-        return (response.data as List);
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return null;
-      }
+
+      return (response.data as List);
+    } on DioError catch (e) {
+      printDioError("getTakeOrders", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return null;
+      print("getTakeOrders程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //新增离线订单接单信息
   static addOffineOrdering(int offerding,
       {BuildContext context, Function success}) async {
     try {
       Response response = await dio.post(MyUrl.offineOrdering, data: offerding);
-      if (response.statusCode == 200) {
-        success(response.data);
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      success(response.data);
+    } on DioError catch (e) {
+      printDioError("addOffineOrdering", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("addOffineOrdering程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //离线订单完成
   static changeOffineOrdering(int offineOrderId,
       {BuildContext context, Function success()}) async {
     try {
       //FocusScope.of(context).unfocus();
-      Response response = await dio
-          .put(MyUrl.offineOrdering, queryParameters: {"offineOrderId": offineOrderId});
-      if (response.statusCode == 200) {
-        success();
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      Response response = await dio.put(MyUrl.offineOrdering,
+          queryParameters: {"offineOrderId": offineOrderId});
+
+      success();
+    } on DioError catch (e) {
+      printDioError("changeOffineOrdering", e);
     } catch (e) {
-      print(e.toString());
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("changeOffineOrdering程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //获取某个离线order的所有订单
   static Future<Map> getOffineOrderingByOrderId(
       BuildContext context, int orderId) async {
     try {
       Response response = await dio
           .get(MyUrl.offineOrdering, queryParameters: {'orderid': orderId});
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return null;
-      }
+      return response.data;
+    } on DioError catch (e) {
+      printDioError("getOffineOrderingByOrderId", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return null;
+      print("getOffineOrderingByOrderId程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //获取图片
   static Future<Response> getImage(String filePath) async {
     try {
-      Response response = await dio.get(MyUrl.imageUp + filePath,
+      Response response = await dio.get(MyUrl.images + filePath,
           options: Options(responseType: ResponseType.bytes));
-      if (response.statusCode == 200) {
-        return response;
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-      }
+
+      return response;
+    } on DioError catch (e) {
+      printDioError("getImage", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("getImage程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
-  static Future<String> FileUp(File file, String fileName,
-      {BuildContext context, Function success}) async {
-    try {
-      Response response = await dio.post(
-        MyUrl.imageUp,
-        data: UploadFileInfo(file, fileName),
-      );
-      if (response.statusCode == 200) {
-        return response.data['url'];
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
-    } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-    }
-  }
-
+  //增加在线订单，包含需要上传的图片
   static addOnlineOrder(OnlineOrder onlineOrder,
       {BuildContext context, Function success}) async {
     try {
       Map<String, dynamic> map = new Map();
-
+      //这里采用上传了图片数组的形式，同时这里因为有些步骤并没有图片，因此后面需要remove 空的
       map.addAll({
         'files': onlineOrder.onlineSteps.map<UploadFileInfo>((it) {
           if (it.imageUrl != null)
             return UploadFileInfo(new File(it.imageUrl),
                 it.imageUrl.split("/")[it.imageUrl.split("/").length - 1]);
         }).toList()
-          ..remove(null)
-          ..remove(null)
-          ..remove(null)
-          ..remove(null)
+          //除空
+          ..retainWhere((test) {
+            if (test == null)
+              return true;
+            else
+              return false;
+          })
       });
       onlineOrder.onlineSteps.forEach((it) {
         if (it.imageUrl != null)
@@ -453,38 +459,37 @@ class MyDio {
               it.imageUrl.split("/")[it.imageUrl.split("/").length - 1];
       });
       map.addAll(onlineOrder.toJson());
+
       FormData formData = new FormData.from(map);
       Response response = await dio.post(MyUrl.onlineOrder, data: formData);
-      if (response.statusCode == 200) {
-        MyToast.toast("增加成功");
-        OnlineOrder onlineOrder = OnlineOrder.fromJsonMap(response.data);
-        Provider.of<OnlineOrderModel>(context, listen: false)
-            .addOnlineOrder(onlineOrder);
-        success(onlineOrder);
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      MyToast.toast("增加成功");
+      onlineOrder = OnlineOrder.fromJsonMap(response.data);
+      Provider.of<OnlineOrderModel>(context, listen: false)
+          .addOnlineOrder(onlineOrder);
+      success(onlineOrder);
+    } on DioError catch (e) {
+      printDioError("addOnlineOrder", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("addOnlineOrder程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //增加线上任务接单
   static addOnlineOrdering(int offerding,
       {BuildContext context, Function success}) async {
     try {
       Response response = await dio.post(MyUrl.onlineOrdering, data: offerding);
-      if (response.statusCode == 200) {
-        success(response.data);
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      success(response.data);
+    } on DioError catch (e) {
+      printDioError("addOnlineOrdering", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("addOnlineOrdering程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
+  //结束线上任务接单
   static finishOnlineOrdering(
       context, int onlineOrderId, bool check, String reason, success) async {
     try {
@@ -492,19 +497,19 @@ class MyDio {
 //      Map<String, dynamic> map = {"orderingId": onlineOrderId};
 //     map["check"]=check;
 //     map["reason"]=reason??"";
-      Response response = await dio.put(MyUrl.finishonlineOrdering, queryParameters: {
-        "orderingId": onlineOrderId,
-        "check": check,
-        "reason": reason ?? ""
-      });
-      if (response.statusCode == 200) {
+      Response response = await dio.put(MyUrl.finishonlineOrdering,
+          queryParameters: {
+            "orderingId": onlineOrderId,
+            "check": check,
+            "reason": reason ?? ""
+          });
+
         success(response.data);
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      } on DioError catch (e) {
+      printDioError("finishOnlineOrdering", e);
     } catch (e) {
-      print(e.toString());
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("finishOnlineOrdering程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
@@ -522,14 +527,13 @@ class MyDio {
       }));
       FormData formData = new FormData.from(map);
       Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
-      if (response.statusCode == 200) {
+
         success(OnlineOrdering.fromJsonMap(response.data));
-      } else {
-        showError(context, failStatus(response.statusCode));
-      }
+      } on DioError catch (e) {
+      printDioError("changeOnlineOrdering", e);
     } catch (e) {
-      print(e.toString());
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
+      print("changeOnlineOrdering程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 
@@ -538,20 +542,18 @@ class MyDio {
     try {
       Response response = await dio
           .get(MyUrl.onlineOrdering, queryParameters: {'orderid': orderId});
-      if (response.statusCode == 200) {
+
         return response.data;
-      } else {
-        MyToast.toast(failStatus(response.statusCode));
-        return null;
-      }
+      } on DioError catch (e) {
+      printDioError("getOnlineOrderingByOrderId", e);
     } catch (e) {
-      print(e);
-      MyToast.toast(DemoLocalizations.demoLocalizations.networkAnomaly);
-      return null;
+      print("getOnlineOrderingByOrderId程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
     }
   }
 }
 
+//没有token
 class UnTokenException implements Exception {
   const UnTokenException();
 
