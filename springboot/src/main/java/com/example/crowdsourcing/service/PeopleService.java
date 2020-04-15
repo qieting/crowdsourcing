@@ -71,6 +71,7 @@ public interface PeopleService {
 	public  OnLineOrdering finishOnlineOrdering(int orderId ,boolean finish ,String reason);
 
 	public  void addMoney(int peopleId , double money);
+	public String addFile(int id,MultipartFile file);
 
 
 

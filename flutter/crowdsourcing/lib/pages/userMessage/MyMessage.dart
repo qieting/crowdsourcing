@@ -1,5 +1,7 @@
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/user.dart';
+import 'package:crowdsourcing/net/MyUrl.dart';
+import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/ChooseImage/ChooseImage.dart';
 import 'package:crowdsourcing/widgets/OneMessageWidget.dart';
@@ -23,7 +25,11 @@ class MyMessage extends StatelessWidget {
                   choose: true,
                   height: 80,
                   widget: 80,
-                  url: userModel.user.head,
+                  url: userModel.user.mYHead,
+                  callBack: (filePath) async {
+                      String path=await MyDio.upImage(filePath);
+                      MyDio.changeMessage({"head":MyUrl.images+path}, context);
+                  },
                 ),
               ),
               OneMessageWidget(

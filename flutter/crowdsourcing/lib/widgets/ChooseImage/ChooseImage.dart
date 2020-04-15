@@ -11,7 +11,12 @@ class ChooseImage extends StatefulWidget {
   final bool choose ;
   final String url;
   final double widget,height;
-  ChooseImage({this.choose=true,this.widget=150,this.height=150,this.url});
+  final Function callBack;
+
+  //整体逻辑分为三层
+  //若url不为空，则代表加载的网络头像，选择投降后需要上传到云端
+  //若url为空，则显示默认头像，选择后不需要立刻上传，等待获取相关的url
+  ChooseImage({this.choose=true,this.widget=150,this.height=150,this.url,this.callBack});
   @override
   _ChooseImageState createState(){
     chooseImage =_ChooseImageState();
@@ -28,10 +33,12 @@ class _ChooseImageState extends State<ChooseImage> {
 
   Future getImage(ImageSource source) async {
     var image = await ImagePicker.pickImage(source: source);
-
     setState(() {
       _image = image;
     });
+    if(widget.callBack!=null){
+      widget.callBack(_image.path);
+    }
   }
   String getUrl(){
    if(_image!=null){

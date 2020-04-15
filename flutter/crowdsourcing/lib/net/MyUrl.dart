@@ -11,6 +11,7 @@ class MyUrl {
   //第一个带有根路径，用于图片的直接加载，第二个是dio使用
   static const String imageUrl = baseUrl+"images/";
   static const String images = 'images/';
+  static const String imageUp = 'imageUp/';
 
   //登陆注册等
   static const String people = "people";

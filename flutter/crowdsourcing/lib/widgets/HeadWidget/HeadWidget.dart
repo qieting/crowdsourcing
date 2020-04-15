@@ -18,7 +18,7 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
             MyImage(
               userModel.user?.head == null
                   ? AssetImage("assets/images/deafaultHead.png")
-                  : NetworkImage(userModel.user.head),
+                  : NetworkImage(userModel.user.mYHead),
               height: 80,
               width: 70,
             ),

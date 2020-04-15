@@ -1,3 +1,5 @@
+import 'package:crowdsourcing/net/MyUrl.dart';
+
 class User {
   String phone, qq, weixin, head, nick, gender;
   double money;
@@ -13,6 +15,12 @@ class User {
   static const String GENDER = "gender";
   static const String Id = 'id';
 
+  String get mYHead {
+    if (head == null || head.startsWith("http")) {
+      return head;
+    } else
+      return MyUrl.baseUrl + head;
+  }
 
   static User fromJsonMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -24,8 +32,8 @@ class User {
     user.nick = map[NICK];
     user.head = map[HEAD];
     user.gender = map[GENDER];
-    user.id= map[Id];
-    user.nick = map[NICK]??"id"+user.id.toString();
+    user.id = map[Id];
+    user.nick = map[NICK] ?? "id" + user.id.toString();
     return user;
   }
 
@@ -37,6 +45,6 @@ class User {
         HEAD: head,
         NICK: nick,
         GENDER: gender,
-    Id:id
+        Id: id
       };
 }

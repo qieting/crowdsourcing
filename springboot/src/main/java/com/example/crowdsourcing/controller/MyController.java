@@ -190,4 +190,9 @@ public class MyController {
         return peopleService.getMyTakeOrders(id,type,onLine);
     }
 
+    @RequestMapping(value = "/imageUp",method=RequestMethod.POST)
+    public  String upImage(@CurrentUserId int id, @RequestParam("file")MultipartFile file){
+        return  peopleService.addFile(id,file);
+    }
+
 }

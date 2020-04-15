@@ -506,6 +506,19 @@ public class PeopleServiceImpl implements PeopleService {
         peopleRepository.save(people);
     }
 
+    @Override
+    public String addFile(int id, MultipartFile file) {
+        if(file.getOriginalFilename().endsWith(".png")||file.getOriginalFilename().endsWith(".jpg")||file.getOriginalFilename().endsWith(".gif")){
+            save(file, "images/" + id + "!" + file.getOriginalFilename());
+            return  id + "!" + file.getOriginalFilename();
+        }
+        else {
+            save(file, "files/"  + id + "!" + file.getOriginalFilename());
+            return id + "!" + file.getOriginalFilename();
+        }
+
+    }
+
 
     public void save(MultipartFile file, String path) {
         if (file.isEmpty()) {

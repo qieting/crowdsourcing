@@ -1,6 +1,6 @@
 import 'package:crowdsourcing/pages/AddLocationPage.dart';
 import 'package:crowdsourcing/pages/LocationPage.dart';
-import 'package:crowdsourcing/pages/MessagePage/ChangeMessage.dart';
+import 'package:crowdsourcing/pages/userMessage/ChangeMessage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/MyOrderPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/AddOnlineStepPage.dart';

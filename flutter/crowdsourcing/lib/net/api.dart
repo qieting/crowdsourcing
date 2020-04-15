@@ -433,6 +433,27 @@ class MyDio {
     }
   }
 
+  //上传图片
+  static Future<String> upImage(String filePath) async {
+    try {
+      FormData formData = new FormData.from({
+        "file":
+        UploadFileInfo(new File(filePath),
+            filePath.split("/")[filePath.split("/").length - 1])
+
+      });
+      Response response = await dio.post(MyUrl.imageUp,
+          data: formData);
+
+      return response.data;
+    } on DioError catch (e) {
+      printDioError("getImage", e);
+    } catch (e) {
+      print("getImage程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
+    }
+  }
+
   //增加在线订单，包含需要上传的图片
   static addOnlineOrder(OnlineOrder onlineOrder,
       {BuildContext context, Function success}) async {
@@ -504,8 +525,8 @@ class MyDio {
             "reason": reason ?? ""
           });
 
-        success(response.data);
-      } on DioError catch (e) {
+      success(response.data);
+    } on DioError catch (e) {
       printDioError("finishOnlineOrdering", e);
     } catch (e) {
       print("finishOnlineOrdering程序内部发生错误,$e");
@@ -528,8 +549,8 @@ class MyDio {
       FormData formData = new FormData.from(map);
       Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
 
-        success(OnlineOrdering.fromJsonMap(response.data));
-      } on DioError catch (e) {
+      success(OnlineOrdering.fromJsonMap(response.data));
+    } on DioError catch (e) {
       printDioError("changeOnlineOrdering", e);
     } catch (e) {
       print("changeOnlineOrdering程序内部发生错误,$e");
@@ -543,8 +564,8 @@ class MyDio {
       Response response = await dio
           .get(MyUrl.onlineOrdering, queryParameters: {'orderid': orderId});
 
-        return response.data;
-      } on DioError catch (e) {
+      return response.data;
+    } on DioError catch (e) {
       printDioError("getOnlineOrderingByOrderId", e);
     } catch (e) {
       print("getOnlineOrderingByOrderId程序内部发生错误,$e");
