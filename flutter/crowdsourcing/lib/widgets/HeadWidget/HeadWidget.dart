@@ -1,4 +1,5 @@
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyImage.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  MyToast.toast("dianj");
+                  Routers.push(context, Routers.MYMESSAGE);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,

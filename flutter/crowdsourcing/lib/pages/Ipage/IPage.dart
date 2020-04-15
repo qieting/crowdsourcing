@@ -441,6 +441,15 @@ class IState extends State<IPage> {
             onClick: () {
               Routers.push(context, Routers.LOCATIONPAGE);
             },
+          ), WhiteblockWidget(
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).accentColor.withAlpha(180),
+            ),
+            title: "设置",
+            onClick: () {
+              Routers.push(context, Routers.SETTINGPAGE);
+            },
           )
         ],
       ),

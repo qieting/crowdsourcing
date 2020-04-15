@@ -1,5 +1,6 @@
 import 'package:crowdsourcing/pages/AddLocationPage.dart';
 import 'package:crowdsourcing/pages/LocationPage.dart';
+import 'package:crowdsourcing/pages/MessagePage/ChangeMessage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/MyOrderPage.dart';
 import 'package:crowdsourcing/pages/NewOrderPage/NewOrderOnNet/AddOnlineStepPage.dart';
@@ -14,11 +15,12 @@ import 'package:crowdsourcing/pages/OtherOrderPage.dart';
 import 'package:crowdsourcing/pages/PoiPage/PoiPage.dart';
 import 'package:crowdsourcing/pages/checkPage.dart';
 import 'package:crowdsourcing/pages/login/loginPage.dart';
+import 'package:crowdsourcing/pages/settingPage.dart';
+import 'package:crowdsourcing/pages/userMessage/MyMessage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'pages/NewOrderPage/NewOrderOnOffline/OnOffineAddpage.dart';
 import 'pages/splash/splash.dart';
-
 
 class Routers {
   static const String SPLASH = "splash";
@@ -34,11 +36,14 @@ class Routers {
   static const String OFFINEORDERSPAGE = 'OffineOrdersPage';
   static const String ADDONLINEPAGE = 'addOnlinStepePage';
   static const String ORDERONLINEDETAILSPAGE = 'OrderOnlineDetailsPage';
-  static const String MYORDERPAGE ="MyOrderPage";
-  static const String OFFINEORDERINGPAGE ="offineOrderPage";
+  static const String MYORDERPAGE = "MyOrderPage";
+  static const String OFFINEORDERINGPAGE = "offineOrderPage";
   static const String ONLINEORDERINGPAGE = 'onlineOrderingPage';
   static const String CHECKPAGE = 'checkPage';
-  static const String OTHERORDERPAGE ="otherorderpage";
+  static const String OTHERORDERPAGE = "otherorderpage";
+  static const String SETTINGPAGE = "SETTINGpAGE";
+  static const String MYMESSAGE = "MyMessage";
+  static const String CHANGEMESSAGE = "CHANGEMESSAGE";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -113,9 +118,15 @@ class Routers {
       case ONLINEORDERINGPAGE:
         return OnlineOrderingPage(params['order']);
       case CHECKPAGE:
-        return CheckPage(params['ordering'],params['user'],params['order']);
+        return CheckPage(params['ordering'], params['user'], params['order']);
       case OTHERORDERPAGE:
-        return OtherOrderPage(params["status"],params['online']);
+        return OtherOrderPage(params["status"], params['online']);
+      case SETTINGPAGE:
+        return SettingPage();
+      case MYMESSAGE:
+        return MyMessage();
+      case CHANGEMESSAGE:
+        return ChangeMessage(params['name']);
       default:
         break;
     }

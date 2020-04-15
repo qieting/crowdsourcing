@@ -9,7 +9,9 @@ class ChooseImage extends StatefulWidget {
 
   _ChooseImageState chooseImage;
   final bool choose ;
-  ChooseImage({this.choose=true});
+  final String url;
+  final double widget,height;
+  ChooseImage({this.choose=true,this.widget=150,this.height=150,this.url});
   @override
   _ChooseImageState createState(){
     chooseImage =_ChooseImageState();
@@ -31,8 +33,6 @@ class _ChooseImageState extends State<ChooseImage> {
       _image = image;
     });
   }
-  String url ="assets/images/add.png";
-
   String getUrl(){
    if(_image!=null){
         return _image.path;
@@ -78,9 +78,11 @@ class _ChooseImageState extends State<ChooseImage> {
           }
         }:null,
         child: Image(
-          height: 150,
-          width: 150,
-          image: _image==null? AssetImage(url):FileImage(_image),
+          height: widget.height,
+          width: widget.widget,
+          image: _image==null? ( widget.url==null? AssetImage("assets/images/add.png"):
+          NetworkImage(widget.url)
+          ):FileImage(_image),
         ),
       )
     );
