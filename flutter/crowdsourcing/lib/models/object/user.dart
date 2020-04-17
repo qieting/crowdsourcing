@@ -5,6 +5,7 @@ class User {
   double money;
   List locations;
   int id;
+  String token;
 
   static const String PHONE = 'number';
   static const String QQ = 'qq';
@@ -14,6 +15,7 @@ class User {
   static const String NICK = "nick";
   static const String GENDER = "gender";
   static const String Id = 'id';
+  static const String TOKEN = "token";
 
   String get mYHead {
     if (head == null || head.startsWith("http")) {
@@ -33,6 +35,7 @@ class User {
     user.head = map[HEAD];
     user.gender = map[GENDER];
     user.id = map[Id];
+    user.token = map[TOKEN];
     user.nick = map[NICK] ?? "id" + user.id.toString();
     return user;
   }
@@ -44,6 +47,7 @@ class User {
         MONEY: money,
         HEAD: head,
         NICK: nick,
+        TOKEN: token,
         GENDER: gender,
         Id: id
       };

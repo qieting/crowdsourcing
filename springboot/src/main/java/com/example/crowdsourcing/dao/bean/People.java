@@ -45,6 +45,19 @@ public class People implements Serializable {
     @Column
     private  double money = 100;
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Column
+    private String token ;
+
+
+
     public double getMoney() {
         return money;
     }

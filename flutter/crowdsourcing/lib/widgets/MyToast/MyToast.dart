@@ -68,7 +68,7 @@ class MyToast {
       left: 25,
       right: 25,
       child: Container(
-        decoration: BoxDecoration(color: Colors.grey[100]),
+        decoration: BoxDecoration(color: Colors.grey[100].withAlpha(0)),
 //        padding: EdgeInsets.all(0),
 //        margin: EdgeInsets.all(0),
         alignment: Alignment.center,
@@ -86,7 +86,7 @@ class MyToast {
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 13,
                       decoration: TextDecoration.none,
                       color: Colors.grey[700],
                     ),

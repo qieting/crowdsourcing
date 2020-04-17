@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crowdsourcing/channel/QQChannel.dart';
+import 'package:crowdsourcing/common/IM.dart';
 import 'package:crowdsourcing/common/StorageManager.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
@@ -169,6 +170,7 @@ class MyDio {
       var body = json.decode(response.toString());
       User user = User.fromJsonMap(body);
       Provider.of<UserModel>(context, listen: false).saveUser(user);
+      Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
     } on DioError catch (e) {
       printDioError("changeMessage", e);
       return false;
@@ -203,7 +205,7 @@ class MyDio {
 
       //判断是否是QQ的新注册用户，如果是，那么QQ获取相应信息
       //否则则解析数据
-      if (body['register'] != null) {
+      if (body['register'] != null &&body[User.QQ!=null]) {
         QQChannel.qqMessage();
       } else {
         List<Location> list = (body['location'] as List).map<Location>((f) {
@@ -235,9 +237,9 @@ class MyDio {
         }).toList();
         Provider.of<OnlineOrderingModel>(context, listen: false)
             .addOnlineOrderings(list4);
+        Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
       }
-      Routers.pushAndRemove(context, Routers.MYHOMEPAGE,
-          params: {"title": "as"});
+
     } on DioError catch (e) {
       printDioError("login", e);
     } catch (e) {
@@ -377,6 +379,7 @@ class MyDio {
       {BuildContext context, Function success}) async {
     try {
       Response response = await dio.post(MyUrl.offineOrdering, data: offerding);
+      IM.sendOffineOrderMessage(response.data['peopleId'].toString());
       success(response.data);
     } on DioError catch (e) {
       printDioError("addOffineOrdering", e);

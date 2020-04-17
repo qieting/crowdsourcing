@@ -1,3 +1,4 @@
+import 'package:crowdsourcing/common/IM.dart';
 import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/pages/FindPage/FindPage.dart';
 import 'package:crowdsourcing/pages/Ipage/IPage.dart';
@@ -7,6 +8,7 @@ import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/ChooseOrder/ChooseOrder.dart';
 import 'package:crowdsourcing/widgets/HeadWidget/HeadWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 
 class MyHomePage extends StatefulWidget {
   static MyHomePageState myHomePageState;
@@ -76,6 +78,7 @@ class MyHomePageState extends State<MyHomePage>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    IM.init(context);
     disableColor = Theme.of(context).disabledColor;
     selectedColor = Theme.of(context).primaryColor;
   }

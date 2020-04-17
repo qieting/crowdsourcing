@@ -5,7 +5,7 @@ class MyUrl {
 
 
   //服务器根url
-  static const String baseUrl = "http://192.168.2.102:8080/";
+  static const String baseUrl = "http://192.168.2.103:8080/";
 
   //获取订单内相关的各种图片，忽略token
   //第一个带有根路径，用于图片的直接加载，第二个是dio使用
