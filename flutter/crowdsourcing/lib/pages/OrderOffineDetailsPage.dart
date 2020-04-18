@@ -1,3 +1,4 @@
+import 'package:crowdsourcing/common/IM.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/object/order/offine/BuyMessage.dart';
@@ -250,6 +251,7 @@ class OrderOffineDetailsPage extends StatelessWidget {
                     MyToast.toast("抢单失败，请重新进入");
                     return;
                   }
+                  IM.sendOffineOrderMessage(offineOrder.peopleId.toString(),offineOrder.id.toString()+offineOrder.title);
                   offineOrderingModel
                       .addOffineOrdering(OffineOrdering.fromJsonMap(data));
                   Navigator.of(context).pop();

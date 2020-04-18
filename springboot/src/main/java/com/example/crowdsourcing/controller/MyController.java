@@ -3,6 +3,7 @@ package com.example.crowdsourcing.controller;
 
 import com.example.crowdsourcing.Myannotation.CurrentUserId;
 import com.example.crowdsourcing.dao.bean.*;
+import com.example.crowdsourcing.dao.help.OffineOrderWithPeople;
 import com.example.crowdsourcing.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -99,7 +100,7 @@ public class MyController {
     }
 
     @RequestMapping(value = "/offineOrder", method = RequestMethod.GET)
-    public List<OffineOrder> getOffineOrders(@RequestParam("platForm") int platForm) {
+    public List<OffineOrderWithPeople> getOffineOrders(@RequestParam("platForm") int platForm) {
         return peopleService.getOffineOrders(platForm);
     }
 
@@ -131,10 +132,10 @@ public class MyController {
         return peopleService.addOnLineOrder(id, onLineOrder, files);
     }
 
-    @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)
-    public List<OnLineOrder> getOnLineOrders(@RequestParam("platForm") int platForm) {
-        return peopleService.getOnLineOrders(platForm);
-    }
+//    @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)
+//    public List<OnLineOrder> getOnLineOrders(@RequestParam("platForm") int platForm) {
+//        return peopleService.getOnLineOrders(platForm);
+//    }
 
     @RequestMapping(value = "/onlineOrdering", method = RequestMethod.GET)
     public Object getOnLineOrderings(@CurrentUserId int id, @RequestParam(required = false, name = "orderid", defaultValue = "-1") int orderId) {

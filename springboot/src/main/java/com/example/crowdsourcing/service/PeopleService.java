@@ -1,6 +1,8 @@
 package com.example.crowdsourcing.service;
 
 import com.example.crowdsourcing.dao.bean.*;
+import com.example.crowdsourcing.dao.help.OffineOrderWithPeople;
+import com.example.crowdsourcing.dao.help.OnlineOrderWithPeople;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +45,7 @@ public interface PeopleService {
 	public void changeLocation(int peopleid,Location location);
 
 	public void  addOffineOrder(int peopleid, OffineOrder offineOrder);
-	public List<OffineOrder>  getOffineOrders(int platForm);
+	public List<OffineOrderWithPeople>  getOffineOrders(int platForm);
 	public List<OffineOrder>  getOffineOrdersByPeople(int peopleId);
 
 
@@ -55,7 +57,7 @@ public interface PeopleService {
 
 
 	public OnLineOrder  addOnLineOrder(int peopleid, OnLineOrder offineOrder, List<MultipartFile> files);
-	public List<OnLineOrder>  getOnLineOrders(int platForm);
+	public List<OnlineOrderWithPeople>  getOnLineOrders(int platForm);
 	public List<OnLineOrder>  getOnLineOrdersByPeople(int peopleId);
 	public void   ChangeOnLineOrder(int peopleid, OnLineOrder  onLineOrder);
 

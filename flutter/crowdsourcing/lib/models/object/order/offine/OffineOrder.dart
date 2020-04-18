@@ -58,7 +58,7 @@ class OffineOrder extends Order {
         limitedTime: map[Order.LIMITEDTIME],
         submit: map[Order.SUBMIT],
         platFormLimit: map[Order.PLATFORMLIMIT],
-        end: Location(id: map[END]),
+        end: Location(id: (map[END] is int)? map[END]:int.parse(map[END])),
         buyMessages: ((json.decode(map[BUYMESSAGES])) as List).map<BuyMessage>((it) {
           return BuyMessage.fromJsonMap(it);
         }).toList(),
@@ -77,7 +77,7 @@ class OffineOrder extends Order {
       Order.REQUIRE: require,
       Order.LIMITEDTIME: limitedTime,
       Order.PLATFORMLIMIT: platFormLimit,
-      END: end?.id ?? '-1',
+      END: end?.id ?? -1,
       Order.Price: price,
       Order.TOTAL:total,
       Order.REMAIN:remain,

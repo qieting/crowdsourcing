@@ -10,6 +10,8 @@ import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
+import 'package:crowdsourcing/models/OrderShowHelp/OffineOrderWithPeople.dart';
+import 'package:crowdsourcing/models/OrderShowHelp/OnlineOrderWithPeople.dart';
 import 'package:crowdsourcing/models/UserModel/LocationModel.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 
@@ -48,7 +50,7 @@ class MyDio {
         connectTimeout: 3000,
         baseUrl: MyUrl.baseUrl,
         headers: token == null ? {} : {Token: token}))
-      //这里连缀调用增加拦截器，如果请求没有token并且不是登录请求，那么就抛出异常，实际上基本没有这种情况
+    //这里连缀调用增加拦截器，如果请求没有token并且不是登录请求，那么就抛出异常，实际上基本没有这种情况
       ..interceptors
           .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
         if (!options.headers.containsKey(Token) &&
@@ -125,28 +127,28 @@ class MyDio {
       Provider.of<LocationModel>(context, listen: false).addLocations(list);
       //解析离线订单消息
       List<OffineOrdering> list1 =
-          (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+      (body['offineOrdering'] as List).map<OffineOrdering>((f) {
         return OffineOrdering.fromJsonMap(f);
       }).toList();
       Provider.of<OffineOrderingModel>(context, listen: false)
           .addOffineOrderings(list1);
       //解析离线订单
       List<OffineOrder> list2 =
-          (body['offineOrder'] as List).map<OffineOrder>((f) {
+      (body['offineOrder'] as List).map<OffineOrder>((f) {
         return OffineOrder.fromJsonMap(f);
       }).toList();
       Provider.of<OffineOrderModel>(context, listen: false)
           .addOffineOrders(list2);
       //解析在线订单
       List<OnlineOrder> list3 =
-          (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+      (body['onlineOrder'] as List).map<OnlineOrder>((f) {
         return OnlineOrder.fromJsonMap(f);
       }).toList();
       Provider.of<OnlineOrderModel>(context, listen: false)
           .addOnlineOrders(list3);
       //解析在线订单接单
       List<OnlineOrdering> list4 =
-          (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+      (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
         return OnlineOrdering.fromJsonMap(f);
       }).toList();
       Provider.of<OnlineOrderingModel>(context, listen: false)
@@ -205,7 +207,7 @@ class MyDio {
 
       //判断是否是QQ的新注册用户，如果是，那么QQ获取相应信息
       //否则则解析数据
-      if (body['register'] != null &&body[User.QQ!=null]) {
+      if (body['register'] != null && body[User.QQ != null]) {
         QQChannel.qqMessage();
       } else {
         List<Location> list = (body['location'] as List).map<Location>((f) {
@@ -213,36 +215,41 @@ class MyDio {
         }).toList();
         Provider.of<LocationModel>(context, listen: false).addLocations(list);
         List<OffineOrdering> list1 =
-            (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+        (body['offineOrdering'] as List).map<OffineOrdering>((f) {
           return OffineOrdering.fromJsonMap(f);
         }).toList();
         Provider.of<OffineOrderingModel>(context, listen: false)
             .addOffineOrderings(list1);
         List<OffineOrder> list2 =
-            (body['offineOrder'] as List).map<OffineOrder>((f) {
+        (body['offineOrder'] as List).map<OffineOrder>((f) {
           return OffineOrder.fromJsonMap(f);
         }).toList();
         Provider.of<OffineOrderModel>(context, listen: false)
             .addOffineOrders(list2);
 
         List<OnlineOrder> list3 =
-            (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+        (body['onlineOrder'] as List).map<OnlineOrder>((f) {
           return OnlineOrder.fromJsonMap(f);
         }).toList();
         Provider.of<OnlineOrderModel>(context, listen: false)
             .addOnlineOrders(list3);
         List<OnlineOrdering> list4 =
-            (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+        (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
           return OnlineOrdering.fromJsonMap(f);
         }).toList();
         Provider.of<OnlineOrderingModel>(context, listen: false)
             .addOnlineOrderings(list4);
         Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
       }
-
     } on DioError catch (e) {
+      if (failed != null) {
+        failed();
+      }
       printDioError("login", e);
     } catch (e) {
+      if (failed != null) {
+        failed();
+      }
       print("login程序内部发生错误,$e");
       MyToast.toast("程序内部发生错误,$e");
     }
@@ -253,7 +260,7 @@ class MyDio {
     try {
       FocusScope.of(context).unfocus();
       Response response =
-          await dio.post(MyUrl.location, data: location.toJson());
+      await dio.post(MyUrl.location, data: location.toJson());
 
       Provider.of<LocationModel>(context, listen: false).addLocation(location);
       MyToast.toast("增加位置信息成功");
@@ -270,7 +277,7 @@ class MyDio {
       {BuildContext context, Function success()}) async {
     try {
       Response response =
-          await dio.put(MyUrl.location, data: location.toJson());
+      await dio.put(MyUrl.location, data: location.toJson());
       MyToast.toast("修改位置信息成功");
     } on DioError catch (e) {
       printDioError("changeLocation", e);
@@ -300,7 +307,7 @@ class MyDio {
       {BuildContext context, Function success}) async {
     try {
       Response response =
-          await dio.post(MyUrl.offineOrder, data: offineOrder.toJson());
+      await dio.post(MyUrl.offineOrder, data: offineOrder.toJson());
 
       MyToast.toast("增加成功");
       Provider.of<OffineOrderModel>(context, listen: false)
@@ -341,15 +348,17 @@ class MyDio {
       Response response = await dio
           .get(MyUrl.order, queryParameters: {'platForm': paltForm.toString()});
       var body = response.data;
-      List<OffineOrder> offineOrders =
-          (body["offineOrder"] as List).map<OffineOrder>((it) {
-        return OffineOrder.fromJsonMap(it);
+      List<OffineOrderWithPeople> offineOrderWithPeoples =
+      (body["offineOrder"] as List).map<OffineOrderWithPeople>((it) {
+        return OffineOrderWithPeople(User.fromJsonMap(it['user']),
+            OffineOrder.fromJsonMap(it['offineOrder']));
       }).toList();
-      List<OnlineOrder> onlineOrders =
-          (body["onlineOrder"] as List).map<OnlineOrder>((it) {
-        return OnlineOrder.fromJsonMap(it);
+      List<OnlineOrderWithPeople> onlineOrderWithPeoples =
+      (body["onlineOrder"] as List).map<OnlineOrderWithPeople>((it) {
+        return OnlineOrderWithPeople(User.fromJsonMap(it['user']),
+            OnlineOrder.fromJsonMap(it['onLineOrder']));
       }).toList();
-      success(offineOrders, onlineOrders);
+      success(offineOrderWithPeoples, onlineOrderWithPeoples);
     } on DioError catch (e) {
       printDioError("getOrders", e);
     } catch (e) {
@@ -359,8 +368,8 @@ class MyDio {
   }
 
   //根据类型和线上线下获取自己的相关订单
-  static Future<List> getTakeOrders(
-      BuildContext context, int type, bool online) async {
+  static Future<List> getTakeOrders(BuildContext context, int type,
+      bool online) async {
     try {
       Response response = await dio.get(MyUrl.takeOrder,
           queryParameters: {'type': type, "online": online});
@@ -379,7 +388,6 @@ class MyDio {
       {BuildContext context, Function success}) async {
     try {
       Response response = await dio.post(MyUrl.offineOrdering, data: offerding);
-      IM.sendOffineOrderMessage(response.data['peopleId'].toString());
       success(response.data);
     } on DioError catch (e) {
       printDioError("addOffineOrdering", e);
@@ -407,8 +415,8 @@ class MyDio {
   }
 
   //获取某个离线order的所有订单
-  static Future<Map> getOffineOrderingByOrderId(
-      BuildContext context, int orderId) async {
+  static Future<Map> getOffineOrderingByOrderId(BuildContext context,
+      int orderId) async {
     try {
       Response response = await dio
           .get(MyUrl.offineOrdering, queryParameters: {'orderid': orderId});
@@ -440,13 +448,12 @@ class MyDio {
   static Future<String> upImage(String filePath) async {
     try {
       FormData formData = new FormData.from({
-        "file":
-        UploadFileInfo(new File(filePath),
-            filePath.split("/")[filePath.split("/").length - 1])
-
+        "file": UploadFileInfo(new File(filePath),
+            filePath.split("/")[filePath
+                .split("/")
+                .length - 1])
       });
-      Response response = await dio.post(MyUrl.imageUp,
-          data: formData);
+      Response response = await dio.post(MyUrl.imageUp, data: formData);
 
       return response.data;
     } on DioError catch (e) {
@@ -467,9 +474,11 @@ class MyDio {
         'files': onlineOrder.onlineSteps.map<UploadFileInfo>((it) {
           if (it.imageUrl != null)
             return UploadFileInfo(new File(it.imageUrl),
-                it.imageUrl.split("/")[it.imageUrl.split("/").length - 1]);
+                it.imageUrl.split("/")[it.imageUrl
+                    .split("/")
+                    .length - 1]);
         }).toList()
-          //除空
+        //除空
           ..retainWhere((test) {
             if (test == null)
               return true;
@@ -480,7 +489,9 @@ class MyDio {
       onlineOrder.onlineSteps.forEach((it) {
         if (it.imageUrl != null)
           it.imageUrl =
-              it.imageUrl.split("/")[it.imageUrl.split("/").length - 1];
+          it.imageUrl.split("/")[it.imageUrl
+              .split("/")
+              .length - 1];
       });
       map.addAll(onlineOrder.toJson());
 
@@ -514,8 +525,8 @@ class MyDio {
   }
 
   //结束线上任务接单
-  static finishOnlineOrdering(
-      context, int onlineOrderId, bool check, String reason, success) async {
+  static finishOnlineOrdering(context, int onlineOrderId, bool check,
+      String reason, success) async {
     try {
       //FocusScope.of(context).unfocus();
 //      Map<String, dynamic> map = {"orderingId": onlineOrderId};
@@ -547,7 +558,9 @@ class MyDio {
       }));
       map.addAll(images.map<String, UploadFileInfo>((k, v) {
         return MapEntry(k.toString(),
-            UploadFileInfo(File(v), v.split("/")[v.split("/").length - 1]));
+            UploadFileInfo(File(v), v.split("/")[v
+                .split("/")
+                .length - 1]));
       }));
       FormData formData = new FormData.from(map);
       Response response = await dio.put(MyUrl.onlineOrdering, data: formData);
@@ -561,8 +574,8 @@ class MyDio {
     }
   }
 
-  static Future<Map> getOnlineOrderingByOrderId(
-      BuildContext context, int orderId) async {
+  static Future<Map> getOnlineOrderingByOrderId(BuildContext context,
+      int orderId) async {
     try {
       Response response = await dio
           .get(MyUrl.onlineOrdering, queryParameters: {'orderid': orderId});

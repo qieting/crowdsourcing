@@ -1,5 +1,6 @@
 import 'package:crowdsourcing/pages/AddLocationPage.dart';
 import 'package:crowdsourcing/pages/LocationPage.dart';
+import 'package:crowdsourcing/pages/MessagePage/ChatPage.dart';
 import 'package:crowdsourcing/pages/userMessage/ChangeMessage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/MyOrderPage.dart';
@@ -44,6 +45,7 @@ class Routers {
   static const String SETTINGPAGE = "SETTINGpAGE";
   static const String MYMESSAGE = "MyMessage";
   static const String CHANGEMESSAGE = "CHANGEMESSAGE";
+  static const String CHATPAGE ="chatpage";
 
   //此处有过一次错误，当时想将weight直接存入map，但是存在一些问题：
   //①有些组件需要参数
@@ -127,6 +129,8 @@ class Routers {
         return MyMessage();
       case CHANGEMESSAGE:
         return ChangeMessage(params['name']);
+      case CHATPAGE:
+        return ChatPage(params['id'],params['message']);
       default:
         break;
     }

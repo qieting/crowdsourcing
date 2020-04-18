@@ -4,6 +4,8 @@ package com.example.crowdsourcing.service;
 import com.alibaba.fastjson.JSON;
 import com.example.crowdsourcing.dao.*;
 import com.example.crowdsourcing.dao.bean.*;
+import com.example.crowdsourcing.dao.help.OffineOrderWithPeople;
+import com.example.crowdsourcing.dao.help.OnlineOrderWithPeople;
 import com.example.crowdsourcing.untils.MySHA1;
 import com.example.crowdsourcing.untils.MyToken;
 import com.google.gson.Gson;
@@ -75,7 +77,7 @@ public class PeopleServiceImpl implements PeopleService {
                     req.put("status", -1);
                     req.put("message", "用户名不存在");
                     return req;
-                } else if (!people1.getPassword().equals(people.getPassword())) {
+                } else if (people1.getPassword() != null && !people1.getPassword().equals(people.getPassword())) {
                     req.put("status", -2);
                     req.put("message", "用户名或密码错误");
                     return req;
@@ -96,17 +98,17 @@ public class PeopleServiceImpl implements PeopleService {
             req.put("message", "错误的登录请求");
             return req;
         }
-        if((boolean)req.getOrDefault("register",false)){
+        if ((boolean) req.getOrDefault("register", false)) {
             RestTemplate client = new RestTemplate();
             //新建Http头，add方法可以添加参数
             HttpHeaders headers = new HttpHeaders();
-            String time =System.currentTimeMillis()+"";
-            String myRandom =new Random().nextInt()+"";
-            headers.set("App-Key","3argexb63s7he");
-            headers.set("Nonce",myRandom);
-            headers.set("Timestamp",time);
+            String time = System.currentTimeMillis() + "";
+            String myRandom = new Random().nextInt() + "";
+            headers.set("App-Key", "3argexb63s7he");
+            headers.set("Nonce", myRandom);
+            headers.set("Timestamp", time);
             try {
-                headers.set("Signature", MySHA1.getSha1(("02TXV1UVKBgX1"+myRandom+time).getBytes()));
+                headers.set("Signature", MySHA1.getSha1(("02TXV1UVKBgX1" + myRandom + time).getBytes()));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
@@ -115,15 +117,15 @@ public class PeopleServiceImpl implements PeopleService {
             // 以表单的方式提交
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             //将请求头部和参数合成一个请求
-            HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity("userId="+people1.getId()+"&name="+people1.getId()+"&portraitUri=null", headers);
+            HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity("userId=" + people1.getId() + "&name=" + people1.getId() + "&portraitUri=null", headers);
             //执行HTTP请求，将返回的结构使用String 类格式化（可设置为对应返回值格式的类）
             try {
-                ResponseEntity<String> response = client.exchange("http://api-cn.ronghub.com/user/getToken.json", method, requestEntity,String .class);
-                String  token= JSON.parseObject(response.getBody()).getString("token");
+                ResponseEntity<String> response = client.exchange("http://api-cn.ronghub.com/user/getToken.json", method, requestEntity, String.class);
+                String token = JSON.parseObject(response.getBody()).getString("token");
                 System.out.println(token);
                 people1.setToken(token);
-                people1=peopleRepository.save(people1);
-            }catch (Exception e){
+                people1 = peopleRepository.save(people1);
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
 
@@ -301,13 +303,13 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public List<OffineOrder> getOffineOrders(int platForm) {
+    public List<OffineOrderWithPeople> getOffineOrders(int platForm) {
         if (platForm == 1) {
             platForm = 2;
         } else {
             platForm = 1;
         }
-        List<OffineOrder> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
+        List<OffineOrderWithPeople> offineOrders = offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
         return offineOrders;
     }
 
@@ -384,7 +386,7 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public List<OnLineOrder> getOnLineOrders(int platForm) {
+    public List<OnlineOrderWithPeople> getOnLineOrders(int platForm) {
         return onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
     }
 
@@ -475,7 +477,6 @@ public class PeopleServiceImpl implements PeopleService {
         }
         map.put("offineOrder", offineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0));
         map.put("onlineOrder", onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0));
-
         return map;
     }
 
@@ -489,13 +490,13 @@ public class PeopleServiceImpl implements PeopleService {
             List<OnLineOrdering> onLineOrderings = onlineOrderingRepository.findByPeopleId(id);
             for (OnLineOrdering on :
                     onLineOrderings) {
-                switch (type){
-                    case  1:
-                        if(on.getFinishDate()==null)
-                        onLineOrders.add(onlineOrderRepository.findById(on.getOnlineOrderId()).get());
+                switch (type) {
+                    case 1:
+                        if (on.getFinishDate() == null)
+                            onLineOrders.add(onlineOrderRepository.findById(on.getOnlineOrderId()).get());
                         break;
-                    case  2:
-                        if(on.getFinishDate()!=null)
+                    case 2:
+                        if (on.getFinishDate() != null)
                             onLineOrders.add(onlineOrderRepository.findById(on.getOnlineOrderId()).get());
 
                         break;
@@ -507,13 +508,13 @@ public class PeopleServiceImpl implements PeopleService {
             List<OffineOrdering> onLineOrderings = offineOrderingRepository.findByPeopleId(id);
             for (OffineOrdering on :
                     onLineOrderings) {
-                switch (type){
-                    case  1:
-                        if(on.getFinishDate()==null)
+                switch (type) {
+                    case 1:
+                        if (on.getFinishDate() == null)
                             onLineOrders.add(offineOrderRepository.findById(on.getOffineOrderId()).get());
                         break;
-                    case  2:
-                        if(on.getFinishDate()!=null)
+                    case 2:
+                        if (on.getFinishDate() != null)
                             onLineOrders.add(offineOrderRepository.findById(on.getOffineOrderId()).get());
 
                         break;
@@ -532,7 +533,7 @@ public class PeopleServiceImpl implements PeopleService {
             onLineOrdering.setReason(reason);
         }
         onlineOrderingRepository.save(onLineOrdering);
-        OnLineOrder order =onlineOrderRepository.findById(orderId).get();
+        OnLineOrder order = onlineOrderRepository.findById(orderId).get();
         order.finishOne();
         onlineOrderRepository.save(order);
         return onLineOrdering;
@@ -547,12 +548,11 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public String addFile(int id, MultipartFile file) {
-        if(file.getOriginalFilename().endsWith(".png")||file.getOriginalFilename().endsWith(".jpg")||file.getOriginalFilename().endsWith(".gif")){
+        if (file.getOriginalFilename().endsWith(".png") || file.getOriginalFilename().endsWith(".jpg") || file.getOriginalFilename().endsWith(".gif")) {
             save(file, "images/" + id + "!" + file.getOriginalFilename());
-            return  id + "!" + file.getOriginalFilename();
-        }
-        else {
-            save(file, "files/"  + id + "!" + file.getOriginalFilename());
+            return id + "!" + file.getOriginalFilename();
+        } else {
+            save(file, "files/" + id + "!" + file.getOriginalFilename());
             return id + "!" + file.getOriginalFilename();
         }
 

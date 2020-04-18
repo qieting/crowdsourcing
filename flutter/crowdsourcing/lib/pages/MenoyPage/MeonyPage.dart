@@ -1,4 +1,7 @@
 import 'package:crowdsourcing/i10n/localization_intl.dart';
+import 'package:crowdsourcing/models/OrderShowHelp/OffineOrderWithPeople.dart';
+import 'package:crowdsourcing/models/OrderShowHelp/OnlineOrderWithPeople.dart';
+import 'package:crowdsourcing/models/OrderShowHelp/OrderWithPeople.dart';
 import 'package:crowdsourcing/models/object/order/offine/OffineOrder.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:crowdsourcing/models/object/order/Order.dart';
@@ -27,32 +30,34 @@ class MoneyPageState extends State<MoneyPage>
   @override
   bool get wantKeepAlive => true;
 
-  List<OffineOrder> offineOrders;
-  List<OnlineOrder> onlineOrders;
+  List<OffineOrderWithPeople> offineOrderWithPeoples;
+  List<OnlineOrderWithPeople> onlineOrderWithPeoples;
   ScrollController scrollController = new ScrollController();
-  List<Order> orders = [];
+  List<OrderWithPeople> orderWithPeoples = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    changeState(0);
     getOrders();
   }
 
   void changeState(int index) {
     if (index == 0) {
-      orders = onlineOrders ?? [];
+      orderWithPeoples = onlineOrderWithPeoples ?? [];
     } else {
-      orders = offineOrders ?? [];
+      orderWithPeoples = offineOrderWithPeoples ?? [];
     }
     setState(() {});
   }
 
   void getOrders() {
     MyDio.getOrders(context, (a, b) {
-      offineOrders = a;
-      onlineOrders = b;
-      changeState(0);
+      int index = orderWithPeoples == offineOrderWithPeoples ? 0 : 1;
+      offineOrderWithPeoples = a ?? [];
+      onlineOrderWithPeoples = b ?? [];
+      changeState(index);
       setState(() {});
     });
   }
@@ -70,7 +75,7 @@ class MoneyPageState extends State<MoneyPage>
           },
           child: Column(
             children: <Widget>[
-              orders.length == 0
+              orderWithPeoples.length == 0
                   ? ListTile(
                       title: Text("暂时没有数据"),
                     )
@@ -79,27 +84,87 @@ class MoneyPageState extends State<MoneyPage>
                     ),
               Expanded(
                 child: ListView.builder(
-                    itemCount: orders.length,
+                    itemCount: orderWithPeoples.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                           onTap: () {
-                            if (orders == offineOrders) {
+                            if (orderWithPeoples == offineOrderWithPeoples) {
                               Routers.push(
                                   context, Routers.ORDEROFFINEDETAILPAGE,
                                   params: {
-                                    "offineOrder": orders[index],
+                                    "offineOrder":
+                                        orderWithPeoples[index].order,
                                     'detail': true
                                   });
                             } else {
                               Routers.push(
                                   context, Routers.ORDERONLINEDETAILSPAGE,
                                   params: {
-                                    "onlineOrder": orders[index],
+                                    "onlineOrder":
+                                        orderWithPeoples[index].order,
                                     'detail': true
                                   });
                             }
                           },
-                          child: ListTile(title: Text(orders[index].title)));
+                          child: Card(
+                              child: Container(
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 15, right: 5),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        orderWithPeoples[index].order.title,
+                                        textScaleFactor: 1.1,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Image(
+                                            image: orderWithPeoples[index]
+                                                        .user
+                                                        .head ==
+                                                    null
+                                                ? AssetImage(
+                                                    "assets/images/deafaultHead.png")
+                                                : NetworkImage(
+                                                    orderWithPeoples[index]
+                                                        .user
+                                                        .head),
+                                            height: 25,
+                                            width: 25,
+                                          ),
+                                          Text(
+                                            orderWithPeoples[index].user.nick ??
+                                                orderWithPeoples[index]
+                                                    .user
+                                                    .id
+                                                    .toString(),
+                                            style: TextStyle(
+                                                color: Colors.grey[500]),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                                Text(
+                                  orderWithPeoples[index]
+                                          .order
+                                          .price
+                                          .toString() +
+                                      "元",
+                                  textScaleFactor: 1.1,
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              ],
+                            ),
+                          )));
                     }),
               ),
             ],

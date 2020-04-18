@@ -1,8 +1,11 @@
 import 'package:crowdsourcing/common/IM.dart';
+import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/net/api.dart';
+import 'package:crowdsourcing/routers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
+import 'package:provider/provider.dart';
 
 class MessagePage extends StatefulWidget {
   @override
@@ -16,7 +19,8 @@ class MessagePageState extends State<MessagePage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  List<Conversation> conversationList = [];
+  List<Conversation> conversationList = IM.conversationList;
+  String myId;
 
   @override
   void initState() {
@@ -26,6 +30,7 @@ class MessagePageState extends State<MessagePage>
 
   @override
   didChangeDependencies() async {
+    myId = Provider.of<UserModel>(context).user.id.toString();
     conversationList = await IM.onGetConversationList() ?? [];
   }
 
@@ -35,6 +40,7 @@ class MessagePageState extends State<MessagePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); //必须添加
     return FutureBuilder<Map>(
       future: getOnlineOrderingByOrderId(),
       builder: (context, AsyncSnapshot<Map> asyncSnapshot) {
@@ -65,21 +71,35 @@ class MessagePageState extends State<MessagePage>
           return Container(
             decoration: BoxDecoration(color: Colors.white),
             padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Row(
-              children: <Widget>[
-                Image(
-                  height: 70,
-                  width: 70,
-                  image: AssetImage("assets/images/deafaultHead.png"),
-                ),
-                Column(
-                  children: <Widget>[
-                    Text(conversationList[index].senderUserId),
-                    Text(
-                        conversationList[index].latestMessageContent.toString())
-                  ],
-                )
-              ],
+            child: GestureDetector(
+              onTap: () async {
+                Routers.push(context, Routers.CHATPAGE, params: {
+                  "id": int.parse(conversationList[index].senderUserId == myId
+                      ? conversationList[index].targetId
+                      : conversationList[index].senderUserId),
+                  "message": await IM
+                      .onGetHistoryMessages(conversationList[index].targetId)
+                });
+              },
+              child: Row(
+                children: <Widget>[
+                  Image(
+                    height: 70,
+                    width: 70,
+                    image: AssetImage("assets/images/deafaultHead.png"),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text(conversationList[index].senderUserId == myId
+                          ? conversationList[index].targetId
+                          : conversationList[index].senderUserId),
+                      Text(conversationList[index]
+                          .latestMessageContent
+                          .toString())
+                    ],
+                  )
+                ],
+              ),
             ),
           );
         },
