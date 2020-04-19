@@ -1,4 +1,5 @@
 import 'package:crowdsourcing/common/IM.dart';
+import 'package:crowdsourcing/common/ListNotify.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
@@ -19,19 +20,22 @@ class MessagePageState extends State<MessagePage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  List<Conversation> conversationList = IM.conversationList;
+  ListNotify<Conversation> conversationList = IM.conversationList;
   String myId;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    conversationList.addListener(() {
+      print("会话列表有新更新");
+      setState(() {});
+    });
   }
 
   @override
   didChangeDependencies() async {
     myId = Provider.of<UserModel>(context).user.id.toString();
-    conversationList = await IM.onGetConversationList() ?? [];
   }
 
   Future<Map> getOnlineOrderingByOrderId() async {
@@ -76,9 +80,7 @@ class MessagePageState extends State<MessagePage>
                 Routers.push(context, Routers.CHATPAGE, params: {
                   "id": int.parse(conversationList[index].senderUserId == myId
                       ? conversationList[index].targetId
-                      : conversationList[index].senderUserId),
-                  "message": await IM
-                      .onGetHistoryMessages(conversationList[index].targetId)
+                      : conversationList[index].senderUserId)
                 });
               },
               child: Row(
@@ -88,6 +90,9 @@ class MessagePageState extends State<MessagePage>
                     width: 70,
                     image: AssetImage("assets/images/deafaultHead.png"),
                   ),
+                  SizedBox(
+                    width: 25,
+                  ),
                   Column(
                     children: <Widget>[
                       Text(conversationList[index].senderUserId == myId
@@ -95,7 +100,7 @@ class MessagePageState extends State<MessagePage>
                           : conversationList[index].senderUserId),
                       Text(conversationList[index]
                           .latestMessageContent
-                          .toString())
+                          .conversationDigest())
                     ],
                   )
                 ],

@@ -21,6 +21,10 @@ class ListNotify<T> extends ChangeNotifier {
     notifyListeners();
   }
 
+  clear(){
+    _list.clear();
+  }
+
   T get(int i) => _list[i];
 
   T operator [](i) => get(i);

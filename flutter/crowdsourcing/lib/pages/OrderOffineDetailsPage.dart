@@ -251,7 +251,7 @@ class OrderOffineDetailsPage extends StatelessWidget {
                     MyToast.toast("抢单失败，请重新进入");
                     return;
                   }
-                  IM.sendOffineOrderMessage(offineOrder.peopleId.toString(),offineOrder.id.toString()+offineOrder.title);
+                  IM.sendOffineOrderMessage(offineOrder.peopleId.toString(),"我接了你的单,id:"+offineOrder.id.toString()+"标题:"+offineOrder.title);
                   offineOrderingModel
                       .addOffineOrdering(OffineOrdering.fromJsonMap(data));
                   Navigator.of(context).pop();

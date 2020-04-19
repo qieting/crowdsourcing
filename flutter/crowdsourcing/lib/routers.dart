@@ -130,7 +130,7 @@ class Routers {
       case CHANGEMESSAGE:
         return ChangeMessage(params['name']);
       case CHATPAGE:
-        return ChatPage(params['id'],params['message']);
+        return ChatPage(params['id']);
       default:
         break;
     }
