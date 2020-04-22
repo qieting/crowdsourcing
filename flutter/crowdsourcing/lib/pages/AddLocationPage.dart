@@ -5,6 +5,7 @@ import 'package:crowdsourcing/models/object/order/offine/location/Location.dart'
 import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../routers.dart';
 
@@ -87,7 +88,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                   height: 1,
                 ),
                 Container(
-                  height: 150,
+                  height: 25*locations.length>300? 300.0 :25.0*locations.length+25 ,
                   child: ListView.builder(
                     itemCount: locations.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -174,12 +175,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
           ],
         ),
         body: Container(
+          margin: const EdgeInsets.only(top: 20),
           child: Column(
             children: <Widget>[
               Container(
                 margin: const EdgeInsets.only(left: 15, right: 5),
                 child: TextField(
                   controller: nameController,
+                  inputFormatters: [LengthLimitingTextInputFormatter(6)],
                   decoration: InputDecoration(
                       isDense: true,
                       contentPadding: const EdgeInsets.only(top: 10),
@@ -195,14 +198,17 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 margin: const EdgeInsets.only(left: 15, right: 5),
                 child: TextField(
                   controller: phoneController,
+                  inputFormatters: [LengthLimitingTextInputFormatter(11),WhitelistingTextInputFormatter(RegExp("[1-9]"))],
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       isDense: true,
+
                       contentPadding: const EdgeInsets.only(top: 10),
                       hintText: "手机号码",
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       //disabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none),
+                      focusedBorder: InputBorder.none,),
                 ),
               ),
               Divider(),
@@ -222,14 +228,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
                           ? FlatButton(
                               child: Text("使用当前位置"),
                               onPressed: () {
-//                                BaiduChannel.getLocation(context,
-//                                    (Location location) {
-//                                  if (othersController.text != null) {
-//                                    othersController.text = location.others;
-//                                  }
-//                                  _location = location;
-//                                  setState(() {});
-//                                });
+                                BaiduChannel.getLocation(
+                                    (Location location) {
+                                  if (othersController.text != null) {
+                                    othersController.text = location.others;
+                                  }
+                                  _location = location;
+                                  setState(() {});
+                                });
                               },
                             )
                           : SizedBox()

@@ -42,7 +42,6 @@ class BaiduChannel {
         switch (methodCall.method) {
           case _Locacation:
             String  status = await methodCall.arguments[_Locacation];
-
             Map<String, dynamic> map =  (json.decode(status));
             Location location =Location.fromJsonMap(map);
             if(location.province==null){

@@ -2,6 +2,7 @@ package com.example.crowdsourcing
 
 //import io.flutter.plugins.GeneratedPluginRegistrant
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.baidu.location.BDAbstractLocationListener
@@ -177,8 +178,7 @@ class MainActivity : FlutterActivity() {
 //mLocationClient为第二步初始化过的LocationClient对象
 //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
 //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
-
-
+                Log.e(Tag,"开始定位")
                 result.success(null);
             } else if (call.method.equals(_Poi)) {
                 var city = call.argument<String>(City);
@@ -269,8 +269,9 @@ class MainActivity : FlutterActivity() {
 //以下只列举部分获取位置描述信息相关的结果
 //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
             mLocationClient!!.stop();
-            val map = HashMap<String, Any>()
-            var location0 = Location(province = location.province, city = location.city, plot = location.district, town = location.town, street = location.street, others = location.locationDescribe);
+            var map = HashMap<String, Any>()
+            val location0 = Location(province = location.province, city = location.city,
+                    plot = location.district, town = location.town, street = location.street, others = location.locationDescribe);
             map.put(_Locacation, location0.toString());
             BaiduChannel.invokeMethod(_Locacation, map)
 

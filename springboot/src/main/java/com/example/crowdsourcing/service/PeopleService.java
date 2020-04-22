@@ -10,39 +10,30 @@ import java.util.List;
 import java.util.Map;
 
 
+//这里没有做接口的分离，全部放在了这一个接口文档里
 @RestController
 public interface PeopleService {
 
 
 
-//	private static PeopleService  serverHandler ;
-//    @PostConstruct //通过@PostConstruct实现初始化bean之前进行的操作
-//    public void init() {  
-//        serverHandler = this;  
-//        serverHandler.peopleRepository = this.peopleRepository;        
-//        // 初使化时将已静态化的testService实例化
-//    }  
-//	
-
-
-//	public static PeopleService getInstance() {
-//
-//		return peopleService;
-//	}
-
+	//用户个人信息相关方法
 	public Map<String,Object> login(People people) ;
 	public  Map<String ,Object> peopleMessage(int id);
-//	public int getIdByToken(int TokenId);
-//	public int register(String phone_number, String password) ;
 	public void changePassword(String id, String password);
-	public List<People> allPeople(int page ,int limit);
 	public People changeMessage(int id,People people);
 
+
+	public List<People> allPeople(int page ,int limit);
+
+
+	//离线任务位置相关
 	public List<Location> getLocations(int peopleid);
 	public Location getLocation(int peopleid,int locationId);
 	public void  addLocation(int peopleid, Location location);
 	public void deleteLocation(int peopleid,int id);
 	public void changeLocation(int peopleid,Location location);
+
+
 
 	public void  addOffineOrder(int peopleid, OffineOrder offineOrder);
 	public List<OffineOrderWithPeople>  getOffineOrders(int platForm);

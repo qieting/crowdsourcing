@@ -53,11 +53,18 @@ class LocationPage extends StatelessWidget {
                                   locations[index].phone,
                                 ),
                                 GestureDetector(
-                                  child: Icon(Icons.delete_outline),
-                                  onTap: () {
-                                    locationModel
-                                        .deleteLocation(locations[index].id);
-                                    _setState(() {});
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Container(
+                                      width: 40,
+                                      child: Icon(Icons.delete_outline)),
+                                  onTap: () async {
+                                    bool delete =
+                                        await showDeleteConfirmDialog1(context);
+                                    if (delete) {
+                                      locationModel
+                                          .deleteLocation(locations[index].id);
+                                      _setState(() {});
+                                    }
                                   },
                                 )
                               ],
@@ -91,5 +98,31 @@ class LocationPage extends StatelessWidget {
                 });
           });
         })));
+  }
+
+  // 弹出对话框
+  Future<bool> showDeleteConfirmDialog1(context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("提示"),
+          content: Text("您确定要删除当前位置吗?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("取消"),
+              onPressed: () => Navigator.of(context).pop(false), // 关闭对话框
+            ),
+            FlatButton(
+              child: Text("删除"),
+              onPressed: () {
+                //关闭对话框并返回true
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
