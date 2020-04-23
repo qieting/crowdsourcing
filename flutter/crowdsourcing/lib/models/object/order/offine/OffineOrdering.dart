@@ -28,15 +28,15 @@ class OffineOrdering {
         id: map[Id],
         peopleId: map[PeopleId],
         offineOrderId: map[OffineOrderId],
-        createDate:  map[CreateDate]!=null? DateTime.fromMicrosecondsSinceEpoch(map[CreateDate]):null,
-        finishDate: map[FinishDate]!=null?DateTime.fromMicrosecondsSinceEpoch(map[FinishDate]):null);
+        createDate:  map[CreateDate]!=null? DateTime.fromMillisecondsSinceEpoch(map[CreateDate]):null,
+        finishDate: map[FinishDate]!=null?DateTime.fromMillisecondsSinceEpoch(map[FinishDate]):null);
   }
 
   Map toJson() => {
         Id: id,
         PeopleId: peopleId,
         OffineOrderId: offineOrderId,
-        CreateDate: createDate?.microsecondsSinceEpoch,
-        FinishDate: finishDate?.microsecondsSinceEpoch
+        CreateDate: createDate?.millisecondsSinceEpoch,
+        FinishDate: finishDate?.millisecondsSinceEpoch
       };
 }

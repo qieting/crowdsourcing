@@ -45,14 +45,14 @@ class OnlineOrdering {
               }),
         peopleId: map[PeopleId],
         submitDate: map[SUBMITTIME] != null
-            ? DateTime.fromMicrosecondsSinceEpoch(map[SUBMITTIME])
+            ? DateTime.fromMillisecondsSinceEpoch(map[SUBMITTIME])
             : null,
         onlineOrderId: map[OnlineOrderId],
         createDate: map[CreateDate] != null
-            ? DateTime.fromMicrosecondsSinceEpoch(map[CreateDate])
+            ? DateTime.fromMillisecondsSinceEpoch(map[CreateDate])
             : null,
         finishDate: map[FinishDate] != null
-            ? DateTime.fromMicrosecondsSinceEpoch(map[FinishDate])
+            ? DateTime.fromMillisecondsSinceEpoch(map[FinishDate])
             : null);
   }
 
@@ -65,9 +65,9 @@ class OnlineOrdering {
       PeopleId: peopleId,
       //RESOURCES: resources == null ? null : resources.toString(),
       OnlineOrderId: onlineOrderId,
-      CreateDate: createDate?.microsecondsSinceEpoch,
-      SUBMITTIME: submitDate?.microsecondsSinceEpoch,
-      FinishDate: finishDate?.microsecondsSinceEpoch
+      CreateDate: createDate?.millisecondsSinceEpoch,
+      SUBMITTIME: submitDate?.millisecondsSinceEpoch,
+      FinishDate: finishDate?.millisecondsSinceEpoch,
     };
   }
 }

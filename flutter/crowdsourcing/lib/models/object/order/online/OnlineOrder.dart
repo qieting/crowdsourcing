@@ -63,8 +63,8 @@ class OnlineOrder extends Order {
         submit: map[Order.SUBMIT],
         id: map[Order.ID],
         finish: map[Order.FINISH],
-        createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.CREATEDTIME]):null,
-        finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.FINISHTIME]):null,
+        createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMillisecondsSinceEpoch(map[Order.CREATEDTIME]):null,
+        finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMillisecondsSinceEpoch(map[Order.FINISHTIME]):null,
         price: map[Order.Price],
       number: map[NUMBER],
       onlineSteps: (json.decode(map[ONLINESTEPS]) as List).map<OnlineStep>((f){ return OnlineStep.fromJsonMap(f);}).toList()
@@ -85,8 +85,8 @@ class OnlineOrder extends Order {
       Order.SUBMIT :submit,
       Order.ID: id,
       Order.PEOPLEID: peopleId,
-      Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,
-      Order.FINISHTIME:finishTime?.microsecondsSinceEpoch,
+      Order.CREATEDTIME:createdTime?.millisecondsSinceEpoch,
+      Order.FINISHTIME:finishTime?.millisecondsSinceEpoch,
       NUMBER:number,
       ONLINESTEPS: json.encode(onlineSteps.map((f){ return f.toJson();}).toList())
     };

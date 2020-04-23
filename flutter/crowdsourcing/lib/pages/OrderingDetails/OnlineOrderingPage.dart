@@ -130,8 +130,7 @@ class _OnlineOrderingPageState extends State<OnlineOrderingPage> {
                                 width: 15,
                               ),
                               Text(submitOrdering[index]
-                                  .createDate
-                                  .toIso8601String())
+                                  .createDate.toIso8601String())
                             ],
                           ),
                           Row(

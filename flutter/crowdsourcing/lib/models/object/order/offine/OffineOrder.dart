@@ -65,8 +65,8 @@ class OffineOrder extends Order {
         peopleId: map[Order.PEOPLEID],
         id: map[Order.ID],
         finish: map[Order.FINISH],
-        createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.CREATEDTIME]):null,
-        finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMicrosecondsSinceEpoch(map[Order.FINISHTIME]):null,
+        createdTime:map[Order.CREATEDTIME]!=null? DateTime.fromMillisecondsSinceEpoch(map[Order.CREATEDTIME]):null,
+        finishTime:map[Order.FINISHTIME]!=null? DateTime.fromMillisecondsSinceEpoch(map[Order.FINISHTIME]):null,
         price: map[Order.Price]);
   }
 
@@ -85,8 +85,8 @@ class OffineOrder extends Order {
       Order.ID: id,
       Order.FINISH:finish,
       Order.PEOPLEID: peopleId,
-      Order.CREATEDTIME:createdTime?.microsecondsSinceEpoch,
-      Order.FINISHTIME:finishTime?.microsecondsSinceEpoch,
+      Order.CREATEDTIME:createdTime?.millisecondsSinceEpoch,
+      Order.FINISHTIME:finishTime?.millisecondsSinceEpoch,
       BUYMESSAGES: json.encode(buyMessages.map((it) {
         return it.toJson();
       }).toList())

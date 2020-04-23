@@ -526,14 +526,14 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public OnLineOrdering finishOnlineOrdering(int orderId, boolean finish, String reason) {
-        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(orderId).get();
+    public OnLineOrdering finishOnlineOrdering(int orderingId, boolean finish, String reason) {
+        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(orderingId).get();
         onLineOrdering.setFinishDate(new Date());
         if (!finish) {
             onLineOrdering.setReason(reason);
         }
         onlineOrderingRepository.save(onLineOrdering);
-        OnLineOrder order = onlineOrderRepository.findById(orderId).get();
+        OnLineOrder order = onlineOrderRepository.findById(onLineOrdering.getOnlineOrderId()).get();
         order.finishOne();
         onlineOrderRepository.save(order);
         return onLineOrdering;
