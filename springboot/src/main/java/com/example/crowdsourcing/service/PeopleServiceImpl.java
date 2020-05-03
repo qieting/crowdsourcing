@@ -293,13 +293,33 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public void addOffineOrder(int peopleid, OffineOrder offineOrder) {
+    public OffineOrder addOffineOrder(int peopleid, OffineOrder offineOrder) {
+        People people = peopleRepository.findById(peopleid);
+        if(people.getMoney()<offineOrder.getPrice()){
+            return null;
+        }
+        people.minusMoney(offineOrder.getPrice());
+        peopleRepository.save(people);
         offineOrder.setPeopleId(peopleid);
         offineOrder.setRemain(offineOrder.getTotal());
         offineOrderRepository.save(offineOrder);
-        People people = peopleRepository.findById(peopleid);
-        people.minusMoney(offineOrder.getPrice());
-        peopleRepository.save(people);
+        return  offineOrder;
+    }
+
+    @Override
+    public Map<String ,Object> changeOffineOrder(int peopleid, int offineOrderId) {
+        People people =peopleRepository.findById(peopleid);
+        OffineOrder offineOrder =offineOrderRepository.findById(offineOrderId).get();
+        if(offineOrder.getRemain()==0){
+            OffineOrdering offineOrdering =offineOrderingRepository.findByOffineOrderId(offineOrderId);
+            finishOffineOrdering(offineOrderId);
+        }else {
+            people.addMoney(offineOrder.getPrice());
+            peopleRepository.save(people);
+            offineOrder.setTotal(0);
+            offineOrderRepository.save(offineOrder);
+        }
+        return  peopleMessage(peopleid);
     }
 
     @Override
@@ -373,6 +393,9 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public OnLineOrder addOnLineOrder(int peopleid, OnLineOrder onlineOrder, List<MultipartFile> files) {
         People people = peopleRepository.findById(peopleid);
+        if(onlineOrder.getPrice() * onlineOrder.getTotal()>people.getMoney()){
+            return  null;
+        }
         people.minusMoney(onlineOrder.getPrice() * onlineOrder.getTotal());
         peopleRepository.save(people);
         onlineOrder.setPeopleId(peopleid);
@@ -396,8 +419,15 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public void ChangeOnLineOrder(int peopleid, OnLineOrder onLineOrder) {
+    public Map<String ,Object> changeOnLineOrder(int peopleid, int onLineOrderId) {
 
+        OnLineOrder onLineOrder =onlineOrderRepository.findById(onLineOrderId).get();
+        People people =peopleRepository.findById(peopleid);
+        people.addMoney(onLineOrder.getPrice()*onLineOrder.getRemain());
+        peopleRepository.save(people);
+        onLineOrder.change();
+        onlineOrderRepository.save(onLineOrder);
+        return  peopleMessage(peopleid);
     }
 
     @Override
@@ -426,7 +456,7 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public OnLineOrdering ChangeOnlineOrdering(Map<String, String> phones, Map<String, MultipartFile> files) {
+    public OnLineOrdering changeOnlineOrdering(Map<String, String> phones, Map<String, MultipartFile> files) {
         int onLineOrderingId = Integer.parseInt(phones.get("onlineOrderId"));
         OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(onLineOrderingId).get();
         onLineOrdering.setSubmitDate(new Date());

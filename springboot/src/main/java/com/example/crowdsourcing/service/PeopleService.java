@@ -35,7 +35,8 @@ public interface PeopleService {
 
 
 
-	public void  addOffineOrder(int peopleid, OffineOrder offineOrder);
+	public OffineOrder  addOffineOrder(int peopleid, OffineOrder offineOrder);
+	public Map<String ,Object>   changeOffineOrder(int peopleid, int offineOrderId);
 	public List<OffineOrderWithPeople>  getOffineOrders(int platForm);
 	public List<OffineOrder>  getOffineOrdersByPeople(int peopleId);
 
@@ -50,11 +51,11 @@ public interface PeopleService {
 	public OnLineOrder  addOnLineOrder(int peopleid, OnLineOrder offineOrder, List<MultipartFile> files);
 	public List<OnlineOrderWithPeople>  getOnLineOrders(int platForm);
 	public List<OnLineOrder>  getOnLineOrdersByPeople(int peopleId);
-	public void   ChangeOnLineOrder(int peopleid, OnLineOrder  onLineOrder);
+	public Map<String ,Object>   changeOnLineOrder(int peopleid, int onlineOrderId);
 
 	public OnLineOrdering  addOnLineOrdering(int  onLineOrderId ,int peopleId);
 	public void  finishOnLineOrdering(int  onLineOrderingId);
-	public OnLineOrdering ChangeOnlineOrdering( Map<String ,String> phones , Map<String ,MultipartFile>files);
+	public OnLineOrdering changeOnlineOrdering( Map<String ,String> phones , Map<String ,MultipartFile>files);
 	public List<OnLineOrdering>  getOnLineOrdering(int  peopleId);
 	public Map<String ,Object>  getOnLineOrdering(int  peopleId,int OnlineOrderId);
 

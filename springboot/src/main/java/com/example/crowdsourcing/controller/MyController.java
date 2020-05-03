@@ -99,6 +99,11 @@ public class MyController {
         peopleService.addOffineOrder(id, offineOrder);
     }
 
+    @RequestMapping(value = "/offineOrder", method = RequestMethod.PUT)
+    public  Map<String ,Object> changeOffineOrder( @RequestParam("offineOrderId")int offineOrderId, @CurrentUserId int id) {
+        return peopleService.changeOffineOrder(id, offineOrderId);
+    }
+
     @RequestMapping(value = "/offineOrder", method = RequestMethod.GET)
     public List<OffineOrderWithPeople> getOffineOrders(@RequestParam("platForm") int platForm) {
         return peopleService.getOffineOrders(platForm);
@@ -128,8 +133,12 @@ public class MyController {
 
     @RequestMapping(value = "/onlineOrder", method = RequestMethod.POST)
     public OnLineOrder addOnLineOrder(OnLineOrder onLineOrder, List<MultipartFile> files, @CurrentUserId int id) {
-
         return peopleService.addOnLineOrder(id, onLineOrder, files);
+    }
+
+    @RequestMapping(value = "/onlineOrder", method = RequestMethod.PUT)
+    public  Map<String ,Object> changeOnlineOrderId(@RequestParam("onlineOrderId") int onlineOrderId, @CurrentUserId int id) {
+       return peopleService.changeOnLineOrder(id, onlineOrderId);
     }
 
 //    @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)
@@ -169,12 +178,12 @@ public class MyController {
             phones.put(as, params.getParameter(as));
         }
         //   return  null;
-        return peopleService.ChangeOnlineOrdering(phones, files);
+        return peopleService.changeOnlineOrdering(phones, files);
     }
 
     @RequestMapping(value = "/finishonlineOrdering", method = RequestMethod.PUT)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public OnLineOrdering finishOnLineOrdering(@RequestParam(name = "orderingId") int orderingId,@RequestParam Boolean check, @RequestParam  String reason) {
+    public OnLineOrdering finishOnLineOrdering(@RequestParam(name = "orderingId") int orderingId, @RequestParam Boolean check, @RequestParam String reason) {
         return peopleService.finishOnlineOrdering(orderingId, check, reason);
     }
 
@@ -186,14 +195,14 @@ public class MyController {
 
     @RequestMapping(value = "/takeOrder", method = RequestMethod.GET)
     //此处的int要写为Integer，因为这个值可能为空，那么要可以支持空类型
-    public List finishOnLineOrdering(@CurrentUserId int id,@RequestParam(name = "type") int type ,@RequestParam(name = "online") boolean onLine) {
+    public List finishOnLineOrdering(@CurrentUserId int id, @RequestParam(name = "type") int type, @RequestParam(name = "online") boolean onLine) {
 
-        return peopleService.getMyTakeOrders(id,type,onLine);
+        return peopleService.getMyTakeOrders(id, type, onLine);
     }
 
-    @RequestMapping(value = "/imageUp",method=RequestMethod.POST)
-    public  String upImage(@CurrentUserId int id, @RequestParam("file")MultipartFile file){
-        return  peopleService.addFile(id,file);
+    @RequestMapping(value = "/imageUp", method = RequestMethod.POST)
+    public String upImage(@CurrentUserId int id, @RequestParam("file") MultipartFile file) {
+        return peopleService.addFile(id, file);
     }
 
 }

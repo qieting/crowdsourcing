@@ -169,4 +169,9 @@ public class OnLineOrder {
         submit--;
         finish++;
     }
+
+    public  void change(){
+     this.total=total-this.remain;
+     this.remain=0;
+    }
 }

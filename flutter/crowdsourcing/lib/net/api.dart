@@ -108,6 +108,47 @@ class MyDio {
     print("异常位置$functionNume,错误信息为" + e.message);
   }
 
+  static initPeopleMessage(body,context){
+    User user = User.fromJsonMap(body['message']);
+    Provider.of<UserModel>(context, listen: false).saveUser(user);
+    //解析location
+    List<Location> list = [];
+    if (body['locations'] != null) {
+      for (var location in body['locations']) {
+        list.add(Location.fromJsonMap(location));
+      }
+    }
+    Provider.of<LocationModel>(context, listen: false).addLocations(list);
+    //解析离线订单消息
+    List<OffineOrdering> list1 =
+    (body['offineOrdering'] as List).map<OffineOrdering>((f) {
+      return OffineOrdering.fromJsonMap(f);
+    }).toList();
+    Provider.of<OffineOrderingModel>(context, listen: false)
+        .addOffineOrderings(list1);
+    //解析离线订单
+    List<OffineOrder> list2 =
+    (body['offineOrder'] as List).map<OffineOrder>((f) {
+      return OffineOrder.fromJsonMap(f);
+    }).toList();
+    Provider.of<OffineOrderModel>(context, listen: false)
+        .addOffineOrders(list2);
+    //解析在线订单
+    List<OnlineOrder> list3 =
+    (body['onlineOrder'] as List).map<OnlineOrder>((f) {
+      return OnlineOrder.fromJsonMap(f);
+    }).toList();
+    Provider.of<OnlineOrderModel>(context, listen: false)
+        .addOnlineOrders(list3);
+    //解析在线订单接单
+    List<OnlineOrdering> list4 =
+    (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
+      return OnlineOrdering.fromJsonMap(f);
+    }).toList();
+    Provider.of<OnlineOrderingModel>(context, listen: false)
+        .addOnlineOrderings(list4);
+  }
+
   //登录，利用token直接获取个人信息
   static getPeople(BuildContext context) async {
     try {
@@ -115,44 +156,7 @@ class MyDio {
       //这里会自动解析response的数据，我们服务器传过来的是map，所以这里data会被自动解析为map
       var body = response.data;
 
-      User user = User.fromJsonMap(body['message']);
-      Provider.of<UserModel>(context, listen: false).saveUser(user);
-      //解析location
-      List<Location> list = [];
-      if (body['locations'] != null) {
-        for (var location in body['locations']) {
-          list.add(Location.fromJsonMap(location));
-        }
-      }
-      Provider.of<LocationModel>(context, listen: false).addLocations(list);
-      //解析离线订单消息
-      List<OffineOrdering> list1 =
-      (body['offineOrdering'] as List).map<OffineOrdering>((f) {
-        return OffineOrdering.fromJsonMap(f);
-      }).toList();
-      Provider.of<OffineOrderingModel>(context, listen: false)
-          .addOffineOrderings(list1);
-      //解析离线订单
-      List<OffineOrder> list2 =
-      (body['offineOrder'] as List).map<OffineOrder>((f) {
-        return OffineOrder.fromJsonMap(f);
-      }).toList();
-      Provider.of<OffineOrderModel>(context, listen: false)
-          .addOffineOrders(list2);
-      //解析在线订单
-      List<OnlineOrder> list3 =
-      (body['onlineOrder'] as List).map<OnlineOrder>((f) {
-        return OnlineOrder.fromJsonMap(f);
-      }).toList();
-      Provider.of<OnlineOrderModel>(context, listen: false)
-          .addOnlineOrders(list3);
-      //解析在线订单接单
-      List<OnlineOrdering> list4 =
-      (body['onlineOrdering'] as List).map<OnlineOrdering>((f) {
-        return OnlineOrdering.fromJsonMap(f);
-      }).toList();
-      Provider.of<OnlineOrderingModel>(context, listen: false)
-          .addOnlineOrderings(list4);
+      initPeopleMessage(body, context);
       return true;
     } on DioError catch (e) {
       printDioError("login", e);
@@ -321,6 +325,21 @@ class MyDio {
     }
   }
 
+  //结束线下订单，策略是如果已经被接，就直接给钱，否则退钱给用户
+  static finishOffineOrder(int offineOrderId,context) async {
+    try {
+      Response response =
+      await dio.put(MyUrl.offineOrder,  queryParameters:{"offineOrderId":offineOrderId});
+      initPeopleMessage(response.data, context);
+      MyToast.toast("结束任务成功");
+    } on DioError catch (e) {
+      printDioError("finishOffineOrder", e);
+    } catch (e) {
+      print("finishOffineOrder程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
+    }
+  }
+
   //获取线下订单列表，没有使用，因为改为主动获取所有所有列表
   static getOffineOrders(BuildContext context, Function success) async {
     try {
@@ -479,24 +498,29 @@ class MyDio {
                     .length - 1]);
         }).toList()
         //除空
-          ..retainWhere((test) {
+          ..removeWhere((test) {
             if (test == null)
               return true;
             else
               return false;
           })
       });
-      onlineOrder.onlineSteps.forEach((it) {
+      OnlineOrder oo =OnlineOrder.fromJsonMap(onlineOrder.toJson());
+      oo.onlineSteps.forEach((it) {
         if (it.imageUrl != null)
           it.imageUrl =
           it.imageUrl.split("/")[it.imageUrl
               .split("/")
               .length - 1];
       });
-      map.addAll(onlineOrder.toJson());
+      map.addAll(oo.toJson());
 
       FormData formData = new FormData.from(map);
       Response response = await dio.post(MyUrl.onlineOrder, data: formData);
+      if(response.data is String){
+        MyToast.toast("余额不足");
+        return ;
+      }
       MyToast.toast("增加成功");
       onlineOrder = OnlineOrder.fromJsonMap(response.data);
       Provider.of<OnlineOrderModel>(context, listen: false)
@@ -509,6 +533,21 @@ class MyDio {
       MyToast.toast("程序内部发生错误,$e");
     }
   }
+  //结束线下订单，策略是如果已经被接，就直接给钱，否则退钱给用户
+  static changeOnlineOrder(int onLineOrderId,context) async {
+    try {
+      Response response =
+      await dio.put(MyUrl.onlineOrder, queryParameters:{"onlineOrderId":onLineOrderId});
+      initPeopleMessage(response.data, context);
+      MyToast.toast("结束任务成功");
+    } on DioError catch (e) {
+      printDioError("finishOffineOrder", e);
+    } catch (e) {
+      print("finishOffineOrder程序内部发生错误,$e");
+      MyToast.toast("程序内部发生错误,$e");
+    }
+  }
+
 
   //增加线上任务接单
   static addOnlineOrdering(int offerding,
@@ -588,6 +627,8 @@ class MyDio {
       MyToast.toast("程序内部发生错误,$e");
     }
   }
+
+
 }
 
 //没有token

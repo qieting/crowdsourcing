@@ -4,6 +4,7 @@ import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
 import 'package:crowdsourcing/models/object/order/Order.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
+import 'package:crowdsourcing/net/api.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,61 @@ class MyOrderPage extends StatelessWidget {
                                 params: {
                                   "order": myOrders[index],
                                 });
+                          }
+                        },
+                        onLongPress: ()async{
+                          if(orderStatus!=OrderStatus.finish)
+                          if (myOrders[index] is  OnlineOrder) {
+                            bool f = await showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("提示"),
+                                  content: Text("您确定要删除当前任务吗?(若已有人接单则只可暂停接单，不可全部删除)"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("取消"),
+                                      onPressed: () => Navigator.of(context).pop(false), // 关闭对话框
+                                    ),
+                                    FlatButton(
+                                      child: Text("删除"),
+                                      onPressed: () {
+                                        //关闭对话框并返回true
+                                        Navigator.of(context).pop(true);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if(f)
+                            await MyDio.changeOnlineOrder(myOrders[index].id,context);
+
+                          } else { bool f = await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("提示"),
+                                content: Text("您确定要删除当前任务吗?（若对方已接单会直接付款给对面，否则退款"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("取消"),
+                                    onPressed: () => Navigator.of(context).pop(false), // 关闭对话框
+                                  ),
+                                  FlatButton(
+                                    child: Text("删除"),
+                                    onPressed: () {
+                                      //关闭对话框并返回true
+                                      Navigator.of(context).pop(true);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                            if(f)
+                            await MyDio.finishOffineOrder(myOrders[index].id,context);
                           }
                         },
                         child: Row(

@@ -51,7 +51,7 @@ class OffineOrderModel extends ChangeNotifier {
   int notStartnumber(){
     int i = 0;
     for(var ii in _offineOrders){
-      if(ii.total==ii.remain){
+      if(ii.total==ii.remain&&ii.total!=0){
         i++;
       }
     }

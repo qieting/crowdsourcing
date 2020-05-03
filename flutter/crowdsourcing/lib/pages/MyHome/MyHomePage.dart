@@ -151,124 +151,135 @@ class MyHomePageState extends State<MyHomePage>
           shape: CircularNotchedRectangle(), // 底部导航栏打一个圆形的洞
           child: Row(
             children: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  _onItemTapped(1);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 13, right: 13, bottom: 6, top: 9),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.attach_money,
-                        size: 30,
-                        color:
-                            _selectedIndex == 1 ? selectedColor : disableColor,
-                      ),
-                      Text(
-                        DemoLocalizations.of(context).mainTitle(0),
-                        textScaleFactor: 0.6,
-                        style: TextStyle(
-                          color: _selectedIndex == 1
-                              ? selectedColor
-                              : disableColor,
+              Expanded(
+                flex: 2,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _onItemTapped(1);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 13, right: 13, bottom: 6, top: 9),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.attach_money,
+                          size: 30,
+                          color:
+                              _selectedIndex == 1 ? selectedColor : disableColor,
                         ),
-                      )
-                    ],
+                        Text(
+                          DemoLocalizations.of(context).mainTitle(0),
+                          textScaleFactor: 0.6,
+                          style: TextStyle(
+                            color: _selectedIndex == 1
+                                ? selectedColor
+                                : disableColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  _onItemTapped(2);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 13, right: 13, bottom: 6, top: 9),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.find_replace,
-                        size: 30,
-                        color:
-                            _selectedIndex == 2 ? selectedColor : disableColor,
-                      ),
-                      Text(
-                        DemoLocalizations.of(context).mainTitle(1),
-                        textScaleFactor: 0.6,
-                        style: TextStyle(
-                          color: _selectedIndex == 2
-                              ? selectedColor
-                              : disableColor,
+//              GestureDetector(
+//                behavior: HitTestBehavior.translucent,
+//                onTap: () {
+//                  _onItemTapped(2);
+//                },
+//                child: Padding(
+//                  padding: const EdgeInsets.only(
+//                      left: 13, right: 13, bottom: 6, top: 9),
+//                  child: Column(
+//                    mainAxisSize: MainAxisSize.min,
+//                    children: <Widget>[
+//                      Icon(
+//                        Icons.find_replace,
+//                        size: 30,
+//                        color:
+//                            _selectedIndex == 2 ? selectedColor : disableColor,
+//                      ),
+//                      Text(
+//                        DemoLocalizations.of(context).mainTitle(1),
+//                        textScaleFactor: 0.6,
+//                        style: TextStyle(
+//                          color: _selectedIndex == 2
+//                              ? selectedColor
+//                              : disableColor,
+//                        ),
+//                      )
+//                    ],
+//                  ),
+//                ),
+//              ),
+              SizedBox(
+                width: 45,
+              ),
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _onItemTapped(3);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 13, right: 13, bottom: 6, top: 9),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.message,
+                          size: 30,
+                          color:
+                              _selectedIndex == 3 ? selectedColor : disableColor,
                         ),
-                      )
-                    ],
+                        Text(
+                          DemoLocalizations.of(context).mainTitle(2),
+                          textScaleFactor: 0.6,
+                          style: TextStyle(
+                            color: _selectedIndex == 3
+                                ? selectedColor
+                                : disableColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              SizedBox(),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  _onItemTapped(3);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 13, right: 13, bottom: 6, top: 9),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.message,
-                        size: 30,
-                        color:
-                            _selectedIndex == 3 ? selectedColor : disableColor,
-                      ),
-                      Text(
-                        DemoLocalizations.of(context).mainTitle(2),
-                        textScaleFactor: 0.6,
-                        style: TextStyle(
-                          color: _selectedIndex == 3
-                              ? selectedColor
-                              : disableColor,
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _onItemTapped(4);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 13, right: 13, bottom: 6, top: 9),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.perm_identity,
+                          size: 30,
+                          color:
+                              _selectedIndex == 4 ? selectedColor : disableColor,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  _onItemTapped(4);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 13, right: 13, bottom: 6, top: 9),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.perm_identity,
-                        size: 30,
-                        color:
-                            _selectedIndex == 4 ? selectedColor : disableColor,
-                      ),
-                      Text(
-                        DemoLocalizations.of(context).mainTitle(3),
-                        textScaleFactor: 0.6,
-                        style: TextStyle(
-                          color: _selectedIndex == 4
-                              ? selectedColor
-                              : disableColor,
-                        ),
-                      )
-                    ],
+                        Text(
+                          DemoLocalizations.of(context).mainTitle(3),
+                          textScaleFactor: 0.6,
+                          style: TextStyle(
+                            color: _selectedIndex == 4
+                                ? selectedColor
+                                : disableColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

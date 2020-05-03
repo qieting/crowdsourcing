@@ -21,7 +21,7 @@ class SplashPage extends StatelessWidget {
     //使用future是因为，我们当前正在处于build过程中，不能将当前组件设为dirty
     //因此我们使用future.delay，将这个跳转活动放到一个次于build的list，build后再运行这个方法
     Future.delayed(new Duration(milliseconds: 0), () async {
-     // Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
+      //Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
       if (MyDio.token == null) {
         Routers.pushAndRemove(context, Routers.LOGIN);
       } else {
