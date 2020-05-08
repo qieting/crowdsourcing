@@ -28,7 +28,7 @@ class MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController; //需要定义一个Controller,用来记录顶部tab变化
   //不同接单种类
-  List tabs = ["网络", "实地"];
+  List tabs = [DemoLocalizations.demoLocalizations.online, DemoLocalizations.demoLocalizations.offline];
 
   //当前底部tab选项
   int _selectedIndex = 1;

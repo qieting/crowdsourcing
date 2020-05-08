@@ -1,6 +1,6 @@
 {
   "@@last_modified": "2020-02-01T13:50:51.447411",
-  "title": "Flutter 应用",
+  "title": "跑腿宝",
   "@title": {
     "description": "Title for the Demo application",
     "type": "text",
@@ -130,7 +130,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "status500": "服务器发射管异常错误",
+  "status500": "服务器发生异常错误",
   "@status500": {
     "type": "text",
     "placeholders": {}
@@ -171,7 +171,97 @@
     "placeholders": {
       "howMany": {}
     }
-  }
+  },
+     "connectionTimeout": "连接超时",
+     "@connectionTimeout": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "receiveTimeout": "接收超时",
+     "@receiveTimeout": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "sendTimeout": "发送超时",
+     "@sendTimeout": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "accessDenied": "服务器拒绝访问",
+     "@accessDenied": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "bug": "系统出现异常",
+     "@bug": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "photoChoose": "请选择图片",
+     "@photoChoose": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "album": "相册",
+     "@album": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "photograph": "拍照",
+     "@photograph": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "online": "在线",
+     "@online": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "offline": "跑腿",
+     "@offline": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "reaseTask": "发布悬赏",
+     "@reaseTask": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "nicknull": "昵称为空",
+     "@nicknull": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "phonenull": "手机号为空",
+     "@phonenull": {
+       "type": "text",
+       "placeholders": {}
+     },
+     "locationNoMessage": "您没有开启位置信息，请开启位置信息",
+     "@locationNoMessage": {
+       "type": "text",
+       "placeholders": {}
+     },
+        "loading": "加载中，请等待",
+        "@loading": {
+          "type": "text",
+          "placeholders": {}
+        },
+           "wallet": "钱包",
+           "@wallet": {
+             "type": "text",
+             "placeholders": {}
+           },
+           "recharge": "充值",
+           "@recharge": {
+             "type": "text",
+             "placeholders": {}
+           },
+           "withdraw": "提现",
+           "@withdraw": {
+             "type": "text",
+             "placeholders": {}
+           }
 
 
 }

@@ -71,6 +71,10 @@ class MyApp extends StatelessWidget {
               ? SystemUiOverlayStyle.dark
               : SystemUiOverlayStyle.light,
           child: MaterialApp(
+              onGenerateTitle: (context){
+                // 此时context在Localizations的子树中
+                return DemoLocalizations.of(context).title;
+              },
               builder: (context, child) {
                 //初始化语言包
                 DemoLocalizations.init(context);

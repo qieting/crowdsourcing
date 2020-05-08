@@ -1,6 +1,11 @@
+import 'package:crowdsourcing/common/StorageManager.dart';
+import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/models/ViewThemeModel/ViewThemeModel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../routers.dart';
+import 'MyHome/MyHomePage.dart';
 
 class SettingPage extends StatelessWidget {
   @override
@@ -84,7 +89,24 @@ class SettingPage extends StatelessWidget {
                       );
                     })
                   ],
-                ))
+                )),
+            Container(
+                padding: const EdgeInsets.only(left: 15),
+                width: double.infinity,
+                decoration: BoxDecoration(color: Colors.white),
+                height: 40,
+                margin: const EdgeInsets.only(top: 15),
+                child: FlatButton(
+                  child: Text("退出登录"),
+                  onPressed: (){
+
+                    Navigator.of(context).pop();
+                    Provider.of<UserModel>(context,listen: false).clearUser();
+                    StorageManager.localStorage.clear();
+                    Routers.pushAndRemove(MyHomePage.of().context, Routers.LOGIN);
+                  },
+                )
+            )
           ],
         ),
       ),

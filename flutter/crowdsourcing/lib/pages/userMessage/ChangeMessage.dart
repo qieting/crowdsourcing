@@ -28,7 +28,7 @@ class _ChangeMessageState extends State<ChangeMessage> {
   bool validate(String value) {
     switch (widget.filedName) {
       case User.GENDER:
-        if (value.length == 1 && (value == "男" || value == "女")) {
+        if (value.length == 1 && (value.compareTo("男")==0 || value.compareTo("女")==0)) {
           return true;
         } else {
           return false;
@@ -50,8 +50,7 @@ class _ChangeMessageState extends State<ChangeMessage> {
         return TextField(
           controller: textEditingController,
           inputFormatters: [
-            LengthLimitingTextInputFormatter(1),
-            WhitelistingTextInputFormatter("[男/女]")
+            LengthLimitingTextInputFormatter(1)
           ],
         );
       case User.NICK:
@@ -69,12 +68,14 @@ class _ChangeMessageState extends State<ChangeMessage> {
         title: Text("修改信息"),
         actions: <Widget>[
           FlatButton(
-            onPressed: () {
+            onPressed: () async {
               if(validate(textEditingController.text)){
-                MyDio.changeMessage(
-                    {widget.filedName: textEditingController.text}, context);
-                Navigator.of(context).pop();
+                await MyDio.changeMessage(
+                    {widget.filedName: textEditingController.text});
+
                 MyToast.toast("修改成功");
+                Navigator.of(context).pop();
+
               }else{
                 MyToast.toast("您的输入不合法");
               }

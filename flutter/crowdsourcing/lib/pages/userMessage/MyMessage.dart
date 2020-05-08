@@ -28,7 +28,7 @@ class MyMessage extends StatelessWidget {
                   url: userModel.user.mYHead,
                   callBack: (filePath) async {
                       String path=await MyDio.upImage(filePath);
-                      MyDio.changeMessage({"head":MyUrl.images+path}, context);
+                      await MyDio.changeMessage({"head":MyUrl.images+path},);
                   },
                 ),
               ),

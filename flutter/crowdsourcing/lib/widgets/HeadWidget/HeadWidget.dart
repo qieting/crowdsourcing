@@ -1,3 +1,4 @@
+import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/UserModel/UserModel.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyImage.dart';
@@ -16,7 +17,7 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
         return Row(
           children: <Widget>[
             MyImage(
-              userModel.user?.head == null
+              userModel.user?.mYHead == null
                   ? AssetImage("assets/images/deafaultHead.png")
                   : NetworkImage(userModel.user.mYHead),
               height: 80,
@@ -28,11 +29,11 @@ class HeadWidget extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Text(
-                    userModel.user?.nick??"昵称为空",
+                    userModel.user?.nick??DemoLocalizations.of(context).nicknull,
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    userModel.user?.phone ?? "未绑定手机号",
+                    userModel.user?.phone ?? DemoLocalizations.of(context).phonenull,
                     style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 0.5),
                         fontSize: 13),

@@ -1,6 +1,6 @@
 {
-  "@@last_modified": "2020-02-21T20:41:55.712570",
-  "title": "Flutter APP",
+  "@@last_modified": "2020-05-08T17:24:19.338611",
+  "title": "crowdsourcing",
   "@title": {
     "description": "Title for the Demo application",
     "type": "text",
@@ -169,5 +169,95 @@
     "placeholders": {
       "howMany": {}
     }
+  },
+  "connectionTimeout": "connection timeout",
+  "@connectionTimeout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "receiveTimeout": "receive timeout",
+  "@receiveTimeout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sendTimeout": "send timeout",
+  "@sendTimeout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accessDenied": "access denied",
+  "@accessDenied": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bug": "There is a bug",
+  "@bug": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "photoChoose": "Please select picture",
+  "@photoChoose": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "album": "album",
+  "@album": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "photograph": "photograph",
+  "@photograph": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "online": "online",
+  "@online": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "offline": "offline",
+  "@offline": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "reaseTask": "release a task",
+  "@reaseTask": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "nicknull": "nick is null",
+  "@nicknull": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "phonenull": "phone is null",
+  "@phonenull": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "locationNoMessage": "You have not turned on the positioning function, please turn on the positioning",
+  "@locationNoMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "loading": "loading,please wait",
+  "@loading": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "wallet": "wallet",
+  "@wallet": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "recharge": "recharge",
+  "@recharge": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdraw": "withdraw",
+  "@withdraw": {
+    "type": "text",
+    "placeholders": {}
   }
 }

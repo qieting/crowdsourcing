@@ -43,7 +43,7 @@ class SplashPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircularProgressIndicator(),
-                Text("加载中，请稍等")
+                Text(DemoLocalizations.of(context).loading)
               ],
             ),)),
       ),

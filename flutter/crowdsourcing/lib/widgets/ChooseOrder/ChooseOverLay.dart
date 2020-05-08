@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class ChooseOverLay {
                                 BorderRadius.all(Radius.circular(20))),
                         child: Center(
                           child: Text(
-                            "跑腿",
+                            DemoLocalizations.of(context).offline,
                             style: TextStyle(
                               color: Colors.white,
                               decoration: TextDecoration.none,
@@ -95,7 +96,7 @@ class ChooseOverLay {
                   SizedBox(
                     width: 50,
                     child: Text(
-                      "发布悬赏",
+                      DemoLocalizations.of(context).reaseTask,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
@@ -118,7 +119,7 @@ class ChooseOverLay {
                                 BorderRadius.all(Radius.circular(20))),
                         child: Center(
                           child: Text(
-                            "网络",
+                            DemoLocalizations.of(context).online,
                             style: TextStyle(
                                 color: Colors.white,
                                 decoration: TextDecoration.none,

@@ -1,3 +1,4 @@
+import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderModel.dart';
@@ -42,11 +43,14 @@ class IState extends State<IPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        Expanded(child: Center(child: Text("钱包"))),
+                        Expanded(
+                            child: Center(
+                                child: Text(
+                                    DemoLocalizations.of(context).wallet))),
                         Expanded(
                           child: Consumer<UserModel>(
                               builder: (context, userModel, child) {
-                            return Text(userModel.user.money.toString() + "元");
+                            return Text((userModel.user?.money??0).toString()+ "元");
                           }),
                         ),
                       ],
@@ -58,7 +62,7 @@ class IState extends State<IPage> {
                       children: <Widget>[
                         Expanded(
                             child: FlatButton(
-                          child: Text("充值"),
+                          child: Text(DemoLocalizations.of(context).recharge),
                           onPressed: () async {
                             String moneys = await showReasonDialog();
                             if (moneys == null) {
@@ -74,14 +78,39 @@ class IState extends State<IPage> {
                                           .user
                                           .money +
                                       money
-                                }, context);
+                                });
                               }
                             }
                           },
                         )),
                         Expanded(
                             child: FlatButton(
-                          child: Text("明细"),
+                          onPressed: () async {
+                            String moneys = await showReasonDialog();
+                            if (moneys == null) {
+                              MyToast.toast("取消提现");
+                            } else {
+                              int money = int.parse(moneys);
+                              if (money == 0) {
+                                MyToast.toast("提现金额不可为0");
+                              } else if (Provider.of<UserModel>(context,
+                                          listen: false)
+                                      .user
+                                      .money <
+                                  money) {
+                                MyToast.toast("提现金额不足");
+                              } else {
+                                MyDio.changeMessage({
+                                  "money": Provider.of<UserModel>(context,
+                                              listen: false)
+                                          .user
+                                          .money -
+                                      money
+                                });
+                              }
+                            }
+                          },
+                          child: Text(DemoLocalizations.of(context).withdraw),
                         )),
                       ],
                     ),
@@ -441,7 +470,8 @@ class IState extends State<IPage> {
             onClick: () {
               Routers.push(context, Routers.LOCATIONPAGE);
             },
-          ), WhiteblockWidget(
+          ),
+          WhiteblockWidget(
             icon: Icon(
               Icons.settings,
               color: Theme.of(context).accentColor.withAlpha(180),

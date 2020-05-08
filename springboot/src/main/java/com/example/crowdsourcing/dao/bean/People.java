@@ -43,7 +43,7 @@ public class People implements Serializable {
     private String nick;
 
     @Column
-    private  double money = 100;
+    private  double money;
 
     public String getToken() {
         return token;

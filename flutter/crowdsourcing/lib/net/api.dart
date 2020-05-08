@@ -22,6 +22,7 @@ import 'package:crowdsourcing/models/object/order/online/OnlineOrder.dart';
 import 'package:crowdsourcing/models/object/order/online/OnlineOrdering.dart';
 import 'package:crowdsourcing/models/object/user.dart';
 import 'package:crowdsourcing/net/MyUrl.dart';
+import 'package:crowdsourcing/pages/MyHome/MyHomePage.dart';
 import 'package:crowdsourcing/routers.dart';
 import 'package:crowdsourcing/widgets/MyToast/MyToast.dart';
 import 'package:data_plugin/bmob/bmob.dart';
@@ -67,13 +68,13 @@ class MyDio {
   static _disposeDioError(DioError e) {
     switch (e.type) {
       case DioErrorType.CONNECT_TIMEOUT:
-        MyToast.toast("连接超时，请检查您的网络连接");
+        MyToast.toast(DemoLocalizations.demoLocalizations.connectionTimeout);
         break;
       case DioErrorType.SEND_TIMEOUT:
-        MyToast.toast("发送超时");
+        MyToast.toast(DemoLocalizations.demoLocalizations.sendTimeout);
         break;
       case DioErrorType.RECEIVE_TIMEOUT:
-        MyToast.toast("接受超时");
+        MyToast.toast(DemoLocalizations.demoLocalizations.receiveTimeout);
         break;
       case DioErrorType.RESPONSE:
         switch (e.response.statusCode) {
@@ -95,7 +96,7 @@ class MyDio {
         }
         break;
       case DioErrorType.CANCEL:
-        MyToast.toast("拒绝访问");
+        MyToast.toast(DemoLocalizations.demoLocalizations.accessDenied);
         break;
 
       case DioErrorType.DEFAULT:
@@ -163,26 +164,26 @@ class MyDio {
       return false;
     } catch (e) {
       print("login程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
       return false;
     }
   }
 
   //更改个人信息
-  static changeMessage(Map map, BuildContext context) async {
+  static Future<bool> changeMessage(Map map) async {
     try {
       Response response = await dio.put(MyUrl.people, data: map);
 
       var body = json.decode(response.toString());
       User user = User.fromJsonMap(body);
-      Provider.of<UserModel>(context, listen: false).saveUser(user);
-      Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
+      Provider.of<UserModel>(MyHomePage.of().context, listen: false).saveUser(user);
+      //Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
     } on DioError catch (e) {
       printDioError("changeMessage", e);
       return false;
     } catch (e) {
       print("changeMessage程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
       return false;
     }
   }
@@ -211,8 +212,9 @@ class MyDio {
 
       //判断是否是QQ的新注册用户，如果是，那么QQ获取相应信息
       //否则则解析数据
-      if (body['register'] != null && body[User.QQ != null]) {
-        QQChannel.qqMessage();
+      if (body['register'] != null && User.QQ != null) {
+        await QQChannel.qqMessage();
+        Routers.pushAndRemove(context, Routers.MYHOMEPAGE);
       } else {
         List<Location> list = (body['location'] as List).map<Location>((f) {
           return Location.fromJsonMap(f);
@@ -255,7 +257,7 @@ class MyDio {
         failed();
       }
       print("login程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -272,7 +274,7 @@ class MyDio {
       printDioError("addLocation", e);
     } catch (e) {
       print("addLocation程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -287,7 +289,7 @@ class MyDio {
       printDioError("changeLocation", e);
     } catch (e) {
       print("changeLocation程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -302,7 +304,7 @@ class MyDio {
       printDioError("deleteLocation", e);
     } catch (e) {
       print("deleteLocation程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -321,7 +323,7 @@ class MyDio {
       printDioError("addOffineOrder", e);
     } catch (e) {
       print("addOffineOrder程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -336,7 +338,7 @@ class MyDio {
       printDioError("finishOffineOrder", e);
     } catch (e) {
       print("finishOffineOrder程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -356,7 +358,7 @@ class MyDio {
       printDioError("getOffineOrders", e);
     } catch (e) {
       print("getOffineOrders程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -382,7 +384,7 @@ class MyDio {
       printDioError("getOrders", e);
     } catch (e) {
       print("getOrders程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -398,7 +400,7 @@ class MyDio {
       printDioError("getTakeOrders", e);
     } catch (e) {
       print("getTakeOrders程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -412,7 +414,7 @@ class MyDio {
       printDioError("addOffineOrdering", e);
     } catch (e) {
       print("addOffineOrdering程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -429,7 +431,7 @@ class MyDio {
       printDioError("changeOffineOrdering", e);
     } catch (e) {
       print("changeOffineOrdering程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -444,7 +446,7 @@ class MyDio {
       printDioError("getOffineOrderingByOrderId", e);
     } catch (e) {
       print("getOffineOrderingByOrderId程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -459,7 +461,7 @@ class MyDio {
       printDioError("getImage", e);
     } catch (e) {
       print("getImage程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -479,7 +481,7 @@ class MyDio {
       printDioError("getImage", e);
     } catch (e) {
       print("getImage程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -530,7 +532,7 @@ class MyDio {
       printDioError("addOnlineOrder", e);
     } catch (e) {
       print("addOnlineOrder程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
   //结束线下订单，策略是如果已经被接，就直接给钱，否则退钱给用户
@@ -544,7 +546,7 @@ class MyDio {
       printDioError("finishOffineOrder", e);
     } catch (e) {
       print("finishOffineOrder程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -559,7 +561,7 @@ class MyDio {
       printDioError("addOnlineOrdering", e);
     } catch (e) {
       print("addOnlineOrdering程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -583,7 +585,7 @@ class MyDio {
       printDioError("finishOnlineOrdering", e);
     } catch (e) {
       print("finishOnlineOrdering程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -609,7 +611,7 @@ class MyDio {
       printDioError("changeOnlineOrdering", e);
     } catch (e) {
       print("changeOnlineOrdering程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 
@@ -624,7 +626,7 @@ class MyDio {
       printDioError("getOnlineOrderingByOrderId", e);
     } catch (e) {
       print("getOnlineOrderingByOrderId程序内部发生错误,$e");
-      MyToast.toast("程序内部发生错误,$e");
+      MyToast.toast(DemoLocalizations.demoLocalizations.bug+",$e");
     }
   }
 

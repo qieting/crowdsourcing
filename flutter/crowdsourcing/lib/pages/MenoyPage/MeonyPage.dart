@@ -54,7 +54,7 @@ class MoneyPageState extends State<MoneyPage>
 
   void getOrders() {
     MyDio.getOrders(context, (a, b) {
-      int index = orderWithPeoples == offineOrderWithPeoples ? 0 : 1;
+      int index = orderWithPeoples == offineOrderWithPeoples ? 1 : 0;
       offineOrderWithPeoples = a ?? [];
       onlineOrderWithPeoples = b ?? [];
       changeState(index);
@@ -126,14 +126,14 @@ class MoneyPageState extends State<MoneyPage>
                                           Image(
                                             image: orderWithPeoples[index]
                                                         .user
-                                                        .head ==
+                                                        .mYHead ==
                                                     null
                                                 ? AssetImage(
                                                     "assets/images/deafaultHead.png")
                                                 : NetworkImage(
                                                     orderWithPeoples[index]
                                                         .user
-                                                        .head),
+                                                        .mYHead),
                                             height: 25,
                                             width: 25,
                                           ),

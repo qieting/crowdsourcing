@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:crowdsourcing/i10n/localization_intl.dart';
 import 'package:crowdsourcing/net/api.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,7 +56,7 @@ class _ChooseImageState extends State<ChooseImage> {
               context: context,
               builder: (BuildContext context) {
                 return SimpleDialog(
-                  title: const Text('请选择图片'),
+                  title: Text(DemoLocalizations.of(context).photoChoose),
                   children: <Widget>[
                     SimpleDialogOption(
                       onPressed: () {
@@ -64,7 +65,7 @@ class _ChooseImageState extends State<ChooseImage> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: const Text('拍照'),
+                        child:  Text(DemoLocalizations.of(context).photograph),
                       ),
                     ),
                     SimpleDialogOption(
@@ -74,7 +75,7 @@ class _ChooseImageState extends State<ChooseImage> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: const Text('图库'),
+                        child: Text(DemoLocalizations.of(context).album),
                       ),
                     ),
                   ],

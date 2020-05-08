@@ -212,10 +212,10 @@ class MainActivity : FlutterActivity() {
     }
 
     fun login() {
-        if (!tencent.isSessionValid()) {
+
             //这个是获取相应的简单个人信息
             tencent.login(this, "get_simple_userinfo", listener)
-        }
+
     }
 
     //同步获取QQ消息，未使用
