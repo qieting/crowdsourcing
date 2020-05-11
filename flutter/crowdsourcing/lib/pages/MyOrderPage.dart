@@ -266,19 +266,17 @@ class MyOrderPage extends StatelessWidget {
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                           if (myOrders[index] is OnlineOrder) {
-                            Routers.push(
-                                context, Routers.ORDERONLINEDETAILSPAGE,
+                            Routers.push(context, Routers.ONLINEORDERINGPAGE,
                                 params: {
-                                  "onlineOrder": myOrders[index],
-                                  'detail': true
+                                  "order": myOrders[index],
                                 });
                           } else {
-                            Routers.push(context, Routers.ORDEROFFINEDETAILPAGE,
+                            Routers.push(context, Routers.OFFINEORDERINGPAGE,
                                 params: {
-                                  "offineOrder": myOrders[index],
-                                  'detail': true
+                                  "order": myOrders[index],
                                 });
                           }
+
                         },
                         child: Row(
                           children: <Widget>[

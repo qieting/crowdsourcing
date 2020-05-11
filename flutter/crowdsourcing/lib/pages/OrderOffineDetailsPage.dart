@@ -197,14 +197,14 @@ class OrderOffineDetailsPage extends StatelessWidget {
                                             mainAxisSize: MainAxisSize.max,
                                             children: <Widget>[
                                               Text(take
-                                                  ? offineOrder.end.name
+                                                  ? offineOrder.end.name??"就近购买"
                                                   : "接单后可查看姓名和联系方式"),
                                               SizedBox(
                                                 width: 30,
                                               ),
                                               Text(
                                                 take
-                                                    ? offineOrder.end.phone
+                                                    ? offineOrder.end.phone??""
                                                     : "",
                                               ),
                                             ],

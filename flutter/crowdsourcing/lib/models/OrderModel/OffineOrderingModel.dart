@@ -63,8 +63,8 @@ class OffineOrderingModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool hasTake(int peopleId) =>
-      _offineOrderings.any((it) => it.peopleId == peopleId);
+  bool hasTake(int offineOrder) =>
+      _offineOrderings.any((it) => it.offineOrderId == offineOrder);
 
   int hasfinish() {
     int i = 0;
