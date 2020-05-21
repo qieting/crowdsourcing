@@ -13,10 +13,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class MyController {
@@ -26,8 +23,8 @@ public class MyController {
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index() {
-        return "正常使用";
+    public Date index() {
+        return new Date();
     }
 
     @RequestMapping(value = "/peoples", method = RequestMethod.GET)
@@ -100,7 +97,7 @@ public class MyController {
     }
 
     @RequestMapping(value = "/offineOrder", method = RequestMethod.PUT)
-    public  Map<String ,Object> changeOffineOrder( @RequestParam("offineOrderId")int offineOrderId, @CurrentUserId int id) {
+    public Map<String, Object> changeOffineOrder(@RequestParam("offineOrderId") int offineOrderId, @CurrentUserId int id) {
         return peopleService.changeOffineOrder(id, offineOrderId);
     }
 
@@ -137,8 +134,8 @@ public class MyController {
     }
 
     @RequestMapping(value = "/onlineOrder", method = RequestMethod.PUT)
-    public  Map<String ,Object> changeOnlineOrderId(@RequestParam("onlineOrderId") int onlineOrderId, @CurrentUserId int id) {
-       return peopleService.changeOnLineOrder(id, onlineOrderId);
+    public Map<String, Object> changeOnlineOrderId(@RequestParam("onlineOrderId") int onlineOrderId, @CurrentUserId int id) {
+        return peopleService.changeOnLineOrder(id, onlineOrderId);
     }
 
 //    @RequestMapping(value = "/onlineOrder", method = RequestMethod.GET)

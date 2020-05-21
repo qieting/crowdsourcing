@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:crowdsourcing/common/IM.dart';
 import 'package:crowdsourcing/common/MyImages.dart';
 import 'package:crowdsourcing/models/OrderModel/OffineOrderingModel.dart';
 import 'package:crowdsourcing/models/OrderModel/OnlineOrderingModel.dart';
@@ -469,6 +470,7 @@ class _OrderOnlineDetailsPageState extends State<OrderOnlineDetailsPage> {
                       return;
                     }
                     MyToast.toast("接单成功");
+                    IM.sendOffineOrderMessage(widget.onlineOrder.peopleId.toString(),"我接了你的单,id:"+widget.onlineOrder.id.toString()+"标题:"+widget.onlineOrder.title);
                     onlineOrderingModel
                         .addOnlineOrdering(OnlineOrdering.fromJsonMap(data));
 //                    Navigator.of(context).pop();
