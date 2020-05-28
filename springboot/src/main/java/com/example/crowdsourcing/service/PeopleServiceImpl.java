@@ -409,6 +409,30 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
+    public OnLineOrdering changeOnlineOrdering(Map<String, String> phones, Map<String, MultipartFile> files) {
+        int onLineOrderingId = Integer.parseInt(phones.get("onlineOrderId"));
+        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(onLineOrderingId).get();
+        onLineOrdering.setSubmitDate(new Date());
+        Map<String, String> myMap = new HashMap<>();
+        for (String key : phones.keySet()) {
+            if (!key.equals("onlineOrderId")) {
+                myMap.put(key, phones.get(key));
+            }
+        }
+        for (String key : files.keySet()) {
+            myMap.put(key, files.get(key).getOriginalFilename());
+            save(files.get(key), "images/" + onLineOrdering.getId() + "$$" + files.get(key).getOriginalFilename());
+        }
+        onLineOrdering.setResources(new Gson().toJson(myMap));
+        onlineOrderingRepository.save(onLineOrdering);
+        OnLineOrder onLineOrder = onlineOrderRepository.findById(onLineOrdering.getOnlineOrderId()).get();
+        onLineOrder.sumbitAdd();
+        onlineOrderRepository.save(onLineOrder);
+        return onLineOrdering;
+
+    }
+
+    @Override
     public List<OnlineOrderWithPeople> getOnLineOrders(int platForm) {
         return onlineOrderRepository.findByPlatFormLimitNotAndRemainIsGreaterThan(platForm, 0);
     }
@@ -455,29 +479,7 @@ public class PeopleServiceImpl implements PeopleService {
 
     }
 
-    @Override
-    public OnLineOrdering changeOnlineOrdering(Map<String, String> phones, Map<String, MultipartFile> files) {
-        int onLineOrderingId = Integer.parseInt(phones.get("onlineOrderId"));
-        OnLineOrdering onLineOrdering = onlineOrderingRepository.findById(onLineOrderingId).get();
-        onLineOrdering.setSubmitDate(new Date());
-        Map<String, String> myMap = new HashMap<>();
-        for (String key : phones.keySet()) {
-            if (!key.equals("onlineOrderId")) {
-                myMap.put(key, phones.get(key));
-            }
-        }
-        for (String key : files.keySet()) {
-            myMap.put(key, files.get(key).getOriginalFilename());
-            save(files.get(key), "images/" + onLineOrdering.getId() + "$$" + files.get(key).getOriginalFilename());
-        }
-        onLineOrdering.setResources(new Gson().toJson(myMap));
-        onlineOrderingRepository.save(onLineOrdering);
-        OnLineOrder onLineOrder = onlineOrderRepository.findById(onLineOrdering.getOnlineOrderId()).get();
-        onLineOrder.sumbitAdd();
-        onlineOrderRepository.save(onLineOrder);
-        return onLineOrdering;
 
-    }
 
     @Override
     public List<OnLineOrdering> getOnLineOrdering(int peopleId) {
