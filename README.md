@@ -1,8 +1,6 @@
 # crowdsourcing
-my graduation design
-
 前端采用flutter，后端采用springboot
-
+my graduation design
 毕设题目为  移动众包系统，移动端采用Flutter开发
 其中众包可以理解为外包的大众化，可以类比于美团众包和众人帮等平台
 
